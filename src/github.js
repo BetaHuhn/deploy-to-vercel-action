@@ -20,13 +20,14 @@ const init = () => {
 
 	const createDeployment = async () => {
 		const ref = RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
+		log.debug(ref)
 
 		const deployment = await client.repos.createDeployment({
 			owner: USER,
 			repo: REPOSITORY,
 			ref,
 			required_contexts: [],
-			environment: PRODUCTION ? 'Production' : 'Preview',
+			environment: PRODUCTION && !IS_PR ? 'Production' : 'Preview',
 			description: 'Deploy to Vercel'
 		})
 

@@ -25567,13 +25567,14 @@ const init = () => {
 
 	const createDeployment = async () => {
 		const ref = RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
+		log.debug(ref)
 
 		const deployment = await client.repos.createDeployment({
 			owner: USER,
 			repo: REPOSITORY,
 			ref,
 			required_contexts: [],
-			environment: PRODUCTION ? 'Production' : 'Preview',
+			environment: PRODUCTION && !IS_PR ? 'Production' : 'Preview',
 			description: 'Deploy to Vercel'
 		})
 
@@ -25647,6 +25648,9 @@ const { exec } = __nccwpck_require__(3129)
 const log = {
 	info(text) {
 		core.info(text)
+	},
+	debug(text) {
+		core.debug(text)
 	},
 	error(text) {
 		core.error(text)
@@ -25725,8 +25729,8 @@ const run = async () => {
 
 		// Create comment on PR
 		if (IS_PR) {
-			const comment = await github.createComment()
-			log.info(`Created comment on PR: ${ comment.url }`)
+			const comment = await github.createComment(previewUrl)
+			log.info(`Created comment on PR: ${ comment.html_url }`)
 		}
 
 		// Set Action output

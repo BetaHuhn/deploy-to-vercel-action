@@ -5,6 +5,9 @@ const log = {
 	info(text) {
 		core.info(text)
 	},
+	debug(text) {
+		core.debug(text)
+	},
 	error(text) {
 		core.error(text)
 	},

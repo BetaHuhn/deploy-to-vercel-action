@@ -25425,51 +25425,7 @@ const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 __nccwpck_require__(2437).config()
 
-const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
-	let coreVar
-	if (Array.isArray(key)) {
-		key.forEach((item) => {
-			if (core.getInput(item)) {
-				coreVar = core.getInput(item)
-			}
-		})
-	} else {
-		coreVar = core.getInput(key)
-	}
-
-	let envVar
-	if (Array.isArray(key)) {
-		key.forEach((item) => {
-			if (item in process.env) {
-				envVar = process.env[item]
-			}
-		})
-	} else {
-		envVar = process.env[key]
-	}
-
-	if (key === 'PR_LABELS' && (coreVar === false || envVar === 'false'))
-		return undefined
-
-	if (coreVar !== undefined && coreVar.length >= 1) {
-		if (type === 'array') return coreVar.split('\n')
-
-		return coreVar
-	}
-
-	if (envVar !== undefined && envVar.length >= 1) {
-		if (type === 'array') return envVar.split(',')
-		if (type === 'boolean') return envVar === 'true'
-
-		return envVar
-	}
-
-	if (required === true)
-		return core.setFailed(`Variable ${ key } missing.`)
-
-	return dft
-
-}
+const { getVar } = __nccwpck_require__(8505)
 
 const context = {
 	GITHUB_TOKEN: getVar({
@@ -25665,6 +25621,52 @@ module.exports = {
 const core = __nccwpck_require__(2186)
 const { exec } = __nccwpck_require__(3129)
 
+const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
+	let coreVar
+	if (Array.isArray(key)) {
+		key.forEach((item) => {
+			if (core.getInput(item)) {
+				coreVar = core.getInput(item)
+			}
+		})
+	} else {
+		coreVar = core.getInput(key)
+	}
+
+	let envVar
+	if (Array.isArray(key)) {
+		key.forEach((item) => {
+			if (item in process.env) {
+				envVar = process.env[item]
+			}
+		})
+	} else {
+		envVar = process.env[key]
+	}
+
+	if (key === 'PR_LABELS' && (coreVar === false || envVar === 'false'))
+		return undefined
+
+	if (coreVar !== undefined && coreVar.length >= 1) {
+		if (type === 'array') return coreVar.split('\n')
+
+		return coreVar
+	}
+
+	if (envVar !== undefined && envVar.length >= 1) {
+		if (type === 'array') return envVar.split(',')
+		if (type === 'boolean') return envVar === 'true'
+
+		return envVar
+	}
+
+	if (required === true)
+		return core.setFailed(`Variable ${ key } missing.`)
+
+	return dft
+
+}
+
 const execCmd = (command) => {
 	core.debug(`EXEC: "${ command }"`)
 	return new Promise((resolve, reject) => {
@@ -25675,7 +25677,8 @@ const execCmd = (command) => {
 }
 
 module.exports = {
-	exec: execCmd
+	exec: execCmd,
+	getVar
 }
 
 /***/ }),

@@ -2,51 +2,7 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 require('dotenv').config()
 
-const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
-	let coreVar
-	if (Array.isArray(key)) {
-		key.forEach((item) => {
-			if (core.getInput(item)) {
-				coreVar = core.getInput(item)
-			}
-		})
-	} else {
-		coreVar = core.getInput(key)
-	}
-
-	let envVar
-	if (Array.isArray(key)) {
-		key.forEach((item) => {
-			if (item in process.env) {
-				envVar = process.env[item]
-			}
-		})
-	} else {
-		envVar = process.env[key]
-	}
-
-	if (key === 'PR_LABELS' && (coreVar === false || envVar === 'false'))
-		return undefined
-
-	if (coreVar !== undefined && coreVar.length >= 1) {
-		if (type === 'array') return coreVar.split('\n')
-
-		return coreVar
-	}
-
-	if (envVar !== undefined && envVar.length >= 1) {
-		if (type === 'array') return envVar.split(',')
-		if (type === 'boolean') return envVar === 'true'
-
-		return envVar
-	}
-
-	if (required === true)
-		return core.setFailed(`Variable ${ key } missing.`)
-
-	return dft
-
-}
+const { getVar } = require('./helpers')
 
 const context = {
 	GITHUB_TOKEN: getVar({

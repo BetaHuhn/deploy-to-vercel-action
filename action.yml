@@ -1,0 +1,53 @@
+name: 'Deploy to Vercel Action'
+description: 'GitHub Action to deploy your site with Vercel and create a GitHub deployment.'
+author: 'BetaHuhn'
+
+inputs:
+  GITHUB_TOKEN:
+    description: |
+      GitHub Token which will be used to authenticate with the GitHub API.
+    required: false
+  VERCEL_TOKEN:
+    description: |
+      Vercel Token which will be used with the Vercel CLI.
+    required: false
+  VERCEL_PROJECT_ID:
+    description: |
+      Id of your Vercel project (can be found in .vercel/project.json).
+    required: false
+  VERCEL_ORG_ID:
+    description: |
+      Id of your Vercel organisation (can be found in .vercel/project.json).
+    required: false
+  GITHUB_DEPLOYMENT:
+    description: |
+      Create a deployment on GitHub (default: true).
+    required: false
+  GITHUB_COMMENT:
+    description: |
+      Create comment on the PR or commit with the preview url (default: true).
+    required: false
+  VERCEL_SCOPE:
+    description: |
+      Execute commands from a different Vercel team or user.
+    required: false
+  VERCEL_ALIAS_DOMAINS:
+    description: |
+      Assign alias domain(s) to this deployment (must be configured in the project).
+    required: false
+
+outputs:
+  PREVIEW_URL:
+    description: 'Vercel Deployment preview URL'
+  DEPLOYMENT_CREATED:
+    description: 'True if a GitHub deployment was created.'
+  COMMENT_CREATED:
+    description: 'True if a comment was created on the PR or commit.'
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+
+branding:
+  icon: 'triangle'
+  color: 'white'

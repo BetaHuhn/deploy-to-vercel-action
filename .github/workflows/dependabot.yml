@@ -1,0 +1,13 @@
+name: Dependabot PR CI
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge minor/patch updates
+        uses: ahmadnassri/action-dependabot-auto-merge@v2
+        with:
+          target: minor
+          github-token: ${{ secrets.GH_PAT }}

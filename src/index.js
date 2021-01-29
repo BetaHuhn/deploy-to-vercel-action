@@ -42,7 +42,7 @@ const run = async () => {
 
 		// Create comment on PR
 		if (IS_PR) {
-			const comment = await github.createComment()
+			const comment = await github.createComment(previewUrl)
 			log.info(`Created comment on PR: ${ comment.url }`)
 		}
 

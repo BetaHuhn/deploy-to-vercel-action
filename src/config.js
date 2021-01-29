@@ -99,7 +99,7 @@ const setDynamicVars = () => {
 	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
 	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
 
-	if (context.IS_PR) context.PR_NUMBER = github.context.event.number
+	if (context.IS_PR) context.PR_NUMBER = github.context.payload.number
 }
 
 setDynamicVars()

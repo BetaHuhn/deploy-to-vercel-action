@@ -12,7 +12,8 @@ const vercel = require('./vercel')
 
 const {
 	GITHUB_DEPLOYMENT,
-	IS_PR
+	IS_PR,
+	PR_LABELS
 } = require('./config')
 
 const run = async () => {
@@ -44,6 +45,11 @@ const run = async () => {
 		if (IS_PR) {
 			const comment = await github.createComment(previewUrl)
 			log.info(`Created comment on PR: ${ comment.html_url }`)
+		}
+
+		if (IS_PR && PR_LABELS) {
+			const labels = await github.addLabel()
+			log.info(`Added label(s) ${ labels.map((label) => label.name).join(', ') } to PR`)
 		}
 
 		// Set Action output

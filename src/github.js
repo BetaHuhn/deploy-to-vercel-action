@@ -9,7 +9,8 @@ const {
 	PRODUCTION,
 	PR_NUMBER,
 	REF,
-	LOG_URL
+	LOG_URL,
+	PR_LABELS
 } = require('./config')
 
 const init = () => {
@@ -74,11 +75,23 @@ const init = () => {
 		return comment.data
 	}
 
+	const addLabel = async () => {
+		const label = await client.issues.addLabels({
+			owner: USER,
+			repo: REPOSITORY,
+			issue_number: PR_NUMBER,
+			labels: PR_LABELS
+		})
+
+		return label.data
+	}
+
 	return {
 		client,
 		createDeployment,
 		updateDeployment,
-		createComment
+		createComment,
+		addLabel
 	}
 }
 

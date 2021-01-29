@@ -25,6 +25,9 @@ const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
 		envVar = process.env[key]
 	}
 
+	if (key === 'PR_LABELS' && (coreVar === false || envVar === 'false'))
+		return undefined
+
 	if (coreVar !== undefined && coreVar.length >= 1) {
 		if (type === 'array') return coreVar.split('\n')
 
@@ -76,6 +79,11 @@ const context = {
 		key: 'GITHUB_DEPLOYMENT',
 		type: 'boolean',
 		default: true
+	}),
+	PR_LABELS: getVar({
+		key: 'PR_LABELS',
+		default: [ 'deployed' ],
+		type: 'array'
 	}),
 	VERCEL_SCOPE: getVar({
 		key: 'VERCEL_SCOPE'

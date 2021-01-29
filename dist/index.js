@@ -25448,6 +25448,9 @@ const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
 		envVar = process.env[key]
 	}
 
+	if (key === 'PR_LABELS' && (coreVar === false || envVar === 'false'))
+		return undefined
+
 	if (coreVar !== undefined && coreVar.length >= 1) {
 		if (type === 'array') return coreVar.split('\n')
 
@@ -25499,6 +25502,11 @@ const context = {
 		key: 'GITHUB_DEPLOYMENT',
 		type: 'boolean',
 		default: true
+	}),
+	PR_LABELS: getVar({
+		key: 'PR_LABELS',
+		default: [ 'deployed' ],
+		type: 'array'
 	}),
 	VERCEL_SCOPE: getVar({
 		key: 'VERCEL_SCOPE'
@@ -25564,7 +25572,8 @@ const {
 	PRODUCTION,
 	PR_NUMBER,
 	REF,
-	LOG_URL
+	LOG_URL,
+	PR_LABELS
 } = __nccwpck_require__(4570)
 
 const init = () => {
@@ -25629,11 +25638,23 @@ const init = () => {
 		return comment.data
 	}
 
+	const addLabel = async () => {
+		const label = await client.issues.addLabels({
+			owner: USER,
+			repo: REPOSITORY,
+			issue_number: PR_NUMBER,
+			labels: PR_LABELS
+		})
+
+		return label.data
+	}
+
 	return {
 		client,
 		createDeployment,
 		updateDeployment,
-		createComment
+		createComment,
+		addLabel
 	}
 }
 
@@ -25703,7 +25724,8 @@ const vercel = __nccwpck_require__(847)
 
 const {
 	GITHUB_DEPLOYMENT,
-	IS_PR
+	IS_PR,
+	PR_LABELS
 } = __nccwpck_require__(4570)
 
 const run = async () => {
@@ -25735,6 +25757,11 @@ const run = async () => {
 		if (IS_PR) {
 			const comment = await github.createComment(previewUrl)
 			log.info(`Created comment on PR: ${ comment.html_url }`)
+		}
+
+		if (IS_PR && PR_LABELS) {
+			const labels = await github.addLabel()
+			log.info(`Added label(s) ${ labels.map((label) => label.name).join(', ') } to PR`)
 		}
 
 		// Set Action output

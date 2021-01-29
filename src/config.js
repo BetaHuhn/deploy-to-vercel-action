@@ -98,8 +98,16 @@ const setDynamicVars = () => {
 
 	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
 	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
+	context.SHA = context.RUNNING_LOCAL ? '' : github.context.sha
 
-	if (context.IS_PR) context.PR_NUMBER = github.context.payload.number
+	if (context.IS_PR) {
+		context.PR_NUMBER = github.context.payload.number
+		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : context.payload.pull_request.head.ref
+	} else {
+		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
+	}
+
+	context.LOG_URL = context.IS_PR ? `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks` : `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
 }
 
 setDynamicVars()

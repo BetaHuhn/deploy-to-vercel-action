@@ -25521,8 +25521,16 @@ const setDynamicVars = () => {
 
 	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
 	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
+	context.SHA = context.RUNNING_LOCAL ? '' : github.context.sha
 
-	if (context.IS_PR) context.PR_NUMBER = github.context.payload.number
+	if (context.IS_PR) {
+		context.PR_NUMBER = github.context.payload.number
+		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : context.payload.pull_request.head.ref
+	} else {
+		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
+	}
+
+	context.LOG_URL = context.IS_PR ? `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks` : `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
 }
 
 setDynamicVars()
@@ -25553,26 +25561,22 @@ const {
 	IS_PR,
 	USER,
 	REPOSITORY,
-	RUNNING_LOCAL,
 	PRODUCTION,
-	PR_NUMBER
+	PR_NUMBER,
+	REF,
+	LOG_URL
 } = __nccwpck_require__(4570)
 
 const init = () => {
 	const client = new github.GitHub(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
-	const sha = RUNNING_LOCAL ? '' : github.context.sha
-	const logUrl = IS_PR ? `https://github.com/${ USER }/${ REPOSITORY }/pull/${ PR_NUMBER }/checks` : `https://github.com/${ USER }/${ REPOSITORY }/commit/${ sha }/checks`
 
 	let deploymentId
 
 	const createDeployment = async () => {
-		const ref = RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
-		log.debug(ref)
-
 		const deployment = await client.repos.createDeployment({
 			owner: USER,
 			repo: REPOSITORY,
-			ref,
+			ref: REF,
 			required_contexts: [],
 			environment: PRODUCTION && !IS_PR ? 'Production' : 'Preview',
 			description: 'Deploy to Vercel'
@@ -25593,8 +25597,8 @@ const init = () => {
 			repo: REPOSITORY,
 			deployment_id: deploymentId,
 			state: status,
-			log_url: logUrl,
-			environment_url: url || logUrl,
+			log_url: LOG_URL,
+			environment_url: url || LOG_URL,
 			description: 'Starting deployment to Vercel'
 		})
 
@@ -25609,7 +25613,7 @@ const init = () => {
 			This pull request has been deployed to Vercel.
 
 			✅ Preview: ${ preview }
-			🔍 Logs: ${ logUrl }
+			🔍 Logs: ${ LOG_URL }
 		`
 
 		// Remove indentation

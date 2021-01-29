@@ -25562,7 +25562,6 @@ module.exports = context
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const github = __nccwpck_require__(5438)
-const { log } = __nccwpck_require__(8505)
 
 const {
 	GITHUB_TOKEN,
@@ -25593,8 +25592,6 @@ const init = () => {
 
 		deploymentId = deployment.data.id
 
-		log.info(`Deployment #${ deploymentId } created`)
-
 		return deployment.data
 	}
 
@@ -25610,8 +25607,6 @@ const init = () => {
 			environment_url: url || LOG_URL,
 			description: 'Starting deployment to Vercel'
 		})
-
-		log.info(`Deployment ${ deploymentId } status changed to ${ status }`)
 
 		return deploymentStatus.data
 	}
@@ -25670,39 +25665,17 @@ module.exports = {
 const core = __nccwpck_require__(2186)
 const { exec } = __nccwpck_require__(3129)
 
-const log = {
-	info(text) {
-		core.info(text)
-	},
-	debug(text) {
-		core.debug(text)
-	},
-	error(text) {
-		core.error(text)
-	},
-	setFailed(text) {
-		core.setFailed(text)
-	}
-}
-
-const execCmd = (command, workingDir) => {
-	core.debug(`EXEC: "${ command }" IN ${ workingDir }`)
+const execCmd = (command) => {
+	core.debug(`EXEC: "${ command }"`)
 	return new Promise((resolve, reject) => {
-		exec(
-			command,
-			{
-				cwd: workingDir
-			},
-			function(error, stdout) {
-				error ? reject(error) : resolve(stdout.trim())
-			}
-		)
+		exec(command, (err, stdout) => {
+			err ? reject(err) : resolve(stdout.trim())
+		})
 	})
 }
 
 module.exports = {
-	exec: execCmd,
-	log
+	exec: execCmd
 }
 
 /***/ }),
@@ -25711,7 +25684,6 @@ module.exports = {
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(2186)
-const { log } = __nccwpck_require__(8505)
 const Github = __nccwpck_require__(8396)
 const vercel = __nccwpck_require__(847)
 
@@ -25731,44 +25703,50 @@ const {
 const run = async () => {
 	const github = Github.init()
 
-	// Create Deployment on GitHub
 	if (GITHUB_DEPLOYMENT) {
-		await github.createDeployment()
+		core.info('Creating GitHub deployment')
+
+		const deployment = await github.createDeployment()
+		core.info(`Deployment #${ deployment.id } created`)
+
 		await github.updateDeployment('pending')
+		core.info(`Deployment #${ deployment.id } status changed to "${ status }"`)
 	}
 
 	try {
-		// Setup vercel project
+		core.info('Setting environment variables for Vercel CLI')
 		await vercel.setEnv()
 
-		// Deploy with Vercel CLI
+		core.info(`Creating deployment with Vercel CLI`)
 		const result = await vercel.deploy()
 
 		// TODO: Handle multiple urls better
 		const previewUrl = Array.isArray(result) ? result[0] : result
-		log.info(`Successfully deployed to ${ previewUrl }`)
+		core.info(`Successfully deployed to: ${ previewUrl }`)
 
-		// Change GitHub deployment status
 		if (GITHUB_DEPLOYMENT) {
+			core.info('Changing GitHub deployment status to "success"')
 			await github.updateDeployment('success', previewUrl)
 		}
 
-		// Create comment on PR
 		if (IS_PR) {
+			core.info('Create comment on PR')
+
 			const comment = await github.createComment(previewUrl)
-			log.info(`Created comment on PR: ${ comment.html_url }`)
+			core.info(`Comment created: ${ comment.html_url }`)
 		}
 
 		if (IS_PR && PR_LABELS) {
+			core.info('Adding label(s) to PR')
 			const labels = await github.addLabel()
-			log.info(`Added label(s) ${ labels.map((label) => label.name).join(', ') } to PR`)
+			core.info(`Label(s) "${ labels.map((label) => label.name).join(', ') }" added`)
 		}
 
-		// Set Action output
 		core.setOutput('PREVIEW_URL', previewUrl)
 		core.setOutput('DEPLOYMENT_CREATED', GITHUB_DEPLOYMENT)
 		core.setOutput('COMMENT_CREATED', IS_PR)
 
+		core.info('Done')
 	} catch (err) {
 		await github.updateDeployment('failure')
 		core.setFailed(err.message)
@@ -25778,8 +25756,8 @@ const run = async () => {
 run()
 	.then(() => {})
 	.catch((err) => {
-		log.error('ERROR')
-		log.setFailed(err.message)
+		core.error('ERROR')
+		core.setFailed(err.message)
 	})
 
 /***/ }),
@@ -25788,7 +25766,7 @@ run()
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(2186)
-const { exec, log } = __nccwpck_require__(8505)
+const { exec } = __nccwpck_require__(8505)
 
 const {
 	VERCEL_TOKEN,
@@ -25799,8 +25777,6 @@ const {
 } = __nccwpck_require__(4570)
 
 const setEnv = async () => {
-	log.info('Setting environment variables for Vercel CLI')
-
 	core.exportVariable('VERCEL_ORG_ID', VERCEL_ORG_ID)
 	core.exportVariable('VERCEL_PROJECT_ID', VERCEL_PROJECT_ID)
 }
@@ -25809,7 +25785,6 @@ const deploy = async () => {
 	let command = `vercel -t ${ VERCEL_TOKEN }`
 
 	if (VERCEL_SCOPE) {
-		log.info(`Using Vercel scope ${ VERCEL_SCOPE }`)
 		command += ` --scope ${ VERCEL_SCOPE }`
 	}
 
@@ -25817,7 +25792,6 @@ const deploy = async () => {
 		command += ` --prod`
 	}
 
-	log.info(`Create deployment with Vercel CLI`)
 	const output = await exec(command)
 
 	return output

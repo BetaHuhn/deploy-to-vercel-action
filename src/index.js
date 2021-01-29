@@ -1,5 +1,4 @@
 const core = require('@actions/core')
-const { log } = require('./helpers')
 const Github = require('./github')
 const vercel = require('./vercel')
 
@@ -19,44 +18,50 @@ const {
 const run = async () => {
 	const github = Github.init()
 
-	// Create Deployment on GitHub
 	if (GITHUB_DEPLOYMENT) {
-		await github.createDeployment()
+		core.info('Creating GitHub deployment')
+
+		const deployment = await github.createDeployment()
+		core.info(`Deployment #${ deployment.id } created`)
+
 		await github.updateDeployment('pending')
+		core.info(`Deployment #${ deployment.id } status changed to "${ status }"`)
 	}
 
 	try {
-		// Setup vercel project
+		core.info('Setting environment variables for Vercel CLI')
 		await vercel.setEnv()
 
-		// Deploy with Vercel CLI
+		core.info(`Creating deployment with Vercel CLI`)
 		const result = await vercel.deploy()
 
 		// TODO: Handle multiple urls better
 		const previewUrl = Array.isArray(result) ? result[0] : result
-		log.info(`Successfully deployed to ${ previewUrl }`)
+		core.info(`Successfully deployed to: ${ previewUrl }`)
 
-		// Change GitHub deployment status
 		if (GITHUB_DEPLOYMENT) {
+			core.info('Changing GitHub deployment status to "success"')
 			await github.updateDeployment('success', previewUrl)
 		}
 
-		// Create comment on PR
 		if (IS_PR) {
+			core.info('Create comment on PR')
+
 			const comment = await github.createComment(previewUrl)
-			log.info(`Created comment on PR: ${ comment.html_url }`)
+			core.info(`Comment created: ${ comment.html_url }`)
 		}
 
 		if (IS_PR && PR_LABELS) {
+			core.info('Adding label(s) to PR')
 			const labels = await github.addLabel()
-			log.info(`Added label(s) ${ labels.map((label) => label.name).join(', ') } to PR`)
+			core.info(`Label(s) "${ labels.map((label) => label.name).join(', ') }" added`)
 		}
 
-		// Set Action output
 		core.setOutput('PREVIEW_URL', previewUrl)
 		core.setOutput('DEPLOYMENT_CREATED', GITHUB_DEPLOYMENT)
 		core.setOutput('COMMENT_CREATED', IS_PR)
 
+		core.info('Done')
 	} catch (err) {
 		await github.updateDeployment('failure')
 		core.setFailed(err.message)
@@ -66,6 +71,6 @@ const run = async () => {
 run()
 	.then(() => {})
 	.catch((err) => {
-		log.error('ERROR')
-		log.setFailed(err.message)
+		core.error('ERROR')
+		core.setFailed(err.message)
 	})

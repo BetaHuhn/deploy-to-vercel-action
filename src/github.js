@@ -1,5 +1,4 @@
 const github = require('@actions/github')
-const { log } = require('./helpers')
 
 const {
 	GITHUB_TOKEN,
@@ -30,8 +29,6 @@ const init = () => {
 
 		deploymentId = deployment.data.id
 
-		log.info(`Deployment #${ deploymentId } created`)
-
 		return deployment.data
 	}
 
@@ -47,8 +44,6 @@ const init = () => {
 			environment_url: url || LOG_URL,
 			description: 'Starting deployment to Vercel'
 		})
-
-		log.info(`Deployment ${ deploymentId } status changed to ${ status }`)
 
 		return deploymentStatus.data
 	}

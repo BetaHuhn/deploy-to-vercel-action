@@ -1,37 +1,15 @@
 const core = require('@actions/core')
 const { exec } = require('child_process')
 
-const log = {
-	info(text) {
-		core.info(text)
-	},
-	debug(text) {
-		core.debug(text)
-	},
-	error(text) {
-		core.error(text)
-	},
-	setFailed(text) {
-		core.setFailed(text)
-	}
-}
-
-const execCmd = (command, workingDir) => {
-	core.debug(`EXEC: "${ command }" IN ${ workingDir }`)
+const execCmd = (command) => {
+	core.debug(`EXEC: "${ command }"`)
 	return new Promise((resolve, reject) => {
-		exec(
-			command,
-			{
-				cwd: workingDir
-			},
-			function(error, stdout) {
-				error ? reject(error) : resolve(stdout.trim())
-			}
-		)
+		exec(command, (err, stdout) => {
+			err ? reject(err) : resolve(stdout.trim())
+		})
 	})
 }
 
 module.exports = {
-	exec: execCmd,
-	log
+	exec: execCmd
 }

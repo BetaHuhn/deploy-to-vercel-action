@@ -67,7 +67,7 @@ const init = () => {
 		// Remove indentation
 		const dedented = body.replace(/^[^\S\n]+/gm, '')
 
-		const comment = await client.repos.createComment({
+		const comment = await client.issues.createComment({
 			owner: USER,
 			repo: REPOSITORY,
 			issue_number: PR_NUMBER,

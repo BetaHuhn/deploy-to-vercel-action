@@ -1,6 +1,5 @@
-const { exec } = require('child_process')
-const core = require('@actions/core')
 const github = require('@actions/github')
+const { log } = require('./helpers')
 
 const {
 	GITHUB_TOKEN,
@@ -14,39 +13,32 @@ const {
 
 const init = () => {
 	const client = new github.GitHub(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
+	const sha = RUNNING_LOCAL ? '' : github.context.sha
+	const logUrl = IS_PR ? `https://github.com/${ USER }/${ REPOSITORY }/pull/${ PR_NUMBER }/checks` : `https://github.com/${ USER }/${ REPOSITORY }/commit/${ sha }/checks`
 
 	let deploymentId
 
-	const message = async () => {
-		let commit = await execCmd('git log --format=%B -n 1 HEAD').toString().trim()
-
-		if (!commit || IS_PR) {
-			commit = await execCmd('git log --format=%B -n 1 HEAD^2').toString().trim()
-		}
-
-		return commit
-	}
-
 	const createDeployment = async () => {
-		const ref = RUNNING_LOCAL ? 'test' : github.context.ref
+		const ref = RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
 
 		const deployment = await client.repos.createDeployment({
 			owner: USER,
 			repo: REPOSITORY,
 			ref,
 			required_contexts: [],
-			environment: PRODUCTION ? 'production' : 'staging',
+			environment: PRODUCTION ? 'Production' : 'Preview',
 			description: 'Deploy to Vercel'
 		})
 
 		deploymentId = deployment.data.id
 
+		log.info(`Deployment #${ deploymentId } created`)
+
 		return deployment.data
 	}
 
 	const updateDeployment = async (status, url) => {
-		const sha = RUNNING_LOCAL ? 'test' : github.context.sha
-		const logUrl = IS_PR ? `https://github.com/${ USER }/${ REPOSITORY }/pull/${ PR_NUMBER }/checks` : `https://github.com/${ USER }/${ REPOSITORY }/commit/${ sha }/checks`
+		if (!deploymentId) return
 
 		const deploymentStatus = await client.repos.createDeploymentStatus({
 			owner: USER,
@@ -58,30 +50,39 @@ const init = () => {
 			description: 'Starting deployment to Vercel'
 		})
 
+		log.info(`Deployment ${ deploymentId } status changed to ${ status }`)
+
 		return deploymentStatus.data
+	}
+
+	// TODO: Check if pr already has a comment before creating a new one
+	const createComment = async (preview) => {
+		const body = `
+			This pull request has been deployed to Vercel.
+
+			✅ Preview: ${ preview }
+			🔍 Logs: ${ logUrl }
+		`
+
+		// Remove indentation
+		const dedented = body.replace(/^[^\S\n]+/gm, '')
+
+		const comment = await client.repos.createComment({
+			owner: USER,
+			repo: REPOSITORY,
+			issue_number: PR_NUMBER,
+			body: dedented
+		})
+
+		return comment.data
 	}
 
 	return {
 		client,
-		message,
 		createDeployment,
-		updateDeployment
+		updateDeployment,
+		createComment
 	}
-}
-
-const execCmd = (command, workingDir) => {
-	core.debug(`EXEC: "${ command }" IN ${ workingDir }`)
-	return new Promise((resolve, reject) => {
-		exec(
-			command,
-			{
-				cwd: workingDir
-			},
-			function(error, stdout) {
-				error ? reject(error) : resolve(stdout.trim())
-			}
-		)
-	})
 }
 
 module.exports = {

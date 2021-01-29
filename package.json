@@ -21,8 +21,10 @@
   "homepage": "https://github.com/marketplace/actions/deploy-to-vercel-action",
   "dependencies": {
     "@actions/core": "^1.2.6",
+    "@actions/exec": "^1.0.4",
     "@actions/github": "^2.2.0",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "vercel": "^21.2.1"
   },
   "devDependencies": {
     "@betahuhn/config": "^1.0.2",

@@ -3,9 +3,27 @@ const github = require('@actions/github')
 require('dotenv').config()
 
 const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
-	// TODO: Fix parsing GH TOKEN
-	const coreVar = Array.isArray(key) ? key.find((item) => core.getInput(item) ? core.getInput(item) : undefined) : core.getInput(key)
-	const envVar = Array.isArray(key) ? key.find((item) => process.env[item]) : process.env[key]
+	let coreVar
+	if (Array.isArray(key)) {
+		key.forEach((item) => {
+			if (core.getInput(item)) {
+				coreVar = core.getInput(item)
+			}
+		})
+	} else {
+		coreVar = core.getInput(key)
+	}
+
+	let envVar
+	if (Array.isArray(key)) {
+		key.forEach((item) => {
+			if (item in process.env) {
+				envVar = process.env[item]
+			}
+		})
+	} else {
+		envVar = process.env[key]
+	}
 
 	if (coreVar !== undefined && coreVar.length >= 1) {
 		if (type === 'array') return coreVar.split('\n')
@@ -69,24 +87,30 @@ const context = {
 	GITHUB_REPOSITORY: getVar({
 		key: 'GITHUB_REPOSITORY',
 		required: true
-	})
+	}),
+	IS_PR: github.context.eventName === 'pull_request',
+	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
 }
 
-context.IS_PR = github.context.eventName === 'pull_request'
-context.RUNNING_LOCAL = process.env.RUNNING_LOCAL === 'true'
-context.BRANCH = (() => {
-	if (process.env.RUNNING_LOCAL === 'true') return 'master'
-	return context.IS_PR ? github.event.pull_request.head.ref : github.event.ref.substr(11)
-})()
+const setDynamicVars = () => {
+	if (context.IS_PR === true && context.DEPLOY_PRS === false)
+		core.setFailed(`Exiting, because "DEPLOY_PRS" option is set to false and Action was triggered from PR`)
 
-context.USER = context.GITHUB_REPOSITORY.split('/')[0]
-context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
+	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
+	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
 
-if (context.IS_PR) {
-	context.PR_NUMBER = github.event.number
+	if (context.IS_PR) context.PR_NUMBER = github.event.number
+
+	context.BRANCH = (() => {
+		if (process.env.RUNNING_LOCAL === 'true') return 'master'
+		return context.IS_PR ? github.event.pull_request.head.ref : github.event.ref.substr(11)
+	})()
 }
+
+setDynamicVars()
 
 core.setSecret(context.GITHUB_TOKEN)
+core.setSecret(context.VERCEL_TOKEN)
 
 core.debug(
 	JSON.stringify(

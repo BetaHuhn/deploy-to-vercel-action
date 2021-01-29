@@ -1,49 +1,65 @@
 const core = require('@actions/core')
-
+const { log } = require('./helpers')
 const Github = require('./github')
+const vercel = require('./vercel')
 
 /*
-	Steps:
-		- get config
-		- check if pr or normal
-		- create GitHub deployment
-		- setup vercel CLI
-		- deploy with vercel CLI
-		- wait for vercel build to finish
-		- parse preview urls and status
-		- if alias domain add it to deployment
-		- update GitHub deployment
-		- if pr create comment with preview url
-		- set preview urls as output
+	To Do:
+	- if alias domain is specified add it to deployment
+	- check if PR already has comment
+	- handle multiple preview urls
 */
 
 const {
-	/* PRODUCTION,
-	IS_PR,
-	PR_NUMBER,
-	RUNNING_LOCAL,
-	USER,
-	REPOSITORY */
+	GITHUB_DEPLOYMENT,
+	IS_PR
 } = require('./config')
 
 const run = async () => {
 	const github = Github.init()
 
-	const deployment = await github.createDeployment()
-	console.log(deployment)
+	// Create Deployment on GitHub
+	if (GITHUB_DEPLOYMENT) {
+		await github.createDeployment()
+		await github.updateDeployment('pending')
+	}
 
-	const deploymentStatus = await github.updateDeployment('pending')
+	try {
+		// Setup vercel project
+		await vercel.setEnv()
 
-	console.log(deploymentStatus)
+		// Deploy with Vercel CLI
+		const result = await vercel.deploy()
 
+		// TODO: Handle multiple urls better
+		const previewUrl = Array.isArray(result) ? result[0] : result
+		log.info(`Successfully deployed to ${ previewUrl }`)
 
-	// Get commit message
-	// const message = await github.message()
+		// Change GitHub deployment status
+		if (GITHUB_DEPLOYMENT) {
+			await github.updateDeployment('success', previewUrl)
+		}
+
+		// Create comment on PR
+		if (IS_PR) {
+			const comment = await github.createComment()
+			log.info(`Created comment on PR: ${ comment.url }`)
+		}
+
+		// Set Action output
+		core.setOutput('PREVIEW_URL', previewUrl)
+		core.setOutput('DEPLOYMENT_CREATED', GITHUB_DEPLOYMENT)
+		core.setOutput('COMMENT_CREATED', IS_PR)
+
+	} catch (err) {
+		await github.updateDeployment('failure')
+		core.setFailed(err.message)
+	}
 }
 
 run()
 	.then(() => {})
 	.catch((err) => {
-		core.error('ERROR', err)
-		core.setFailed(err.message)
+		log.error('ERROR')
+		log.setFailed(err.message)
 	})

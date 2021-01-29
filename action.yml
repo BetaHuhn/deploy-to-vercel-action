@@ -19,13 +19,17 @@ inputs:
     description: |
       Id of your Vercel organisation (can be found in .vercel/project.json).
     required: false
+  PRODUCTION:
+    description: |
+      Create a production deployment (has no impact on PR deployments).
+    required: false
+  DEPLOY_PRS:
+    description: |
+      Create deployment new PRs.
+    required: false
   GITHUB_DEPLOYMENT:
     description: |
       Create a deployment on GitHub (default: true).
-    required: false
-  GITHUB_COMMENT:
-    description: |
-      Create comment on the PR or commit with the preview url (default: true).
     required: false
   VERCEL_SCOPE:
     description: |

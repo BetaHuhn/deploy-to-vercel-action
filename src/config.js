@@ -1,9 +1,10 @@
 const core = require('@actions/core')
-
+const github = require('@actions/github')
 require('dotenv').config()
 
 const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
-	const coreVar = Array.isArray(key) ? key.find((item) => core.getInput(item)) : core.getInput(key)
+	// TODO: Fix parsing GH TOKEN
+	const coreVar = Array.isArray(key) ? key.find((item) => core.getInput(item) ? core.getInput(item) : undefined) : core.getInput(key)
 	const envVar = Array.isArray(key) ? key.find((item) => process.env[item]) : process.env[key]
 
 	if (coreVar !== undefined && coreVar.length >= 1) {
@@ -43,13 +44,18 @@ const context = {
 		key: 'VERCEL_PROJECT_ID',
 		required: true
 	}),
-	GITHUB_DEPLOYMENT: getVar({
-		key: 'GITHUB_DEPLOYMENT',
+	PRODUCTION: getVar({
+		key: 'PRODUCTION',
 		type: 'boolean',
 		default: true
 	}),
-	GITHUB_COMMENT: getVar({
-		key: 'GITHUB_COMMENT',
+	DEPLOY_PRS: getVar({
+		key: 'DEPLOY_PRS',
+		type: 'boolean',
+		default: true
+	}),
+	GITHUB_DEPLOYMENT: getVar({
+		key: 'GITHUB_DEPLOYMENT',
 		type: 'boolean',
 		default: true
 	}),
@@ -64,6 +70,20 @@ const context = {
 		key: 'GITHUB_REPOSITORY',
 		required: true
 	})
+}
+
+context.IS_PR = github.context.eventName === 'pull_request'
+context.RUNNING_LOCAL = process.env.RUNNING_LOCAL === 'true'
+context.BRANCH = (() => {
+	if (process.env.RUNNING_LOCAL === 'true') return 'master'
+	return context.IS_PR ? github.event.pull_request.head.ref : github.event.ref.substr(11)
+})()
+
+context.USER = context.GITHUB_REPOSITORY.split('/')[0]
+context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
+
+if (context.IS_PR) {
+	context.PR_NUMBER = github.event.number
 }
 
 core.setSecret(context.GITHUB_TOKEN)

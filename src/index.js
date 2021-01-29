@@ -1,5 +1,6 @@
 const core = require('@actions/core')
-const github = require('@actions/github')
+
+const Github = require('./github')
 
 /*
 	Steps:
@@ -10,31 +11,34 @@ const github = require('@actions/github')
 		- deploy with vercel CLI
 		- wait for vercel build to finish
 		- parse preview urls and status
+		- if alias domain add it to deployment
 		- update GitHub deployment
 		- if pr create comment with preview url
 		- set preview urls as output
 */
 
 const {
-	GITHUB_TOKEN
+	/* PRODUCTION,
+	IS_PR,
+	PR_NUMBER,
+	RUNNING_LOCAL,
+	USER,
+	REPOSITORY */
 } = require('./config')
 
 const run = async () => {
-	const client = new github.GitHub(GITHUB_TOKEN)
+	const github = Github.init()
 
-	core.info(`Repository Info`)
-	core.info(`Slug		: `)
-	core.info(`Owner		: `)
-	core.info(`Https Url	: https://github.com/`)
-	core.info(`Branch		: `)
-	core.info('	')
-	try {
-		core.info(client)
-		core.info('	')
-	} catch (err) {
-		core.error(err.message)
-		core.error(err)
-	}
+	const deployment = await github.createDeployment()
+	console.log(deployment)
+
+	const deploymentStatus = await github.updateDeployment('pending')
+
+	console.log(deploymentStatus)
+
+
+	// Get commit message
+	// const message = await github.message()
 }
 
 run()

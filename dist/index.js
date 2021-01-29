@@ -25523,11 +25523,6 @@ const setDynamicVars = () => {
 	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
 
 	if (context.IS_PR) context.PR_NUMBER = github.event.number
-
-	context.BRANCH = (() => {
-		if (process.env.RUNNING_LOCAL === 'true') return 'master'
-		return context.IS_PR ? github.event.pull_request.head.ref : github.event.ref.substr(11)
-	})()
 }
 
 setDynamicVars()

@@ -1,3 +1,15 @@
+## [v1.1.0] - 2021-01-30
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.1.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.0.2...v1.1.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.1.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.1.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.1.0.tar.gz))
+
+### New features
+
+- [`381ecd7`](https://github.com/betahuhn/deploy-to-vercel-action/commit/381ecd7)  Delete existing PR comment
+
+### Updates
+
+- [`10aac40`](https://github.com/betahuhn/deploy-to-vercel-action/commit/10aac40)  Change how config is handled if running local
+
 ## [v1.0.2] - 2021-01-30
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.0.2) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.0.1...v1.0.2) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.0.2) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.0.2.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.0.2.tar.gz))

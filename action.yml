@@ -31,6 +31,10 @@ inputs:
     description: |
       Create a deployment on GitHub (default: true).
     required: false
+  PR_LABELS:
+    description: |
+      Labels which will be added to the pull request once deployed. Set it to false to turn off (default: deployed).
+    required: false
   VERCEL_SCOPE:
     description: |
       Execute commands from a different Vercel team or user.

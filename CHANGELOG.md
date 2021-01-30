@@ -1,3 +1,11 @@
+## [v1.1.1] - 2021-01-30
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.1.1) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.1.0...v1.1.1) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.1.1) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.1.1.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.1.1.tar.gz))
+
+### Critical hotfixes
+
+- [`599be0b`](https://github.com/betahuhn/deploy-to-vercel-action/commit/599be0b)  Forgot to add config option
+
 ## [v1.1.0] - 2021-01-30
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.1.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.0.2...v1.1.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.1.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.1.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.1.0.tar.gz))

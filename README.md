@@ -49,16 +49,18 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 ```
 
+Before you can start using the Action, you have to setup a few Action inputs. Refer to the [configuration](#%EF%B8%8F-configuration) section below for more info.
+
 ## ⚙️ Action Inputs
 
 Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) takes:
 
 | Key | Value | Required | Default |
 | ------------- | ------------- | ------------- | ------------- |
-| `GITHUB_TOKEN` | GitHub Token, recommended to use a [Personal Access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) | **Yes** | N/A |
-| `VERCEL_TOKEN` | Vercel Token, generate one [here](https://vercel.com/account/tokens) | **Yes** | N/A |
-| `VERCEL_ORG_ID` | Id of your Vercel Organisation (more info [below]()) | **Yes** | N/A |
-| `VERCEL_PROJECT_ID` | Id of your Vercel project (more info [below]()) | **Yes** | N/A |
+| `GITHUB_TOKEN` | GitHub Token to use when creating deployment and comment (more info [below](#tokens)) | **Yes** | N/A |
+| `VERCEL_TOKEN` | Vercel Token to use with the Vercel CLI (more info [below](#tokens)) | **Yes** | N/A |
+| `VERCEL_ORG_ID` | Id of your Vercel Organisation (more info [below](#vercel-project)) | **Yes** | N/A |
+| `VERCEL_PROJECT_ID` | Id of your Vercel project (more info [below](#vercel-project)) | **Yes** | N/A |
 | `DEPLOY_PRS` | Deploy every PR to Vercel | **No** | true |
 | `GITHUB_DEPLOYMENT` | Create a deployment on GitHub | **No** | true |
 | `PRODUCTION` | Create a production deployment (has no impact on PR deployments). | **No** | true |
@@ -67,7 +69,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 
 ## 🛠️ Configuration
 
-In order for the Action to create a deployment on GitHub and Vercel you have to specify your GitHub and Vercel access token as well as your Vercel Org Id and your Vercel Project Id.
+In order for the Action to interact with GitHub and Vercel on your behalf, you have to specify your GitHub and Vercel Access Tokens as well as your Vercel Organisation and Project Id.
 
 ### Tokens
 

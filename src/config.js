@@ -67,6 +67,7 @@ const setDynamicVars = () => {
 	if (context.IS_PR) {
 		context.PR_NUMBER = github.context.payload.number
 		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : github.context.payload.pull_request.head.ref
+		context.PRODUCTION = false
 	} else {
 		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
 	}

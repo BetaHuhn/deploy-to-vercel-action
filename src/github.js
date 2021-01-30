@@ -2,7 +2,6 @@ const github = require('@actions/github')
 
 const {
 	GITHUB_TOKEN,
-	IS_PR,
 	USER,
 	REPOSITORY,
 	PRODUCTION,
@@ -23,7 +22,7 @@ const init = () => {
 			repo: REPOSITORY,
 			ref: REF,
 			required_contexts: [],
-			environment: PRODUCTION && !IS_PR ? 'Production' : 'Preview',
+			environment: PRODUCTION ? 'Production' : 'Preview',
 			description: 'Deploy to Vercel'
 		})
 

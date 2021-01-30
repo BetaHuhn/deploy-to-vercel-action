@@ -25454,6 +25454,11 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
+	DELETE_EXISTING_COMMENT: getVar({
+		key: 'DELETE_EXISTING_COMMENT',
+		type: 'boolean',
+		default: true
+	}),
 	PR_LABELS: getVar({
 		key: 'PR_LABELS',
 		default: [ 'deployed' ],

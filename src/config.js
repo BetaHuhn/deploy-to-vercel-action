@@ -52,27 +52,37 @@ const context = {
 		key: 'GITHUB_REPOSITORY',
 		required: true
 	}),
-	IS_PR: github.context.eventName === 'pull_request',
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
 }
 
 const setDynamicVars = () => {
-	if (context.IS_PR === true && context.DEPLOY_PRS === false)
-		core.setFailed(`Exiting, because "DEPLOY_PRS" option is set to false and Action was triggered from PR`)
-
 	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
 	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
-	context.SHA = context.RUNNING_LOCAL ? '' : github.context.sha
 
-	if (context.IS_PR) {
-		context.PR_NUMBER = github.context.payload.number
-		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : github.context.payload.pull_request.head.ref
-		context.PRODUCTION = false
-	} else {
-		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
+	// If running the action locally, use env vars instead of github.context
+	if (context.RUNNING_LOCAL) {
+		context.SHA = process.env.SHA
+		context.IS_PR = process.env.IS_PR === 'true' || false
+		context.PR_NUMBER = process.env.PR_NUMBER || undefined
+		context.REF = process.env.REF || 'refs/heads/master'
+		context.PRODUCTION = process.env.PRODUCTION === 'true' || !context.IS_PR
+
+		return
 	}
 
-	context.LOG_URL = context.IS_PR ? `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks` : `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
+	context.IS_PR = github.context.eventName === 'pull_request'
+	context.SHA = github.context.sha
+
+	// Use different values depending on if the Action was triggered by a PR
+	if (context.IS_PR) {
+		context.PRODUCTION = false
+		context.PR_NUMBER = github.context.payload.number
+		context.REF = github.context.payload.pull_request.head.ref
+		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks`
+	} else {
+		context.REF = github.context.ref
+		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
+	}
 }
 
 setDynamicVars()

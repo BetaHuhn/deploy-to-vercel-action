@@ -25,7 +25,7 @@ const run = async () => {
 		core.info(`Deployment #${ deployment.id } created`)
 
 		await github.updateDeployment('pending')
-		core.info(`Deployment #${ deployment.id } status changed to "${ status }"`)
+		core.info(`Deployment #${ deployment.id } status changed to "pending"`)
 	}
 
 	try {

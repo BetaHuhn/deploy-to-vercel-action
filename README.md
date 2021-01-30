@@ -21,20 +21,21 @@ GitHub Action to deploy your site with Vercel and create a GitHub deployment.
 
 ## 📚 Usage
 
-Create a `.yml` file in your `.github/workflows` folder (you can find more info about the structure in the [GitHub Docs](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)):
+Before you can start using the Action, you have to setup a few Action inputs. Refer to the [configuration](#%EF%B8%8F-configuration) section below for more info.
+
+Then create a `.yml` file in your `.github/workflows` folder (you can find more info about the structure in the [GitHub Docs](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)) and add the following:
 
 **.github/workflows/deploy.yml**
 
 ```yml
 name: Deploy CI
 on:
-  release:
-    types: [created]
+  push:
+    branches: [master]
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  vercel:
-    name: Deploy to vercel
+  deploy:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
@@ -49,7 +50,21 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 ```
 
-Before you can start using the Action, you have to setup a few Action inputs. Refer to the [configuration](#%EF%B8%8F-configuration) section below for more info.
+### Versioning
+
+To always use the latest version of the Action add the `latest` tag to the action name like this:
+
+```yml
+uses: BetaHuhn/deploy-to-vercel-action@latest
+```
+
+If you want to make sure that your Workflow doesn't suddenly break when a new major version is released, use the `v1` tag instead (recommended usage):
+
+```yml
+uses: BetaHuhn/deploy-to-vercel-action@v1
+```
+
+With the `v1` tag you will always get the latest non-breaking version which will include potential bug fixes in the future. If you use a specific version, make sure to regulary check if a new version is available, or enable Dependabot.
 
 ## ⚙️ Action Inputs
 

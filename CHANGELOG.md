@@ -1,3 +1,11 @@
+## [v1.0.2] - 2021-01-30
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.0.2) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.0.1...v1.0.2) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.0.2) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.0.2.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.0.2.tar.gz))
+
+### Bug fixes
+
+- [`4f1bfa5`](https://github.com/betahuhn/deploy-to-vercel-action/commit/4f1bfa5)  If PR don&#x27;t deploy to production
+
 ## [v1.0.1] - 2021-01-30
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.0.1) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.0.0...v1.0.1) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.0.1) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.0.1.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.0.1.tar.gz))

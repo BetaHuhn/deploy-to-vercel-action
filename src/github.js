@@ -47,7 +47,27 @@ const init = () => {
 		return deploymentStatus.data
 	}
 
-	// TODO: Check if pr already has a comment before creating a new one
+	const deleteExistingComment = async () => {
+		const { data } = await client.issues.listComments({
+			owner: USER,
+			repo: REPOSITORY,
+			issue_number: PR_NUMBER
+		})
+
+		if (data.length < 1) return
+
+		const comment = data.find((comment) => comment.body.includes('This pull request has been deployed to Vercel.'))
+		if (comment) {
+			await client.issues.deleteComment({
+				owner: USER,
+				repo: REPOSITORY,
+				comment_id: comment.id
+			})
+
+			return comment.id
+		}
+	}
+
 	const createComment = async (preview) => {
 		const body = `
 			This pull request has been deployed to Vercel.
@@ -84,6 +104,7 @@ const init = () => {
 		client,
 		createDeployment,
 		updateDeployment,
+		deleteExistingComment,
 		createComment,
 		addLabel
 	}

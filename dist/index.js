@@ -25459,6 +25459,11 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
+	DELETE_EXISTING_COMMENT: getVar({
+		key: 'DELETE_EXISTING_COMMENT',
+		type: 'boolean',
+		default: true
+	}),
 	PR_LABELS: getVar({
 		key: 'PR_LABELS',
 		default: [ 'deployed' ],
@@ -25475,27 +25480,37 @@ const context = {
 		key: 'GITHUB_REPOSITORY',
 		required: true
 	}),
-	IS_PR: github.context.eventName === 'pull_request',
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
 }
 
 const setDynamicVars = () => {
-	if (context.IS_PR === true && context.DEPLOY_PRS === false)
-		core.setFailed(`Exiting, because "DEPLOY_PRS" option is set to false and Action was triggered from PR`)
-
 	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
 	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
-	context.SHA = context.RUNNING_LOCAL ? '' : github.context.sha
 
-	if (context.IS_PR) {
-		context.PR_NUMBER = github.context.payload.number
-		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : github.context.payload.pull_request.head.ref
-		context.PRODUCTION = false
-	} else {
-		context.REF = context.RUNNING_LOCAL ? 'refs/heads/master' : github.context.ref
+	// If running the action locally, use env vars instead of github.context
+	if (context.RUNNING_LOCAL) {
+		context.SHA = process.env.SHA
+		context.IS_PR = process.env.IS_PR === 'true' || false
+		context.PR_NUMBER = process.env.PR_NUMBER || undefined
+		context.REF = process.env.REF || 'refs/heads/master'
+		context.PRODUCTION = process.env.PRODUCTION === 'true' || !context.IS_PR
+
+		return
 	}
 
-	context.LOG_URL = context.IS_PR ? `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks` : `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
+	context.IS_PR = github.context.eventName === 'pull_request'
+	context.SHA = github.context.sha
+
+	// Use different values depending on if the Action was triggered by a PR
+	if (context.IS_PR) {
+		context.PRODUCTION = false
+		context.PR_NUMBER = github.context.payload.number
+		context.REF = github.context.payload.pull_request.head.ref
+		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks`
+	} else {
+		context.REF = github.context.ref
+		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
+	}
 }
 
 setDynamicVars()
@@ -25567,7 +25582,27 @@ const init = () => {
 		return deploymentStatus.data
 	}
 
-	// TODO: Check if pr already has a comment before creating a new one
+	const deleteExistingComment = async () => {
+		const { data } = await client.issues.listComments({
+			owner: USER,
+			repo: REPOSITORY,
+			issue_number: PR_NUMBER
+		})
+
+		if (data.length < 1) return
+
+		const comment = data.find((comment) => comment.body.includes('This pull request has been deployed to Vercel.'))
+		if (comment) {
+			await client.issues.deleteComment({
+				owner: USER,
+				repo: REPOSITORY,
+				comment_id: comment.id
+			})
+
+			return comment.id
+		}
+	}
+
 	const createComment = async (preview) => {
 		const body = `
 			This pull request has been deployed to Vercel.
@@ -25604,6 +25639,7 @@ const init = () => {
 		client,
 		createDeployment,
 		updateDeployment,
+		deleteExistingComment,
 		createComment,
 		addLabel
 	}
@@ -25700,7 +25736,8 @@ const vercel = __nccwpck_require__(847)
 const {
 	GITHUB_DEPLOYMENT,
 	IS_PR,
-	PR_LABELS
+	PR_LABELS,
+	DELETE_EXISTING_COMMENT
 } = __nccwpck_require__(4570)
 
 const run = async () => {
@@ -25733,7 +25770,14 @@ const run = async () => {
 		}
 
 		if (IS_PR) {
-			core.info('Create comment on PR')
+			if (DELETE_EXISTING_COMMENT) {
+				core.info('Checking for existing comment on PR')
+
+				const deletedCommentId = await github.deleteExistingComment()
+				if (deletedCommentId) core.info(`Deleted existing comment #${ deletedCommentId }`)
+			}
+
+			core.info('Creating new comment on PR')
 
 			const comment = await github.createComment(previewUrl)
 			core.info(`Comment created: ${ comment.html_url }`)

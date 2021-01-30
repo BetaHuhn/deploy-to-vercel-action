@@ -12,7 +12,8 @@ const vercel = require('./vercel')
 const {
 	GITHUB_DEPLOYMENT,
 	IS_PR,
-	PR_LABELS
+	PR_LABELS,
+	DELETE_EXISTING_COMMENT
 } = require('./config')
 
 const run = async () => {
@@ -45,7 +46,14 @@ const run = async () => {
 		}
 
 		if (IS_PR) {
-			core.info('Create comment on PR')
+			if (DELETE_EXISTING_COMMENT) {
+				core.info('Checking for existing comment on PR')
+
+				const deletedCommentId = await github.deleteExistingComment()
+				if (deletedCommentId) core.info(`Deleted existing comment #${ deletedCommentId }`)
+			}
+
+			core.info('Creating new comment on PR')
 
 			const comment = await github.createComment(previewUrl)
 			core.info(`Comment created: ${ comment.html_url }`)

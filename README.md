@@ -110,6 +110,8 @@ Here are a few examples to help you get started!
 
 ### Basic Example
 
+The workflow below will run on every push to master and everytime a new PR is created or an existing PR changed. [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) will deploy the master branch to your Vercel production environment and comment on every PR with a preview link to the deployed PR.
+
 **.github/workflows/deploy.yml**
 
 ```yml
@@ -117,9 +119,10 @@ name: Deploy CI
 on:
   push:
     branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
-  vercel:
-    name: Deploy to vercel
+  deploy:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
@@ -133,6 +136,125 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 ```
+
+### Don't deploy to production
+
+The workflow below will run on every push to the staging branch. The Action will then deploy it to the preview environment on Vercel.
+
+**.github/workflows/deploy.yml**
+
+```yml
+name: Deploy staging CI
+on:
+  push:
+    branches: [ staging ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          PRODUCTION: false # Don't deploy to production environment
+```
+
+### Deploy on release
+
+The workflow below will only run after a new release is created on GitHub.
+
+**.github/workflows/deploy.yml**
+
+```yml
+name: Deploy CI
+on:
+  release:
+    types: [created]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+```
+
+### Wait for other CI jobs
+
+The workflow below will wait until your other CI jobs are completed until it will deploy your project to Vercel.
+
+**.github/workflows/deploy.yml**
+
+```yml
+name: Deploy CI
+on:
+  push:
+    branches: [master]
+jobs:
+  build:
+    # Your build job (can be anything you want)
+    # ...
+  lint:
+    # Your lint job (can be anything you want)
+    # ...
+  deploy:
+    needs: [build, lint] # wait for other jobs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+```
+
+### Deploy on schedule
+
+The workflow below will run at the given interval and deploy your project to Vercel.
+
+> Note: You can use any other action to change your project or run your own script before deploying those changes to Vercel
+
+**.github/workflows/deploy.yml**
+
+```yml
+name: Deploy CI
+on:
+  schedule:
+    - cron:  '0 8 * * 1' # will run every Monday at 8 am
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      # maybe do something else first
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+```
+
+If you have an idea for another usecase, [create a discussion](https://github.com/BetaHuhn/deploy-to-vercel-action/discussions/new?category=show-and-tell) and maybe I will add it here!
 
 ## 💻 Development
 

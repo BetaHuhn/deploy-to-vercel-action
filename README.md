@@ -78,6 +78,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_PROJECT_ID` | Id of your Vercel project (more info [below](#vercel-project)) | **Yes** | N/A |
 | `GITHUB_DEPLOYMENT` | Create a deployment on GitHub | **No** | true |
 | `PRODUCTION` | Create a production deployment (has no impact on PR deployments). | **No** | true |
+| `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR. | **No** | true |
 | `VERCEL_SCOPE` | Execute commands from a different Vercel team or user. | **No** | N/A |
 | `PR_LABELS` | Labels which will be added to the pull request once deployed. Set it to false to turn off | **No** | deployed |
 

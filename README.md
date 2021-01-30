@@ -4,7 +4,7 @@
 
 [![Node CI](https://github.com/BetaHuhn/deploy-to-vercel-action/workflows/Node%20CI/badge.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/actions?query=workflow%3A%22Node+CI%22) [![Release CI](https://github.com/BetaHuhn/deploy-to-vercel-action/workflows/Release%20CI/badge.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/actions?query=workflow%3A%22Release+CI%22) [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/blob/master/LICENSE) ![David](https://img.shields.io/david/betahuhn/deploy-to-vercel-action)
 
-GitHub Action to deploy your site with Vercel and create a GitHub deployment.
+Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.
 
 </div>
 
@@ -16,7 +16,7 @@ GitHub Action to deploy your site with Vercel and create a GitHub deployment.
 
 - Use GitHub Actions Events to control when to deploy to Vercel
 - Automatically deploy every Pull Request
-- Comment on Pull Request with a preview link
+- Comment on Pull Requests with a preview link
 - Create a deployment on GitHub
 
 ## 📚 Usage
@@ -64,7 +64,7 @@ If you want to make sure that your Workflow doesn't suddenly break when a new ma
 uses: BetaHuhn/deploy-to-vercel-action@v1
 ```
 
-With the `v1` tag you will always get the latest non-breaking version which will include potential bug fixes in the future. If you use a specific version, make sure to regulary check if a new version is available, or enable Dependabot.
+With the `v1` tag you will always get the latest non-breaking version which will include potential bug fixes in the future. If you use a specific version, make sure to regularly check if a new version is available, or enable Dependabot.
 
 ## ⚙️ Action Inputs
 

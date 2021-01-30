@@ -1,5 +1,5 @@
 name: 'Deploy to Vercel Action'
-description: 'GitHub Action to deploy your site with Vercel and create a GitHub deployment.'
+description: 'Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.'
 author: 'BetaHuhn'
 
 inputs:

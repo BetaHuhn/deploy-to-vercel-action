@@ -1,7 +1,7 @@
 {
   "name": "deploy-to-vercel-action",
   "version": "1.0.1",
-  "description": "GitHub Action to deploy your site with Vercel and create a GitHub deployment.",
+  "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint ./src",

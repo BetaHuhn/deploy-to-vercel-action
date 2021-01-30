@@ -1,6 +1,6 @@
 {
   "name": "deploy-to-vercel-action",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitHub Action to deploy your site with Vercel and create a GitHub deployment.",
   "main": "dist/index.js",
   "scripts": {

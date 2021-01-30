@@ -25449,18 +25449,8 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
-	DEPLOY_PRS: getVar({
-		key: 'DEPLOY_PRS',
-		type: 'boolean',
-		default: true
-	}),
 	GITHUB_DEPLOYMENT: getVar({
 		key: 'GITHUB_DEPLOYMENT',
-		type: 'boolean',
-		default: true
-	}),
-	DELETE_EXISTING_COMMENT: getVar({
-		key: 'DELETE_EXISTING_COMMENT',
 		type: 'boolean',
 		default: true
 	}),

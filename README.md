@@ -76,7 +76,6 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_TOKEN` | Vercel Token to use with the Vercel CLI (more info [below](#tokens)) | **Yes** | N/A |
 | `VERCEL_ORG_ID` | Id of your Vercel Organisation (more info [below](#vercel-project)) | **Yes** | N/A |
 | `VERCEL_PROJECT_ID` | Id of your Vercel project (more info [below](#vercel-project)) | **Yes** | N/A |
-| `DEPLOY_PRS` | Deploy every PR to Vercel | **No** | true |
 | `GITHUB_DEPLOYMENT` | Create a deployment on GitHub | **No** | true |
 | `PRODUCTION` | Create a production deployment (has no impact on PR deployments). | **No** | true |
 | `VERCEL_SCOPE` | Execute commands from a different Vercel team or user. | **No** | N/A |

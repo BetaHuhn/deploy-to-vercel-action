@@ -1,5 +1,5 @@
 const core = require('@actions/core')
-const { exec } = require('./helpers')
+const { exec, removeSchema } = require('./helpers')
 
 const {
 	VERCEL_TOKEN,
@@ -9,28 +9,50 @@ const {
 	VERCEL_PROJECT_ID
 } = require('./config')
 
-const setEnv = async () => {
+const init = () => {
+	core.info('Setting environment variables for Vercel CLI')
 	core.exportVariable('VERCEL_ORG_ID', VERCEL_ORG_ID)
 	core.exportVariable('VERCEL_PROJECT_ID', VERCEL_PROJECT_ID)
-}
 
-const deploy = async () => {
-	let command = `vercel -t ${ VERCEL_TOKEN }`
+	let deploymentUrl
 
-	if (VERCEL_SCOPE) {
-		command += ` --scope ${ VERCEL_SCOPE }`
+	const deploy = async () => {
+		let command = `vercel -t ${ VERCEL_TOKEN }`
+
+		if (VERCEL_SCOPE) {
+			command += ` --scope ${ VERCEL_SCOPE }`
+		}
+
+		if (PRODUCTION) {
+			command += ` --prod`
+		}
+
+		const output = await exec(command)
+
+		deploymentUrl = removeSchema(output)
+
+		return deploymentUrl
 	}
 
-	if (PRODUCTION) {
-		command += ` --prod`
+	const assignAlias = async (aliasUrl) => {
+		let command = `vercel alias set ${ deploymentUrl } ${ removeSchema(aliasUrl) } -t ${ VERCEL_TOKEN }`
+
+		if (VERCEL_SCOPE) {
+			command += ` --scope ${ VERCEL_SCOPE }`
+		}
+
+		const output = await exec(command)
+
+		return output
 	}
 
-	const output = await exec(command)
-
-	return output
+	return {
+		deploy,
+		assignAlias,
+		deploymentUrl
+	}
 }
 
 module.exports = {
-	deploy,
-	setEnv
+	init
 }

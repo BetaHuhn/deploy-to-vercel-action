@@ -25464,12 +25464,15 @@ const context = {
 		default: [ 'deployed' ],
 		type: 'array'
 	}),
+	ALIAS_DOMAINS: getVar({
+		key: 'ALIAS_DOMAINS',
+		type: 'array'
+	}),
+	PR_PREVIEW_DOMAIN: getVar({
+		key: 'PR_PREVIEW_DOMAIN'
+	}),
 	VERCEL_SCOPE: getVar({
 		key: 'VERCEL_SCOPE'
-	}),
-	VERCEL_ALIAS_DOMAINS: getVar({
-		key: 'VERCEL_ALIAS_DOMAINS',
-		type: 'array'
 	}),
 	GITHUB_REPOSITORY: getVar({
 		key: 'GITHUB_REPOSITORY',
@@ -25484,11 +25487,13 @@ const setDynamicVars = () => {
 
 	// If running the action locally, use env vars instead of github.context
 	if (context.RUNNING_LOCAL) {
-		context.SHA = process.env.SHA
+		context.SHA = process.env.SHA || 'XXXXXXX'
 		context.IS_PR = process.env.IS_PR === 'true' || false
 		context.PR_NUMBER = process.env.PR_NUMBER || undefined
 		context.REF = process.env.REF || 'refs/heads/master'
+		context.BRANCH = process.env.BRANCH || 'master'
 		context.PRODUCTION = process.env.PRODUCTION === 'true' || !context.IS_PR
+		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
 
 		return
 	}
@@ -25501,9 +25506,11 @@ const setDynamicVars = () => {
 		context.PRODUCTION = false
 		context.PR_NUMBER = github.context.payload.number
 		context.REF = github.context.payload.pull_request.head.ref
+		context.BRANCH = github.context.payload.pull_request.head.ref
 		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks`
 	} else {
 		context.REF = github.context.ref
+		context.BRANCH = github.context.ref.substr(11)
 		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
 	}
 }
@@ -25707,9 +25714,25 @@ const execCmd = (command) => {
 	})
 }
 
+const addSchema = (url) => {
+	const regex = /^https?:\/\//
+	if (!regex.test(url)) {
+		return `https://${ url }`
+	}
+
+	return url
+}
+
+const removeSchema = (url) => {
+	const regex = /^https?:\/\//
+	return url.replace(regex, '')
+}
+
 module.exports = {
 	exec: execCmd,
-	getVar
+	getVar,
+	addSchema,
+	removeSchema
 }
 
 /***/ }),
@@ -25719,20 +25742,21 @@ module.exports = {
 
 const core = __nccwpck_require__(2186)
 const Github = __nccwpck_require__(8396)
-const vercel = __nccwpck_require__(847)
-
-/*
-	To Do:
-	- if alias domain is specified add it to deployment
-	- check if PR already has comment
-	- handle multiple preview urls
-*/
+const Vercel = __nccwpck_require__(847)
+const { addSchema } = __nccwpck_require__(8505)
 
 const {
 	GITHUB_DEPLOYMENT,
+	USER,
+	REPOSITORY,
+	BRANCH,
+	PR_NUMBER,
+	SHA,
 	IS_PR,
 	PR_LABELS,
-	DELETE_EXISTING_COMMENT
+	DELETE_EXISTING_COMMENT,
+	PR_PREVIEW_DOMAIN,
+	ALIAS_DOMAINS
 } = __nccwpck_require__(4570)
 
 const run = async () => {
@@ -25740,8 +25764,8 @@ const run = async () => {
 
 	if (GITHUB_DEPLOYMENT) {
 		core.info('Creating GitHub deployment')
-
 		const deployment = await github.createDeployment()
+
 		core.info(`Deployment #${ deployment.id } created`)
 
 		await github.updateDeployment('pending')
@@ -25749,42 +25773,75 @@ const run = async () => {
 	}
 
 	try {
-		core.info('Setting environment variables for Vercel CLI')
-		await vercel.setEnv()
-
 		core.info(`Creating deployment with Vercel CLI`)
-		const result = await vercel.deploy()
+		const vercel = Vercel.init()
+		const deploymentUrl = await vercel.deploy()
 
-		// TODO: Handle multiple urls better
-		const previewUrl = Array.isArray(result) ? result[0] : result
-		core.info(`Successfully deployed to: ${ previewUrl }`)
+		const previewUrls = []
+		if (IS_PR && PR_PREVIEW_DOMAIN) {
+			core.info(`Assigning custom preview domain to PR`)
+
+			const alias = PR_PREVIEW_DOMAIN
+				.replace('{USER}', USER)
+				.replace('{REPO}', REPOSITORY)
+				.replace('{BRANCH}', BRANCH)
+				.replace('{PR}', PR_NUMBER)
+				.replace('{SHA}', SHA.substring(0, 7))
+				.toLowerCase()
+
+			await vercel.assignAlias(alias)
+
+			previewUrls.push(addSchema(alias))
+		}
+
+		if (!IS_PR && ALIAS_DOMAINS) {
+			core.info(`Assigning custom domains to Vercel deployment`)
+
+			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
+				const alias = ALIAS_DOMAINS[i]
+					.replace('{USER}', USER)
+					.replace('{REPO}', REPOSITORY)
+					.replace('{BRANCH}', BRANCH)
+					.replace('{SHA}', SHA.substring(0, 7))
+					.toLowerCase()
+
+				await vercel.assignAlias(alias)
+
+				previewUrls.push(addSchema(alias))
+			}
+		}
+
+		previewUrls.push(addSchema(deploymentUrl))
+		core.info(`Deployment available at: ${ previewUrls.join(', ') }`)
 
 		if (GITHUB_DEPLOYMENT) {
 			core.info('Changing GitHub deployment status to "success"')
-			await github.updateDeployment('success', previewUrl)
+			await github.updateDeployment('success', previewUrls[0])
 		}
 
 		if (IS_PR) {
 			if (DELETE_EXISTING_COMMENT) {
 				core.info('Checking for existing comment on PR')
-
 				const deletedCommentId = await github.deleteExistingComment()
+
 				if (deletedCommentId) core.info(`Deleted existing comment #${ deletedCommentId }`)
 			}
 
 			core.info('Creating new comment on PR')
+			const comment = await github.createComment(previewUrls[0])
 
-			const comment = await github.createComment(previewUrl)
 			core.info(`Comment created: ${ comment.html_url }`)
+
+			if (PR_LABELS) {
+				core.info('Adding label(s) to PR')
+				const labels = await github.addLabel()
+
+				core.info(`Label(s) "${ labels.map((label) => label.name).join(', ') }" added`)
+			}
 		}
 
-		if (IS_PR && PR_LABELS) {
-			core.info('Adding label(s) to PR')
-			const labels = await github.addLabel()
-			core.info(`Label(s) "${ labels.map((label) => label.name).join(', ') }" added`)
-		}
-
-		core.setOutput('PREVIEW_URL', previewUrl)
+		core.setOutput('PREVIEW_URL', previewUrls[0])
+		core.setOutput('DEPLOYMENT_URLS', previewUrls)
 		core.setOutput('DEPLOYMENT_CREATED', GITHUB_DEPLOYMENT)
 		core.setOutput('COMMENT_CREATED', IS_PR)
 
@@ -25808,7 +25865,7 @@ run()
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(2186)
-const { exec } = __nccwpck_require__(8505)
+const { exec, removeSchema } = __nccwpck_require__(8505)
 
 const {
 	VERCEL_TOKEN,
@@ -25818,30 +25875,52 @@ const {
 	VERCEL_PROJECT_ID
 } = __nccwpck_require__(4570)
 
-const setEnv = async () => {
+const init = () => {
+	core.info('Setting environment variables for Vercel CLI')
 	core.exportVariable('VERCEL_ORG_ID', VERCEL_ORG_ID)
 	core.exportVariable('VERCEL_PROJECT_ID', VERCEL_PROJECT_ID)
-}
 
-const deploy = async () => {
-	let command = `vercel -t ${ VERCEL_TOKEN }`
+	let deploymentUrl
 
-	if (VERCEL_SCOPE) {
-		command += ` --scope ${ VERCEL_SCOPE }`
+	const deploy = async () => {
+		let command = `vercel -t ${ VERCEL_TOKEN }`
+
+		if (VERCEL_SCOPE) {
+			command += ` --scope ${ VERCEL_SCOPE }`
+		}
+
+		if (PRODUCTION) {
+			command += ` --prod`
+		}
+
+		const output = await exec(command)
+
+		deploymentUrl = removeSchema(output)
+
+		return deploymentUrl
 	}
 
-	if (PRODUCTION) {
-		command += ` --prod`
+	const assignAlias = async (aliasUrl) => {
+		let command = `vercel alias set ${ deploymentUrl } ${ removeSchema(aliasUrl) } -t ${ VERCEL_TOKEN }`
+
+		if (VERCEL_SCOPE) {
+			command += ` --scope ${ VERCEL_SCOPE }`
+		}
+
+		const output = await exec(command)
+
+		return output
 	}
 
-	const output = await exec(command)
-
-	return output
+	return {
+		deploy,
+		assignAlias,
+		deploymentUrl
+	}
 }
 
 module.exports = {
-	deploy,
-	setEnv
+	init
 }
 
 /***/ }),

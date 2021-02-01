@@ -41,12 +41,15 @@ const context = {
 		default: [ 'deployed' ],
 		type: 'array'
 	}),
+	ALIAS_DOMAINS: getVar({
+		key: 'ALIAS_DOMAINS',
+		type: 'array'
+	}),
+	PR_PREVIEW_DOMAIN: getVar({
+		key: 'PR_PREVIEW_DOMAIN'
+	}),
 	VERCEL_SCOPE: getVar({
 		key: 'VERCEL_SCOPE'
-	}),
-	VERCEL_ALIAS_DOMAINS: getVar({
-		key: 'VERCEL_ALIAS_DOMAINS',
-		type: 'array'
 	}),
 	GITHUB_REPOSITORY: getVar({
 		key: 'GITHUB_REPOSITORY',
@@ -61,11 +64,13 @@ const setDynamicVars = () => {
 
 	// If running the action locally, use env vars instead of github.context
 	if (context.RUNNING_LOCAL) {
-		context.SHA = process.env.SHA
+		context.SHA = process.env.SHA || 'XXXXXXX'
 		context.IS_PR = process.env.IS_PR === 'true' || false
 		context.PR_NUMBER = process.env.PR_NUMBER || undefined
 		context.REF = process.env.REF || 'refs/heads/master'
+		context.BRANCH = process.env.BRANCH || 'master'
 		context.PRODUCTION = process.env.PRODUCTION === 'true' || !context.IS_PR
+		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
 
 		return
 	}
@@ -78,9 +83,11 @@ const setDynamicVars = () => {
 		context.PRODUCTION = false
 		context.PR_NUMBER = github.context.payload.number
 		context.REF = github.context.payload.pull_request.head.ref
+		context.BRANCH = github.context.payload.pull_request.head.ref
 		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks`
 	} else {
 		context.REF = github.context.ref
+		context.BRANCH = github.context.ref.substr(11)
 		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
 	}
 }

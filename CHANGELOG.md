@@ -1,3 +1,11 @@
+## [v1.2.2] - 2021-02-01
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.2.2) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.2.1...v1.2.2) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.2.2) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.2.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.2.tar.gz))
+
+### Bug fixes
+
+- [`a4a967d`](https://github.com/betahuhn/deploy-to-vercel-action/commit/a4a967d)  Disable auto merging when creating GH deployment
+
 ## [v1.2.1] - 2021-02-01
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.2.1) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.2.0...v1.2.1) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.2.1) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.1.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.1.tar.gz))

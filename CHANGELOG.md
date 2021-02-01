@@ -1,3 +1,11 @@
+## [v1.2.3] - 2021-02-01
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.2.3) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.2.2...v1.2.3) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.2.3) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.3.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.3.tar.gz))
+
+### Bug fixes
+
+- [`512a553`](https://github.com/betahuhn/deploy-to-vercel-action/commit/512a553)  Correctly parse boolean input even if it is string
+
 ## [v1.2.2] - 2021-02-01
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.2.2) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.2.1...v1.2.2) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.2.2) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.2.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.2.tar.gz))

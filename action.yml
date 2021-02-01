@@ -35,18 +35,24 @@ inputs:
     description: |
       Labels which will be added to the pull request once deployed. Set it to false to turn off (default: deployed).
     required: false
+  ALIAS_DOMAINS:
+    description: |
+      Assign alias domain(s) to the deployment.
+    required: false
+  PR_PREVIEW_DOMAIN:
+    description: |
+      Assign a custom domain to the PR preview deployment.
+    required: false
   VERCEL_SCOPE:
     description: |
       Execute commands from a different Vercel team or user.
     required: false
-  VERCEL_ALIAS_DOMAINS:
-    description: |
-      Assign alias domain(s) to this deployment (must be configured in the project).
-    required: false
 
 outputs:
   PREVIEW_URL:
-    description: 'Vercel Deployment preview URL'
+    description: 'Main deployment preview URL'
+  DEPLOYMENT_URLS:
+    description: 'All assigned deployment URLs'
   DEPLOYMENT_CREATED:
     description: 'True if a GitHub deployment was created.'
   COMMENT_CREATED:

@@ -29,6 +29,6 @@
   "devDependencies": {
     "@betahuhn/config": "^1.0.2",
     "@vercel/ncc": "^0.26.2",
-    "eslint": "^7.17.0"
+    "eslint": "^7.19.0"
   }
 }

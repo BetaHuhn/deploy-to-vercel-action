@@ -25560,7 +25560,8 @@ const init = () => {
 			ref: REF,
 			required_contexts: [],
 			environment: PRODUCTION ? 'Production' : 'Preview',
-			description: 'Deploy to Vercel'
+			description: 'Deploy to Vercel',
+			auto_merge: false
 		})
 
 		deploymentId = deployment.data.id

@@ -10,7 +10,7 @@ Deploy your project to Vercel using GitHub Actions. Supports PR previews and Git
 
 ## 👋 Introduction
 
-[deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) uses GitHub Actions to deploy your project/site to [Vercel](https://vercel.com). It offers more customization than Vercel's GitHub integration in terms of when to deploy your site. Using GitHub Actions [Events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows) you can choose to deploy every commit, only on new releases or even on a cron schedule. The Action can also deploy every PR and comment on it with the preview url. It uses the Vercel CLI and can automatically create a Deployment on GitHub as well.
+[deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) uses GitHub Actions to deploy your project/site to [Vercel](https://vercel.com). It offers more customization than Vercel's GitHub integration in terms of when to deploy your site. Using GitHub Actions [Events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows) you can choose to deploy every commit, only on new releases or even on a cron schedule. The Action can also deploy every PR and comment on it with a custom preview url. It uses the Vercel CLI and can automatically create a Deployment on GitHub as well.
 
 ## 🚀 Features
 
@@ -18,6 +18,7 @@ Deploy your project to Vercel using GitHub Actions. Supports PR previews and Git
 - Automatically deploy every Pull Request
 - Comment on Pull Requests with a preview link
 - Create a deployment on GitHub
+- Assign custom dynamic domains to each deployment or Pull Request
 
 ## 📚 Usage
 
@@ -77,10 +78,12 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_ORG_ID` | Id of your Vercel Organisation (more info [below](#vercel-project)) | **Yes** | N/A |
 | `VERCEL_PROJECT_ID` | Id of your Vercel project (more info [below](#vercel-project)) | **Yes** | N/A |
 | `GITHUB_DEPLOYMENT` | Create a deployment on GitHub | **No** | true |
-| `PRODUCTION` | Create a production deployment (has no impact on PR deployments). | **No** | true |
-| `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR. | **No** | true |
-| `VERCEL_SCOPE` | Execute commands from a different Vercel team or user. | **No** | N/A |
+| `PRODUCTION` | Create a production deployment (has no impact on PR deployments) | **No** | true |
+| `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
 | `PR_LABELS` | Labels which will be added to the pull request once deployed. Set it to false to turn off | **No** | deployed |
+| `ALIAS_DOMAINS` | Alias domain(s) to assign to the deployment (more info [below](#custom-domains)) | **No** | N/A |
+| `PR_PREVIEW_DOMAIN` | Custom preview domain for PRs (more info [below](#custom-domains)) | **No** | N/A |
+| `VERCEL_SCOPE` | Execute commands from a different Vercel team or user | **No** | N/A |
 
 ## 🛠️ Configuration
 
@@ -103,6 +106,42 @@ Once set up, a new `.vercel` directory will be added to your directory. The `.ve
 You can then specify them as `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` in the Actions inputs.
 
 > **Note:** It is recommneded to set them as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+
+### Custom Domains
+
+Instead of using the auto generated domain (`name-randomString.vercel.app`) for each deployment, you can specify custom domains. Use the `ALIAS_DOMAINS` input and seperate each domain on a new line like this:
+
+```yml
+ALIAS_DOMAINS: |
+  example.com
+  example.now.sh
+```
+
+> **Note:** You can use `*.vercel.app` or `*.now.sh` without configuration, but any other custom domain needs to be configured in the Vercel Dashboard first
+
+You can also use any of the following variables anywhere in the domain:
+
+- `{USER}` - the owner of the repository the action was executed in
+- `{REPO}` - the name of the repository the action was executed in
+- `{BRANCH}` - the branch in which the action was triggered
+- `{SHA}` - the most recent commit's sha
+- `{PR}` - the number of the pr the action was triggered from
+
+Examples:
+
+```yml
+ALIAS_DOMAINS: |
+  {BRANCH}.example.com
+  {USER}-{REPO}-{SHA}.now.sh
+```
+
+This is especially useful if you want to change the PR preview domain with the `PR_PREVIEW_DOMAIN` input:
+
+```yml
+PR_PREVIEW_DOMAIN: "{REPO}-{PR}.now.sh"
+```
+
+> **Note:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN` 
 
 ## 📖 Examples
 
@@ -190,6 +229,39 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+```
+
+### Assign alias domains
+
+If you want, [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) can assign multiple domains to each deployment and also change the PR preview domain:
+
+**.github/workflows/deploy.yml**
+
+```yml
+name: Deploy CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          ALIAS_DOMAINS: |
+            example.com
+            {BRANCH}.example.com
+          PR_PREVIEW_DOMAIN: "{REPO}-{PR}.now.sh"
 ```
 
 ### Wait for other CI jobs

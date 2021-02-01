@@ -25688,13 +25688,14 @@ const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
 
 	if (coreVar !== undefined && coreVar.length >= 1) {
 		if (type === 'array') return coreVar.split('\n')
+		if (type === 'boolean') return String(coreVar) === 'true'
 
 		return coreVar
 	}
 
 	if (envVar !== undefined && envVar.length >= 1) {
 		if (type === 'array') return envVar.split(',')
-		if (type === 'boolean') return envVar === 'true'
+		if (type === 'boolean') return String(envVar) === 'true'
 
 		return envVar
 	}

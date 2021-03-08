@@ -1,3 +1,7 @@
+## [v1.2.7] - 2021-03-08
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.2.7) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.2.6...v1.2.7) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.2.7) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.7.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.7.tar.gz))
+
 ## [v1.2.6] - 2021-03-01
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.2.6) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.2.5...v1.2.6) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.2.6) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.6.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.6.tar.gz))

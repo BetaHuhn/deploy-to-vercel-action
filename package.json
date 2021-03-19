@@ -23,7 +23,7 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/exec": "^1.0.4",
-    "@actions/github": "^2.2.0",
+    "@actions/github": "^4.0.0",
     "dotenv": "^8.2.0",
     "got": "^11.8.2",
     "vercel": "^21.3.3"

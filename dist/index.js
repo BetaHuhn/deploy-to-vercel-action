@@ -25464,6 +25464,11 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
+	DEPLOY_PR_FROM_FORK: getVar({
+		key: 'DEPLOY_PR_FROM_FORK',
+		type: 'boolean',
+		default: false
+	}),
 	PR_LABELS: getVar({
 		key: 'PR_LABELS',
 		default: [ 'deployed' ],
@@ -25500,6 +25505,7 @@ const setDynamicVars = () => {
 		context.PRODUCTION = process.env.PRODUCTION === 'true' || !context.IS_PR
 		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
 		context.ACTOR = process.env.ACTOR || context.USER
+		context.IS_FORK = process.env.IS_FORK === 'true' || false
 
 		return
 	}
@@ -25515,6 +25521,7 @@ const setDynamicVars = () => {
 		context.REF = github.context.payload.pull_request.head.ref
 		context.BRANCH = github.context.payload.pull_request.head.ref
 		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks`
+		context.IS_FORK = github.context.payload.pull_request.head.repo.full_name !== context.GITHUB_REPOSITORY
 	} else {
 		context.REF = github.context.ref
 		context.BRANCH = github.context.ref.substr(11)
@@ -25613,14 +25620,7 @@ const init = () => {
 		}
 	}
 
-	const createComment = async (preview) => {
-		const body = `
-			This pull request has been deployed to Vercel.
-
-			✅ Preview: ${ preview }
-			🔍 Logs: ${ LOG_URL }
-		`
-
+	const createComment = async (body) => {
 		// Remove indentation
 		const dedented = body.replace(/^[^\S\n]+/gm, '')
 
@@ -25646,13 +25646,17 @@ const init = () => {
 	}
 
 	const getCommit = async () => {
-		const commit = await client.repos.getCommit({
+		const { data } = await client.repos.getCommit({
 			owner: USER,
 			repo: REPOSITORY,
 			ref: REF
 		})
 
-		return commit.data
+		return {
+			authorName: data.commit.author.name,
+			authorLogin: data.author.login,
+			commitMessage: data.commit.message
+		}
 	}
 
 	return {
@@ -25777,11 +25781,34 @@ const {
 	DELETE_EXISTING_COMMENT,
 	PR_PREVIEW_DOMAIN,
 	ALIAS_DOMAINS,
-	ATTACH_COMMIT_METADATA
+	ATTACH_COMMIT_METADATA,
+	LOG_URL,
+	DEPLOY_PR_FROM_FORK,
+	IS_FORK,
+	ACTOR
 } = __nccwpck_require__(4570)
 
 const run = async () => {
 	const github = Github.init()
+
+	// Refuse to deploy an untrusted fork
+	if (IS_FORK === true && DEPLOY_PR_FROM_FORK === false) {
+		core.warning(`PR is from fork and DEPLOY_PR_FROM_FORK is set to false`)
+		const body = `
+			Refusing to deploy this Pull Request to Vercel because it originates from @${ ACTOR }'s fork.
+
+			**@${ USER }** To allow this behaviour set \`DEPLOY_PR_FROM_FORK\` to true ([more info](https://github.com/BetaHuhn/deploy-to-vercel-action#%EF%B8%8F-configuration)).
+		`
+
+		const comment = await github.createComment(body)
+		core.info(`Comment created: ${ comment.html_url }`)
+
+		core.setOutput('DEPLOYMENT_CREATED', false)
+		core.setOutput('COMMENT_CREATED', true)
+
+		core.info('Done')
+		return
+	}
 
 	if (GITHUB_DEPLOYMENT) {
 		core.info('Creating GitHub deployment')
@@ -25793,14 +25820,11 @@ const run = async () => {
 		core.info(`Deployment #${ deployment.id } status changed to "pending"`)
 	}
 
-	let commit
-	if (ATTACH_COMMIT_METADATA) {
-		commit = await github.getCommit()
-	}
-
 	try {
 		core.info(`Creating deployment with Vercel CLI`)
 		const vercel = Vercel.init()
+
+		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
 
 		const previewUrls = []
@@ -25854,8 +25878,14 @@ const run = async () => {
 			}
 
 			core.info('Creating new comment on PR')
-			const comment = await github.createComment(previewUrls[0])
+			const body = `
+				This pull request has been deployed to Vercel.
 
+				✅ Preview: ${ previewUrls[0] }
+				🔍 Logs: ${ LOG_URL }
+			`
+
+			const comment = await github.createComment(body)
 			core.info(`Comment created: ${ comment.html_url }`)
 
 			if (PR_LABELS) {
@@ -25868,7 +25898,7 @@ const run = async () => {
 
 		core.setOutput('PREVIEW_URL', previewUrls[0])
 		core.setOutput('DEPLOYMENT_URLS', previewUrls)
-		core.setOutput('DEPLOYMENT_CREATED', GITHUB_DEPLOYMENT)
+		core.setOutput('DEPLOYMENT_CREATED', true)
 		core.setOutput('COMMENT_CREATED', IS_PR)
 
 		core.info('Done')
@@ -25912,7 +25942,7 @@ const init = () => {
 
 	let deploymentUrl
 
-	const deploy = async (commitData) => {
+	const deploy = async (commit) => {
 		let command = `vercel -t ${ VERCEL_TOKEN }`
 
 		if (VERCEL_SCOPE) {
@@ -25923,11 +25953,11 @@ const init = () => {
 			command += ` --prod`
 		}
 
-		if (commitData) {
+		if (commit) {
 			const metadata = [
-				`githubCommitAuthorName=${ commitData.commit.author.name }`,
-				`githubCommitAuthorLogin=${ commitData.author.login }`,
-				`githubCommitMessage=${ commitData.commit.message }`,
+				`githubCommitAuthorName=${ commit.authorName }`,
+				`githubCommitAuthorLogin=${ commit.authorLogin }`,
+				`githubCommitMessage=${ commit.commitMessage }`,
 				`githubCommitOrg=${ USER }`,
 				`githubCommitRepo=${ REPOSITORY }`,
 				`githubCommitRef=${ REF }`,

@@ -15,11 +15,34 @@ const {
 	DELETE_EXISTING_COMMENT,
 	PR_PREVIEW_DOMAIN,
 	ALIAS_DOMAINS,
-	ATTACH_COMMIT_METADATA
+	ATTACH_COMMIT_METADATA,
+	LOG_URL,
+	DEPLOY_PR_FROM_FORK,
+	IS_FORK,
+	ACTOR
 } = require('./config')
 
 const run = async () => {
 	const github = Github.init()
+
+	// Refuse to deploy an untrusted fork
+	if (IS_FORK === true && DEPLOY_PR_FROM_FORK === false) {
+		core.warning(`PR is from fork and DEPLOY_PR_FROM_FORK is set to false`)
+		const body = `
+			Refusing to deploy this Pull Request to Vercel because it originates from @${ ACTOR }'s fork.
+
+			**@${ USER }** To allow this behaviour set \`DEPLOY_PR_FROM_FORK\` to true ([more info](https://github.com/BetaHuhn/deploy-to-vercel-action#%EF%B8%8F-configuration)).
+		`
+
+		const comment = await github.createComment(body)
+		core.info(`Comment created: ${ comment.html_url }`)
+
+		core.setOutput('DEPLOYMENT_CREATED', false)
+		core.setOutput('COMMENT_CREATED', true)
+
+		core.info('Done')
+		return
+	}
 
 	if (GITHUB_DEPLOYMENT) {
 		core.info('Creating GitHub deployment')
@@ -31,14 +54,11 @@ const run = async () => {
 		core.info(`Deployment #${ deployment.id } status changed to "pending"`)
 	}
 
-	let commit
-	if (ATTACH_COMMIT_METADATA) {
-		commit = await github.getCommit()
-	}
-
 	try {
 		core.info(`Creating deployment with Vercel CLI`)
 		const vercel = Vercel.init()
+
+		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
 
 		const previewUrls = []
@@ -92,8 +112,14 @@ const run = async () => {
 			}
 
 			core.info('Creating new comment on PR')
-			const comment = await github.createComment(previewUrls[0])
+			const body = `
+				This pull request has been deployed to Vercel.
 
+				✅ Preview: ${ previewUrls[0] }
+				🔍 Logs: ${ LOG_URL }
+			`
+
+			const comment = await github.createComment(body)
 			core.info(`Comment created: ${ comment.html_url }`)
 
 			if (PR_LABELS) {
@@ -106,7 +132,7 @@ const run = async () => {
 
 		core.setOutput('PREVIEW_URL', previewUrls[0])
 		core.setOutput('DEPLOYMENT_URLS', previewUrls)
-		core.setOutput('DEPLOYMENT_CREATED', GITHUB_DEPLOYMENT)
+		core.setOutput('DEPLOYMENT_CREATED', true)
 		core.setOutput('COMMENT_CREATED', IS_PR)
 
 		core.info('Done')

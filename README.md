@@ -33,7 +33,7 @@ name: Deploy CI
 on:
   push:
     branches: [master]
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
 jobs:
   deploy:
@@ -81,6 +81,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `PRODUCTION` | Create a production deployment (has no impact on PR deployments) | **No** | true |
 | `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
 | `ATTACH_COMMIT_METADATA` | Attach metadata about the commit to the Vercel deployment | **No** | true |
+| `DEPLOY_PR_FROM_FORK` | Allow PRs which originate from a fork to be deployed (more info [below](#deploying-a-pr)) | **No** | false |
 | `PR_LABELS` | Labels which will be added to the pull request once deployed. Set it to false to turn off | **No** | deployed |
 | `ALIAS_DOMAINS` | Alias domain(s) to assign to the deployment (more info [below](#custom-domains)) | **No** | N/A |
 | `PR_PREVIEW_DOMAIN` | Custom preview domain for PRs (more info [below](#custom-domains)) | **No** | N/A |
@@ -144,6 +145,14 @@ PR_PREVIEW_DOMAIN: "{REPO}-{PR}.now.sh"
 
 > **Note:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN` 
 
+### Deploying a PR
+
+If this action is triggered by a Pull Request it will create a preview deployment on Vercel and assign the specified `PR_PREVIEW_DOMAIN` domain.
+
+By default this action will not deploy a PR if it originates from a fork (this is also the default behaviour of [Vercel for GitHub](https://vercel.com/docs/git/vercel-for-github?query=git#deployment-authorizations-for-forks)). If you want to deploy a PR from a fork, you can set `DEPLOY_PR_FROM_FORK` to true.
+
+> **Note:** If you want to deploy a PR made from a fork or by [Dependabot](https://github.com/dependabot), make sure to use the `pull_request_target` event instead of the `pull_request` event, as GitHub doesn't pass any secrets to workflows triggered by `pull_request` in those two cases (more info in GitHub's [docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-events-for-forked-repositories)).
+
 ## 📖 Examples
 
 Here are a few examples to help you get started!
@@ -159,7 +168,7 @@ name: Deploy CI
 on:
   push:
     branches: [master]
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
 jobs:
   deploy:
@@ -243,7 +252,7 @@ name: Deploy CI
 on:
   push:
     branches: [master]
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
 jobs:
   deploy:

@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint ./src",
-    "start": "node src/index.js",
+    "dev": "node src/index.js",
+    "start": "node dist/index.js",
     "build": "ncc build src/index.js -o dist"
   },
   "repository": {

@@ -35,6 +35,10 @@ inputs:
     description: |
       Attach metadata about the commit to the Vercel deployment (default: true).
     required: false
+  DEPLOY_PR_FROM_FORK:
+    description: |
+      Allow PRs which originate from a fork to be deployed (default: false).
+    required: false
   PR_LABELS:
     description: |
       Labels which will be added to the pull request once deployed. Set it to false to turn off (default: deployed).
@@ -58,7 +62,7 @@ outputs:
   DEPLOYMENT_URLS:
     description: 'All assigned deployment URLs'
   DEPLOYMENT_CREATED:
-    description: 'True if a GitHub deployment was created.'
+    description: 'True if a Vercel deployment was created.'
   COMMENT_CREATED:
     description: 'True if a comment was created on the PR or commit.'
 

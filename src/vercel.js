@@ -20,7 +20,7 @@ const init = () => {
 
 	let deploymentUrl
 
-	const deploy = async (commitData) => {
+	const deploy = async (commit) => {
 		let command = `vercel -t ${ VERCEL_TOKEN }`
 
 		if (VERCEL_SCOPE) {
@@ -31,11 +31,11 @@ const init = () => {
 			command += ` --prod`
 		}
 
-		if (commitData) {
+		if (commit) {
 			const metadata = [
-				`githubCommitAuthorName=${ commitData.commit.author.name }`,
-				`githubCommitAuthorLogin=${ commitData.author.login }`,
-				`githubCommitMessage=${ commitData.commit.message }`,
+				`githubCommitAuthorName=${ commit.authorName }`,
+				`githubCommitAuthorLogin=${ commit.authorLogin }`,
+				`githubCommitMessage=${ commit.commitMessage }`,
 				`githubCommitOrg=${ USER }`,
 				`githubCommitRepo=${ REPOSITORY }`,
 				`githubCommitRef=${ REF }`,

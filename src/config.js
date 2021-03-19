@@ -41,6 +41,11 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
+	DEPLOY_PR_FROM_FORK: getVar({
+		key: 'DEPLOY_PR_FROM_FORK',
+		type: 'boolean',
+		default: false
+	}),
 	PR_LABELS: getVar({
 		key: 'PR_LABELS',
 		default: [ 'deployed' ],
@@ -77,6 +82,7 @@ const setDynamicVars = () => {
 		context.PRODUCTION = process.env.PRODUCTION === 'true' || !context.IS_PR
 		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
 		context.ACTOR = process.env.ACTOR || context.USER
+		context.IS_FORK = process.env.IS_FORK === 'true' || false
 
 		return
 	}
@@ -92,6 +98,7 @@ const setDynamicVars = () => {
 		context.REF = github.context.payload.pull_request.head.ref
 		context.BRANCH = github.context.payload.pull_request.head.ref
 		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks`
+		context.IS_FORK = github.context.payload.pull_request.head.repo.full_name !== context.GITHUB_REPOSITORY
 	} else {
 		context.REF = github.context.ref
 		context.BRANCH = github.context.ref.substr(11)

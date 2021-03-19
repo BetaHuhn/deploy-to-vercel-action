@@ -69,14 +69,7 @@ const init = () => {
 		}
 	}
 
-	const createComment = async (preview) => {
-		const body = `
-			This pull request has been deployed to Vercel.
-
-			✅ Preview: ${ preview }
-			🔍 Logs: ${ LOG_URL }
-		`
-
+	const createComment = async (body) => {
 		// Remove indentation
 		const dedented = body.replace(/^[^\S\n]+/gm, '')
 
@@ -102,13 +95,17 @@ const init = () => {
 	}
 
 	const getCommit = async () => {
-		const commit = await client.repos.getCommit({
+		const { data } = await client.repos.getCommit({
 			owner: USER,
 			repo: REPOSITORY,
 			ref: REF
 		})
 
-		return commit.data
+		return {
+			authorName: data.commit.author.name,
+			authorLogin: data.author.login,
+			commitMessage: data.commit.message
+		}
 	}
 
 	return {

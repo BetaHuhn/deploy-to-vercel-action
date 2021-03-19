@@ -14,11 +14,12 @@ Deploy your project to Vercel using GitHub Actions. Supports PR previews and Git
 
 ## 🚀 Features
 
-- Use GitHub Actions Events to control when to deploy to Vercel
-- Automatically deploy every Pull Request
-- Comment on Pull Requests with a preview link
+- Use GitHub Actions events to control when to deploy to Vercel
+- Automatically deploy every pull request
+- Comment on pull requests with a preview link
 - Create a deployment on GitHub
-- Assign custom dynamic domains to each deployment or Pull Request
+- Assign custom dynamic domains to each deployment or pr
+- Can deploy Dependabot PRs and optionally even PRs made from forks
 
 ## 📚 Usage
 

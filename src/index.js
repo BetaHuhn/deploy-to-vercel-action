@@ -121,7 +121,7 @@ const run = async () => {
 				<table>
 					<tr>
 						<td><strong>Latest commit:</strong></td>
-						<td><code>${ SHA }</code></td>
+						<td><code>${ SHA.substring(0, 7) }</code></td>
 					</tr>
 					<tr>
 						<td><strong>✅ Preview:</strong></td>

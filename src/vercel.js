@@ -1,4 +1,5 @@
 const core = require('@actions/core')
+const got = require('got')
 const { exec, removeSchema } = require('./helpers')
 
 const {
@@ -69,10 +70,24 @@ const init = () => {
 		return output
 	}
 
+	const getDeployment = async () => {
+		const url = `https://api.vercel.com/v11/now/deployments/get?url=${ deploymentUrl }`
+		const options = {
+			headers: {
+				Authorization: `Bearer ${ VERCEL_TOKEN }`
+			}
+		}
+
+		const res = await got(url, options).json()
+
+		return res
+	}
+
 	return {
 		deploy,
 		assignAlias,
-		deploymentUrl
+		deploymentUrl,
+		getDeployment
 	}
 }
 

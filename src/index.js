@@ -46,12 +46,12 @@ const run = async () => {
 
 	if (GITHUB_DEPLOYMENT) {
 		core.info('Creating GitHub deployment')
-		const deployment = await github.createDeployment()
+		const ghDeployment = await github.createDeployment()
 
-		core.info(`Deployment #${ deployment.id } created`)
+		core.info(`Deployment #${ ghDeployment.id } created`)
 
 		await github.updateDeployment('pending')
-		core.info(`Deployment #${ deployment.id } status changed to "pending"`)
+		core.info(`Deployment #${ ghDeployment.id } status changed to "pending"`)
 	}
 
 	try {
@@ -61,7 +61,7 @@ const run = async () => {
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
 
-		const previewUrls = []
+		const deploymentUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info(`Assigning custom preview domain to PR`)
 
@@ -75,7 +75,7 @@ const run = async () => {
 
 			await vercel.assignAlias(alias)
 
-			previewUrls.push(addSchema(alias))
+			deploymentUrls.push(addSchema(alias))
 		}
 
 		if (!IS_PR && ALIAS_DOMAINS) {
@@ -91,16 +91,19 @@ const run = async () => {
 
 				await vercel.assignAlias(alias)
 
-				previewUrls.push(addSchema(alias))
+				deploymentUrls.push(addSchema(alias))
 			}
 		}
 
-		previewUrls.push(addSchema(deploymentUrl))
-		core.info(`Deployment available at: ${ previewUrls.join(', ') }`)
+		deploymentUrls.push(addSchema(deploymentUrl))
+		const previewUrl = deploymentUrls[0]
+
+		const deployment = await vercel.getDeployment()
+		core.info(`Deployment "${ deployment.id }" available at: ${ deploymentUrls.join(', ') }`)
 
 		if (GITHUB_DEPLOYMENT) {
 			core.info('Changing GitHub deployment status to "success"')
-			await github.updateDeployment('success', previewUrls[0])
+			await github.updateDeployment('success', previewUrl)
 		}
 
 		if (IS_PR) {
@@ -115,8 +118,22 @@ const run = async () => {
 			const body = `
 				This pull request has been deployed to Vercel.
 
-				✅ Preview: ${ previewUrls[0] }
-				🔍 Logs: ${ LOG_URL }
+				<table>
+					<tr>
+						<td><strong>Latest commit:</strong></td>
+						<td><code>${ SHA }</code></td>
+					</tr>
+					<tr>
+						<td><strong>✅ Preview:</strong></td>
+						<td><a href='${ previewUrl }'>${ previewUrl }</a></td>
+					</tr>
+					<tr>
+						<td><strong>🔍 Inspect:</strong></td>
+						<td><a href='${ deployment.inspectorUrl }'>${ deployment.inspectorUrl }</a></td>
+					</tr>
+				</table>
+
+				[View Workflow Logs](${ LOG_URL })
 			`
 
 			const comment = await github.createComment(body)
@@ -130,8 +147,10 @@ const run = async () => {
 			}
 		}
 
-		core.setOutput('PREVIEW_URL', previewUrls[0])
-		core.setOutput('DEPLOYMENT_URLS', previewUrls)
+		core.setOutput('PREVIEW_URL', previewUrl)
+		core.setOutput('DEPLOYMENT_URLS', deploymentUrls)
+		core.setOutput('DEPLOYMENT_ID', deployment.id)
+		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deployment.inspectorUrl)
 		core.setOutput('DEPLOYMENT_CREATED', true)
 		core.setOutput('COMMENT_CREATED', IS_PR)
 

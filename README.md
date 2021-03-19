@@ -81,7 +81,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `PRODUCTION` | Create a production deployment (has no impact on PR deployments) | **No** | true |
 | `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
 | `ATTACH_COMMIT_METADATA` | Attach metadata about the commit to the Vercel deployment | **No** | true |
-| `DEPLOY_PR_FROM_FORK` | Allow PRs which originate from a fork to be deployed (more info [below](#deploying-a-pr)) | **No** | false |
+| `DEPLOY_PR_FROM_FORK` | Allow PRs which originate from a fork to be deployed (more info [below](#deploying-a-pr-made-from-a-fork-or-dependabot)) | **No** | false |
 | `PR_LABELS` | Labels which will be added to the pull request once deployed. Set it to false to turn off | **No** | deployed |
 | `ALIAS_DOMAINS` | Alias domain(s) to assign to the deployment (more info [below](#custom-domains)) | **No** | N/A |
 | `PR_PREVIEW_DOMAIN` | Custom preview domain for PRs (more info [below](#custom-domains)) | **No** | N/A |
@@ -145,13 +145,53 @@ PR_PREVIEW_DOMAIN: "{REPO}-{PR}.now.sh"
 
 > **Note:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN` 
 
-### Deploying a PR
+### Deploying a PR made from a fork or Dependabot
 
-If this action is triggered by a Pull Request it will create a preview deployment on Vercel and assign the specified `PR_PREVIEW_DOMAIN` domain.
+By default this action will not deploy a PR if it originates from a fork (this is also the default behaviour of [Vercel for GitHub](https://vercel.com/docs/git/vercel-for-github?query=git#deployment-authorizations-for-forks)).
 
-By default this action will not deploy a PR if it originates from a fork (this is also the default behaviour of [Vercel for GitHub](https://vercel.com/docs/git/vercel-for-github?query=git#deployment-authorizations-for-forks)). If you want to deploy a PR from a fork, you can set `DEPLOY_PR_FROM_FORK` to true.
+If you want to deploy a PR made from a fork, you have to set `DEPLOY_PR_FROM_FORK` to true and make sure to use the `pull_request_target` event instead of the `pull_request` event, as GitHub doesn't pass any secrets to workflows triggered by `pull_request` on forks (more info in GitHub's [docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-events-for-forked-repositories)).
 
-> **Note:** If you want to deploy a PR made from a fork or by [Dependabot](https://github.com/dependabot), make sure to use the `pull_request_target` event instead of the `pull_request` event, as GitHub doesn't pass any secrets to workflows triggered by `pull_request` in those two cases (more info in GitHub's [docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-events-for-forked-repositories)).
+You also have to manually checkout the PR branch, as `pull_request_target` runs in the context of the base of the pull request, rather than in the merge commit.
+
+Here's a complete workflow as an example:
+
+```yml
+name: Deploy CI
+on:
+  push:
+    branches: [master]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+jobs:
+  vercel:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - id: script
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const isPr = [ 'pull_request', 'pull_request_target' ].includes(context.eventName)
+            core.setOutput('ref', isPr ? context.payload.pull_request.head.ref : context.ref)
+            core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.repo)
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.script.outputs.ref }}
+          repository: ${{ steps.script.outputs.repo }}
+
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@develop
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          DEPLOY_PR_FROM_FORK: true # This has some serious security risks you need be aware of
+```
+
+> **Note:** Since the first of March 2021 workflow runs which are triggered by a Dependabot PR will act as if they are made from a fork and have the same limitations described above (more info in [GitHub's Changelog](https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/)), except that DEPLOY_PR_FROM_FORK doesn't have to be set to true.
 
 ## 📖 Examples
 

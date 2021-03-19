@@ -33212,7 +33212,7 @@ const run = async () => {
 		const body = `
 			Refusing to deploy this Pull Request to Vercel because it originates from @${ ACTOR }'s fork.
 
-			**@${ USER }** To allow this behaviour set \`DEPLOY_PR_FROM_FORK\` to true ([more info](https://github.com/BetaHuhn/deploy-to-vercel-action#deploying-a-pr)).
+			**@${ USER }** To allow this behaviour set \`DEPLOY_PR_FROM_FORK\` to true ([more info](https://github.com/BetaHuhn/deploy-to-vercel-action#deploying-a-pr-made-from-a-fork-or-dependabot)).
 		`
 
 		const comment = await github.createComment(body)

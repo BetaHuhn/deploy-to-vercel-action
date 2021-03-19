@@ -87,7 +87,7 @@ const setDynamicVars = () => {
 		return
 	}
 
-	context.IS_PR = github.context.eventName === 'pull_request'
+	context.IS_PR = [ 'pull_request', 'pull_request_target' ].includes(github.context.eventName)
 	context.SHA = github.context.sha
 	context.ACTOR = github.context.actor
 

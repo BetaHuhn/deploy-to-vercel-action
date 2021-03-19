@@ -88,19 +88,21 @@ const setDynamicVars = () => {
 	}
 
 	context.IS_PR = [ 'pull_request', 'pull_request_target' ].includes(github.context.eventName)
-	context.SHA = github.context.sha
-	context.ACTOR = github.context.actor
 
 	// Use different values depending on if the Action was triggered by a PR
 	if (context.IS_PR) {
 		context.PRODUCTION = false
 		context.PR_NUMBER = github.context.payload.number
+		context.ACTOR = github.context.payload.pull_request.user.login
 		context.REF = github.context.payload.pull_request.head.ref
+		context.SHA = github.context.payload.pull_request.head.sha
 		context.BRANCH = github.context.payload.pull_request.head.ref
 		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/pull/${ context.PR_NUMBER }/checks`
 		context.IS_FORK = github.context.payload.pull_request.head.repo.full_name !== context.GITHUB_REPOSITORY
 	} else {
+		context.ACTOR = github.context.actor
 		context.REF = github.context.ref
+		context.SHA = github.context.sha
 		context.BRANCH = github.context.ref.substr(11)
 		context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/commit/${ context.SHA }/checks`
 	}

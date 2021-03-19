@@ -6,6 +6,8 @@
 
 Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.
 
+![pr-comment-screenshot](https://user-images.githubusercontent.com/51766171/111844410-4aeec000-8903-11eb-9e2d-f84c8c89b039.png)
+
 </div>
 
 ## 👋 Introduction

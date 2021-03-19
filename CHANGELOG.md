@@ -1,3 +1,24 @@
+## [v1.3.0] - 2021-03-19
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.2.7...v1.3.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.0.tar.gz))
+
+### New features
+
+- [`b5b7c50`](https://github.com/betahuhn/deploy-to-vercel-action/commit/b5b7c50)  Attach commit metadata to deployment
+- [`a6db3ed`](https://github.com/betahuhn/deploy-to-vercel-action/commit/a6db3ed)  Don&#x27;t deploy PR if from fork
+- [`d182fc0`](https://github.com/betahuhn/deploy-to-vercel-action/commit/d182fc0)  Cleaner and more detailed PR comment
+
+### Bug fixes
+
+- [`de6fcd8`](https://github.com/betahuhn/deploy-to-vercel-action/commit/de6fcd8)  Use correct sha when triggered by PR
+
+### Dependency updates
+
+- [`0afdecb`](https://github.com/betahuhn/deploy-to-vercel-action/commit/0afdecb)  Bump vercel from 21.3.2 to 21.3.3
+- [`62c6d2e`](https://github.com/betahuhn/deploy-to-vercel-action/commit/62c6d2e)  Bump eslint from 7.21.0 to 7.22.0
+- [`094c707`](https://github.com/betahuhn/deploy-to-vercel-action/commit/094c707)  Bump @actions/github from 2.2.0 to 4.0.0 (#2)
+(Issues: [`#2`](https://github.com/betahuhn/deploy-to-vercel-action/issues/2))
+
 ## [v1.2.7] - 2021-03-08
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.2.7) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.2.6...v1.2.7) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.2.7) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.7.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.2.7.tar.gz))

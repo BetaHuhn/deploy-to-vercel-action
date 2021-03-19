@@ -33,7 +33,7 @@ name: Deploy CI
 on:
   push:
     branches: [master]
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
 jobs:
   deploy:
@@ -208,7 +208,7 @@ name: Deploy CI
 on:
   push:
     branches: [master]
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
 jobs:
   deploy:
@@ -292,7 +292,7 @@ name: Deploy CI
 on:
   push:
     branches: [master]
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
 jobs:
   deploy:
@@ -369,6 +369,51 @@ jobs:
       # maybe do something else first
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+```
+
+### Deploy Dependabot PRs
+
+As described in the [Deploying a PR made from a fork or Dependabot](#deploying-a-pr-made-from-a-fork-or-dependabot) section, Pull Requests created by Dependabot behave as if they where created from a fork and thus the Workflow triggered by the `pull_request` event doesn't have access to any secrets.
+
+To overcome this limitation you can use the `pull_request_target` event and checkout the PR branch manually:
+
+> Note: By default this action doesn't deploy any forks so you can use pull_request_target without any security concerns
+
+**.github/workflows/deploy.yml**
+
+```yml
+name: Deploy CI
+on:
+  push:
+    branches: [master]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+jobs:
+  vercel:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - id: script
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const isPr = [ 'pull_request', 'pull_request_target' ].includes(context.eventName)
+            core.setOutput('ref', isPr ? context.payload.pull_request.head.ref : context.ref)
+            core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.repo)
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.script.outputs.ref }}
+          repository: ${{ steps.script.outputs.repo }}
+
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

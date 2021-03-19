@@ -36,6 +36,11 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
+	ATTACH_COMMIT_METADATA: getVar({
+		key: 'ATTACH_COMMIT_METADATA',
+		type: 'boolean',
+		default: true
+	}),
 	PR_LABELS: getVar({
 		key: 'PR_LABELS',
 		default: [ 'deployed' ],
@@ -71,12 +76,14 @@ const setDynamicVars = () => {
 		context.BRANCH = process.env.BRANCH || 'master'
 		context.PRODUCTION = process.env.PRODUCTION === 'true' || !context.IS_PR
 		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
+		context.ACTOR = process.env.ACTOR || context.USER
 
 		return
 	}
 
 	context.IS_PR = github.context.eventName === 'pull_request'
 	context.SHA = github.context.sha
+	context.ACTOR = github.context.actor
 
 	// Use different values depending on if the Action was triggered by a PR
 	if (context.IS_PR) {

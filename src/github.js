@@ -101,13 +101,24 @@ const init = () => {
 		return label.data
 	}
 
+	const getCommit = async () => {
+		const commit = await client.repos.getCommit({
+			owner: USER,
+			repo: REPOSITORY,
+			ref: REF
+		})
+
+		return commit.data
+	}
+
 	return {
 		client,
 		createDeployment,
 		updateDeployment,
 		deleteExistingComment,
 		createComment,
-		addLabel
+		addLabel,
+		getCommit
 	}
 }
 

@@ -6,7 +6,11 @@ const {
 	PRODUCTION,
 	VERCEL_SCOPE,
 	VERCEL_ORG_ID,
-	VERCEL_PROJECT_ID
+	VERCEL_PROJECT_ID,
+	SHA,
+	USER,
+	REPOSITORY,
+	REF
 } = require('./config')
 
 const init = () => {
@@ -16,7 +20,7 @@ const init = () => {
 
 	let deploymentUrl
 
-	const deploy = async () => {
+	const deploy = async (commitData) => {
 		let command = `vercel -t ${ VERCEL_TOKEN }`
 
 		if (VERCEL_SCOPE) {
@@ -25,6 +29,25 @@ const init = () => {
 
 		if (PRODUCTION) {
 			command += ` --prod`
+		}
+
+		if (commitData) {
+			const metadata = [
+				`githubCommitAuthorName=${ commitData.commit.author.name }`,
+				`githubCommitAuthorLogin=${ commitData.author.login }`,
+				`githubCommitMessage=${ commitData.commit.message }`,
+				`githubCommitOrg=${ USER }`,
+				`githubCommitRepo=${ REPOSITORY }`,
+				`githubCommitRef=${ REF }`,
+				`githubCommitSha=${ SHA }`,
+				`githubOrg=${ USER }`,
+				`githubRepo=${ REPOSITORY }`,
+				`githubDeployment=1`
+			]
+
+			metadata.forEach((item) => {
+				command += ` -m "${ item }"`
+			})
 		}
 
 		const output = await exec(command)

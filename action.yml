@@ -31,6 +31,10 @@ inputs:
     description: |
       Delete existing PR comment when redeploying PR (default: true).
     required: false
+  ATTACH_COMMIT_METADATA:
+    description: |
+      Attach metadata about the commit to the Vercel deployment (default: true).
+    required: false
   PR_LABELS:
     description: |
       Labels which will be added to the pull request once deployed. Set it to false to turn off (default: deployed).

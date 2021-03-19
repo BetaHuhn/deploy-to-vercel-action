@@ -25459,6 +25459,11 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
+	ATTACH_COMMIT_METADATA: getVar({
+		key: 'ATTACH_COMMIT_METADATA',
+		type: 'boolean',
+		default: true
+	}),
 	PR_LABELS: getVar({
 		key: 'PR_LABELS',
 		default: [ 'deployed' ],
@@ -25494,12 +25499,14 @@ const setDynamicVars = () => {
 		context.BRANCH = process.env.BRANCH || 'master'
 		context.PRODUCTION = process.env.PRODUCTION === 'true' || !context.IS_PR
 		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
+		context.ACTOR = process.env.ACTOR || context.USER
 
 		return
 	}
 
 	context.IS_PR = github.context.eventName === 'pull_request'
 	context.SHA = github.context.sha
+	context.ACTOR = github.context.actor
 
 	// Use different values depending on if the Action was triggered by a PR
 	if (context.IS_PR) {
@@ -25638,13 +25645,24 @@ const init = () => {
 		return label.data
 	}
 
+	const getCommit = async () => {
+		const commit = await client.repos.getCommit({
+			owner: USER,
+			repo: REPOSITORY,
+			ref: REF
+		})
+
+		return commit.data
+	}
+
 	return {
 		client,
 		createDeployment,
 		updateDeployment,
 		deleteExistingComment,
 		createComment,
-		addLabel
+		addLabel,
+		getCommit
 	}
 }
 
@@ -25758,7 +25776,8 @@ const {
 	PR_LABELS,
 	DELETE_EXISTING_COMMENT,
 	PR_PREVIEW_DOMAIN,
-	ALIAS_DOMAINS
+	ALIAS_DOMAINS,
+	ATTACH_COMMIT_METADATA
 } = __nccwpck_require__(4570)
 
 const run = async () => {
@@ -25774,10 +25793,15 @@ const run = async () => {
 		core.info(`Deployment #${ deployment.id } status changed to "pending"`)
 	}
 
+	let commit
+	if (ATTACH_COMMIT_METADATA) {
+		commit = await github.getCommit()
+	}
+
 	try {
 		core.info(`Creating deployment with Vercel CLI`)
 		const vercel = Vercel.init()
-		const deploymentUrl = await vercel.deploy()
+		const deploymentUrl = await vercel.deploy(commit)
 
 		const previewUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
@@ -25874,7 +25898,11 @@ const {
 	PRODUCTION,
 	VERCEL_SCOPE,
 	VERCEL_ORG_ID,
-	VERCEL_PROJECT_ID
+	VERCEL_PROJECT_ID,
+	SHA,
+	USER,
+	REPOSITORY,
+	REF
 } = __nccwpck_require__(4570)
 
 const init = () => {
@@ -25884,7 +25912,7 @@ const init = () => {
 
 	let deploymentUrl
 
-	const deploy = async () => {
+	const deploy = async (commitData) => {
 		let command = `vercel -t ${ VERCEL_TOKEN }`
 
 		if (VERCEL_SCOPE) {
@@ -25893,6 +25921,25 @@ const init = () => {
 
 		if (PRODUCTION) {
 			command += ` --prod`
+		}
+
+		if (commitData) {
+			const metadata = [
+				`githubCommitAuthorName=${ commitData.commit.author.name }`,
+				`githubCommitAuthorLogin=${ commitData.author.login }`,
+				`githubCommitMessage=${ commitData.commit.message }`,
+				`githubCommitOrg=${ USER }`,
+				`githubCommitRepo=${ REPOSITORY }`,
+				`githubCommitRef=${ REF }`,
+				`githubCommitSha=${ SHA }`,
+				`githubOrg=${ USER }`,
+				`githubRepo=${ REPOSITORY }`,
+				`githubDeployment=1`
+			]
+
+			metadata.forEach((item) => {
+				command += ` -m "${ item }"`
+			})
 		}
 
 		const output = await exec(command)

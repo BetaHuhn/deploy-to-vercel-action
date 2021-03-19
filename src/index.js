@@ -14,7 +14,8 @@ const {
 	PR_LABELS,
 	DELETE_EXISTING_COMMENT,
 	PR_PREVIEW_DOMAIN,
-	ALIAS_DOMAINS
+	ALIAS_DOMAINS,
+	ATTACH_COMMIT_METADATA
 } = require('./config')
 
 const run = async () => {
@@ -30,10 +31,15 @@ const run = async () => {
 		core.info(`Deployment #${ deployment.id } status changed to "pending"`)
 	}
 
+	let commit
+	if (ATTACH_COMMIT_METADATA) {
+		commit = await github.getCommit()
+	}
+
 	try {
 		core.info(`Creating deployment with Vercel CLI`)
 		const vercel = Vercel.init()
-		const deploymentUrl = await vercel.deploy()
+		const deploymentUrl = await vercel.deploy(commit)
 
 		const previewUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {

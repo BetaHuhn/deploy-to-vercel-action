@@ -29,7 +29,7 @@
     "vercel": "^21.3.3"
   },
   "devDependencies": {
-    "@betahuhn/config": "^1.0.2",
+    "@betahuhn/config": "^1.1.0",
     "@vercel/ncc": "^0.28.3",
     "eslint": "^7.24.0"
   }

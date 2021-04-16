@@ -176,7 +176,7 @@ jobs:
           script: |
             const isPr = [ 'pull_request', 'pull_request_target' ].includes(context.eventName)
             core.setOutput('ref', isPr ? context.payload.pull_request.head.ref : context.ref)
-            core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.repo)
+            core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.full_name)
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -407,7 +407,7 @@ jobs:
           script: |
             const isPr = [ 'pull_request', 'pull_request_target' ].includes(context.eventName)
             core.setOutput('ref', isPr ? context.payload.pull_request.head.ref : context.ref)
-            core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.repo)
+            core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.full_name)
 
       - name: Checkout
         uses: actions/checkout@v2

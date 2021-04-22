@@ -26,7 +26,7 @@
     "@actions/github": "^4.0.0",
     "dotenv": "^8.2.0",
     "got": "^11.8.2",
-    "vercel": "^21.3.3"
+    "vercel": "^22.0.0"
   },
   "devDependencies": {
     "@betahuhn/config": "^1.1.0",

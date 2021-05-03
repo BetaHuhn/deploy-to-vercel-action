@@ -1,3 +1,12 @@
+## [v1.3.2] - 2021-05-03
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.2) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.1...v1.3.2) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.2) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.2.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.2.tar.gz))
+
+### Dependency updates
+
+- [`88d33da`](https://github.com/betahuhn/deploy-to-vercel-action/commit/88d33da)  Bump eslint from 7.24.0 to 7.25.0
+- [`67b3013`](https://github.com/betahuhn/deploy-to-vercel-action/commit/67b3013)  Bump @vercel/ncc from 0.28.3 to 0.28.4
+
 ## [v1.3.1] - 2021-04-19
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.1) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.0...v1.3.1) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.1) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.1.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.1.tar.gz))

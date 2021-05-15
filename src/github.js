@@ -12,7 +12,7 @@ const {
 } = require('./config')
 
 const init = () => {
-	const client = new github.GitHub(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
+	const client = github.getOctokit(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
 
 	let deploymentId
 

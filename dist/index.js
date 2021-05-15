@@ -4108,6 +4108,229 @@ module.exports.default = timer;
 
 /***/ }),
 
+/***/ 4623:
+/***/ (function(module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getInput = void 0;
+var dotenv_1 = __importDefault(__nccwpck_require__(8138));
+dotenv_1.default.config();
+var VALID_TYPES = ['string', 'array', 'boolean', 'number'];
+var DEFAULT_OPTIONS = {
+    required: false,
+    type: 'string',
+    disableable: false
+};
+var getEnvVar = function (key) {
+    var parsed = process.env["INPUT_" + key.replace(/ /g, '_').toUpperCase()];
+    var raw = process.env[key];
+    return parsed || raw || undefined;
+};
+var parseArray = function (val) {
+    var array = val.split('\n').join(',').split(',');
+    var filtered = array.filter(function (n) { return n; });
+    return filtered.map(function (n) { return n.trim(); });
+};
+var parseBoolean = function (val) {
+    var trueValue = ['true', 'True', 'TRUE'];
+    var falseValue = ['false', 'False', 'FALSE'];
+    if (trueValue.includes(val))
+        return true;
+    if (falseValue.includes(val))
+        return false;
+    throw new Error('boolean input has to be one of \`true | True | TRUE | false | False | FALSE\`');
+};
+var parseNumber = function (val) {
+    var parsed = Number(val);
+    if (isNaN(parsed))
+        throw new Error('input has to be a valid number');
+    return parsed;
+};
+var parseValue = function (val, type) {
+    if (type === 'array') {
+        return parseArray(val);
+    }
+    if (type === 'boolean') {
+        return parseBoolean(val);
+    }
+    if (type === 'number') {
+        return parseNumber(val);
+    }
+    return val.trim();
+};
+var getInput = function (key, opts) {
+    var parsedOptions;
+    if (typeof key === 'string') {
+        parsedOptions = __assign({ key: key }, opts);
+    }
+    else if (typeof key === 'object') {
+        parsedOptions = key;
+    }
+    else {
+        throw new Error('No key for input specified');
+    }
+    if (!parsedOptions.key)
+        throw new Error('No key for input specified');
+    var options = Object.assign({}, DEFAULT_OPTIONS, parsedOptions);
+    if (VALID_TYPES.includes(options.type) === false)
+        throw new Error('option type has to be one of `string | array | boolean | number`');
+    var val = getEnvVar(options.key);
+    if (options.disableable && val === 'false')
+        return undefined;
+    var parsed = val !== undefined ? parseValue(val, options.type) : undefined;
+    if (parsed === undefined) {
+        if (options.required)
+            throw new Error("Input `" + options.key + "` is required but was not provided.");
+        if (options.default !== undefined)
+            return options.default;
+        return undefined;
+    }
+    if (options.modifier)
+        return options.modifier(parsed);
+    return parsed;
+};
+exports.getInput = getInput;
+module.exports.getInput = exports.getInput;
+
+
+/***/ }),
+
+/***/ 8138:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+/* @flow */
+/*::
+
+type DotenvParseOptions = {
+  debug?: boolean
+}
+
+// keys and values from src
+type DotenvParseOutput = { [string]: string }
+
+type DotenvConfigOptions = {
+  path?: string, // path to .env file
+  encoding?: string, // encoding of .env file
+  debug?: string // turn on logging for debugging purposes
+}
+
+type DotenvConfigOutput = {
+  parsed?: DotenvParseOutput,
+  error?: Error
+}
+
+*/
+
+const fs = __nccwpck_require__(5747)
+const path = __nccwpck_require__(5622)
+
+function log (message /*: string */) {
+  console.log(`[dotenv][DEBUG] ${message}`)
+}
+
+const NEWLINE = '\n'
+const RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/
+const RE_NEWLINES = /\\n/g
+const NEWLINES_MATCH = /\n|\r|\r\n/
+
+// Parses src into an Object
+function parse (src /*: string | Buffer */, options /*: ?DotenvParseOptions */) /*: DotenvParseOutput */ {
+  const debug = Boolean(options && options.debug)
+  const obj = {}
+
+  // convert Buffers before splitting into lines and processing
+  src.toString().split(NEWLINES_MATCH).forEach(function (line, idx) {
+    // matching "KEY' and 'VAL' in 'KEY=VAL'
+    const keyValueArr = line.match(RE_INI_KEY_VAL)
+    // matched?
+    if (keyValueArr != null) {
+      const key = keyValueArr[1]
+      // default undefined or missing values to empty string
+      let val = (keyValueArr[2] || '')
+      const end = val.length - 1
+      const isDoubleQuoted = val[0] === '"' && val[end] === '"'
+      const isSingleQuoted = val[0] === "'" && val[end] === "'"
+
+      // if single or double quoted, remove quotes
+      if (isSingleQuoted || isDoubleQuoted) {
+        val = val.substring(1, end)
+
+        // if double quoted, expand newlines
+        if (isDoubleQuoted) {
+          val = val.replace(RE_NEWLINES, NEWLINE)
+        }
+      } else {
+        // remove surrounding whitespace
+        val = val.trim()
+      }
+
+      obj[key] = val
+    } else if (debug) {
+      log(`did not match key and value when parsing line ${idx + 1}: ${line}`)
+    }
+  })
+
+  return obj
+}
+
+// Populates process.env from .env file
+function config (options /*: ?DotenvConfigOptions */) /*: DotenvConfigOutput */ {
+  let dotenvPath = path.resolve(process.cwd(), '.env')
+  let encoding /*: string */ = 'utf8'
+  let debug = false
+
+  if (options) {
+    if (options.path != null) {
+      dotenvPath = options.path
+    }
+    if (options.encoding != null) {
+      encoding = options.encoding
+    }
+    if (options.debug != null) {
+      debug = true
+    }
+  }
+
+  try {
+    // specifying an encoding returns a string instead of a buffer
+    const parsed = parse(fs.readFileSync(dotenvPath, { encoding }), { debug })
+
+    Object.keys(parsed).forEach(function (key) {
+      if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
+        process.env[key] = parsed[key]
+      } else if (debug) {
+        log(`"${key}" is already defined in \`process.env\` and will not be overwritten`)
+      }
+    })
+
+    return { parsed }
+  } catch (e) {
+    return { error: e }
+  }
+}
+
+module.exports.config = config
+module.exports.parse = parse
+
+
+/***/ }),
+
 /***/ 3682:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -13596,68 +13819,68 @@ function wrappy (fn, cb) {
 
 const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
+const parser = __nccwpck_require__(4623)
 __nccwpck_require__(2437).config()
 
-const { getVar } = __nccwpck_require__(8505)
-
 const context = {
-	GITHUB_TOKEN: getVar({
+	GITHUB_TOKEN: parser.getInput({
 		key: [ 'GH_PAT', 'GITHUB_TOKEN' ],
 		required: true
 	}),
-	VERCEL_TOKEN: getVar({
+	VERCEL_TOKEN: parser.getInput({
 		key: 'VERCEL_TOKEN',
 		required: true
 	}),
-	VERCEL_ORG_ID: getVar({
+	VERCEL_ORG_ID: parser.getInput({
 		key: 'VERCEL_ORG_ID',
 		required: true
 	}),
-	VERCEL_PROJECT_ID: getVar({
+	VERCEL_PROJECT_ID: parser.getInput({
 		key: 'VERCEL_PROJECT_ID',
 		required: true
 	}),
-	PRODUCTION: getVar({
+	PRODUCTION: parser.getInput({
 		key: 'PRODUCTION',
 		type: 'boolean',
 		default: true
 	}),
-	GITHUB_DEPLOYMENT: getVar({
+	GITHUB_DEPLOYMENT: parser.getInput({
 		key: 'GITHUB_DEPLOYMENT',
 		type: 'boolean',
 		default: true
 	}),
-	DELETE_EXISTING_COMMENT: getVar({
+	DELETE_EXISTING_COMMENT: parser.getInput({
 		key: 'DELETE_EXISTING_COMMENT',
 		type: 'boolean',
 		default: true
 	}),
-	ATTACH_COMMIT_METADATA: getVar({
+	ATTACH_COMMIT_METADATA: parser.getInput({
 		key: 'ATTACH_COMMIT_METADATA',
 		type: 'boolean',
 		default: true
 	}),
-	DEPLOY_PR_FROM_FORK: getVar({
+	DEPLOY_PR_FROM_FORK: parser.getInput({
 		key: 'DEPLOY_PR_FROM_FORK',
 		type: 'boolean',
 		default: false
 	}),
-	PR_LABELS: getVar({
+	PR_LABELS: parser.getInput({
 		key: 'PR_LABELS',
 		default: [ 'deployed' ],
-		type: 'array'
+		type: 'array',
+		disableable: true
 	}),
-	ALIAS_DOMAINS: getVar({
+	ALIAS_DOMAINS: parser.getInput({
 		key: 'ALIAS_DOMAINS',
 		type: 'array'
 	}),
-	PR_PREVIEW_DOMAIN: getVar({
+	PR_PREVIEW_DOMAIN: parser.getInput({
 		key: 'PR_PREVIEW_DOMAIN'
 	}),
-	VERCEL_SCOPE: getVar({
+	VERCEL_SCOPE: parser.getInput({
 		key: 'VERCEL_SCOPE'
 	}),
-	GITHUB_REPOSITORY: getVar({
+	GITHUB_REPOSITORY: parser.getInput({
 		key: 'GITHUB_REPOSITORY',
 		required: true
 	}),
@@ -13737,7 +13960,7 @@ const {
 } = __nccwpck_require__(4570)
 
 const init = () => {
-	const client = new github.GitHub(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
+	const client = github.getOctokit(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
 
 	let deploymentId
 
@@ -13856,53 +14079,6 @@ module.exports = {
 const core = __nccwpck_require__(2186)
 const { exec } = __nccwpck_require__(3129)
 
-const getVar = ({ key, default: dft, required = false, type = 'string' }) => {
-	let coreVar
-	if (Array.isArray(key)) {
-		key.forEach((item) => {
-			if (core.getInput(item)) {
-				coreVar = core.getInput(item)
-			}
-		})
-	} else {
-		coreVar = core.getInput(key)
-	}
-
-	let envVar
-	if (Array.isArray(key)) {
-		key.forEach((item) => {
-			if (item in process.env) {
-				envVar = process.env[item]
-			}
-		})
-	} else {
-		envVar = process.env[key]
-	}
-
-	if (key === 'PR_LABELS' && (coreVar === false || envVar === 'false'))
-		return undefined
-
-	if (coreVar !== undefined && coreVar.length >= 1) {
-		if (type === 'array') return coreVar.split('\n')
-		if (type === 'boolean') return String(coreVar) === 'true'
-
-		return coreVar
-	}
-
-	if (envVar !== undefined && envVar.length >= 1) {
-		if (type === 'array') return envVar.split(',')
-		if (type === 'boolean') return String(envVar) === 'true'
-
-		return envVar
-	}
-
-	if (required === true)
-		return core.setFailed(`Variable ${ key } missing.`)
-
-	return dft
-
-}
-
 const execCmd = (command) => {
 	core.debug(`EXEC: "${ command }"`)
 	return new Promise((resolve, reject) => {
@@ -13928,7 +14104,6 @@ const removeSchema = (url) => {
 
 module.exports = {
 	exec: execCmd,
-	getVar,
 	addSchema,
 	removeSchema
 }

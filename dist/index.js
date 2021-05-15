@@ -4176,7 +4176,7 @@ var parseValue = function (val, type) {
 };
 var getInput = function (key, opts) {
     var parsedOptions;
-    if (typeof key === 'string') {
+    if (typeof key === 'string' || Array.isArray(key)) {
         parsedOptions = __assign({ key: key }, opts);
     }
     else if (typeof key === 'object') {
@@ -4190,7 +4190,7 @@ var getInput = function (key, opts) {
     var options = Object.assign({}, DEFAULT_OPTIONS, parsedOptions);
     if (VALID_TYPES.includes(options.type) === false)
         throw new Error('option type has to be one of `string | array | boolean | number`');
-    var val = getEnvVar(options.key);
+    var val = typeof options.key === 'string' ? getEnvVar(options.key) : options.key.map(function (key) { return getEnvVar(key); }).filter(function (item) { return item; })[0];
     if (options.disableable && val === 'false')
         return undefined;
     var parsed = val !== undefined ? parseValue(val, options.type) : undefined;

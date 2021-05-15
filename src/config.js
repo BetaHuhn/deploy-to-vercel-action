@@ -1,67 +1,67 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
+const parser = require('action-input-parser')
 require('dotenv').config()
 
-const { getVar } = require('./helpers')
-
 const context = {
-	GITHUB_TOKEN: getVar({
+	GITHUB_TOKEN: parser.getInput({
 		key: [ 'GH_PAT', 'GITHUB_TOKEN' ],
 		required: true
 	}),
-	VERCEL_TOKEN: getVar({
+	VERCEL_TOKEN: parser.getInput({
 		key: 'VERCEL_TOKEN',
 		required: true
 	}),
-	VERCEL_ORG_ID: getVar({
+	VERCEL_ORG_ID: parser.getInput({
 		key: 'VERCEL_ORG_ID',
 		required: true
 	}),
-	VERCEL_PROJECT_ID: getVar({
+	VERCEL_PROJECT_ID: parser.getInput({
 		key: 'VERCEL_PROJECT_ID',
 		required: true
 	}),
-	PRODUCTION: getVar({
+	PRODUCTION: parser.getInput({
 		key: 'PRODUCTION',
 		type: 'boolean',
 		default: true
 	}),
-	GITHUB_DEPLOYMENT: getVar({
+	GITHUB_DEPLOYMENT: parser.getInput({
 		key: 'GITHUB_DEPLOYMENT',
 		type: 'boolean',
 		default: true
 	}),
-	DELETE_EXISTING_COMMENT: getVar({
+	DELETE_EXISTING_COMMENT: parser.getInput({
 		key: 'DELETE_EXISTING_COMMENT',
 		type: 'boolean',
 		default: true
 	}),
-	ATTACH_COMMIT_METADATA: getVar({
+	ATTACH_COMMIT_METADATA: parser.getInput({
 		key: 'ATTACH_COMMIT_METADATA',
 		type: 'boolean',
 		default: true
 	}),
-	DEPLOY_PR_FROM_FORK: getVar({
+	DEPLOY_PR_FROM_FORK: parser.getInput({
 		key: 'DEPLOY_PR_FROM_FORK',
 		type: 'boolean',
 		default: false
 	}),
-	PR_LABELS: getVar({
+	PR_LABELS: parser.getInput({
 		key: 'PR_LABELS',
 		default: [ 'deployed' ],
-		type: 'array'
+		type: 'array',
+		disableable: true
 	}),
-	ALIAS_DOMAINS: getVar({
+	ALIAS_DOMAINS: parser.getInput({
 		key: 'ALIAS_DOMAINS',
 		type: 'array'
 	}),
-	PR_PREVIEW_DOMAIN: getVar({
+	PR_PREVIEW_DOMAIN: parser.getInput({
 		key: 'PR_PREVIEW_DOMAIN'
 	}),
-	VERCEL_SCOPE: getVar({
+	VERCEL_SCOPE: parser.getInput({
 		key: 'VERCEL_SCOPE'
 	}),
-	GITHUB_REPOSITORY: getVar({
+	GITHUB_REPOSITORY: parser.getInput({
 		key: 'GITHUB_REPOSITORY',
 		required: true
 	}),

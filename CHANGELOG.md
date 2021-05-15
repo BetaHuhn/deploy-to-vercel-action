@@ -1,3 +1,22 @@
+## [v1.3.4] - 2021-05-15
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.4) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.3...v1.3.4) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.4) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.4.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.4.tar.gz))
+
+### Updates
+
+- [`d4d200a`](https://github.com/betahuhn/deploy-to-vercel-action/commit/d4d200a)  Use new library for input parsing, fixes #41
+(Issues: [`#41`](https://github.com/betahuhn/deploy-to-vercel-action/issues/41))
+
+### Bug fixes
+
+- [`166cc8b`](https://github.com/betahuhn/deploy-to-vercel-action/commit/166cc8b)  Use getOctokit instead of constructor
+
+### Dependency updates
+
+- [`0ed245e`](https://github.com/betahuhn/deploy-to-vercel-action/commit/0ed245e)  Bump eslint from 7.25.0 to 7.26.0
+- [`a33a9ef`](https://github.com/betahuhn/deploy-to-vercel-action/commit/a33a9ef)  Update dependencies
+- [`646f640`](https://github.com/betahuhn/deploy-to-vercel-action/commit/646f640)  Update action-input-parser to make use multiple keys
+
 ## [v1.3.3] - 2021-05-10
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.3) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.2...v1.3.3) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.3) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.3.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.3.tar.gz))

@@ -1,3 +1,12 @@
+## [v1.3.9] - 2021-06-28
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.9) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.8...v1.3.9) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.9) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.9.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.9.tar.gz))
+
+### Dependency updates
+
+- [`4427eaf`](https://github.com/betahuhn/deploy-to-vercel-action/commit/4427eaf)  Bump action-input-parser from 1.2.4 to 1.2.5
+- [`cdf0f61`](https://github.com/betahuhn/deploy-to-vercel-action/commit/cdf0f61)  Bump eslint from 7.28.0 to 7.29.0
+
 ## [v1.3.8] - 2021-06-21
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.8) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.7...v1.3.8) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.8) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.8.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.8.tar.gz))

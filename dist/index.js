@@ -14077,13 +14077,31 @@ module.exports = {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(2186)
-const { exec } = __nccwpck_require__(3129)
+const { spawn } = __nccwpck_require__(3129)
 
-const execCmd = (command) => {
+const execCmd = (command, args) => {
 	core.debug(`EXEC: "${ command }"`)
 	return new Promise((resolve, reject) => {
-		exec(command, (err, stdout) => {
-			err ? reject(err) : resolve(stdout.trim())
+		const process = spawn(command, args)
+		let stdout
+		let stderr
+
+		process.stdout.on('data', (data) => {
+			core.debug(data.toString())
+			if (data !== undefined && data.length > 0) {
+				stdout += data
+			}
+		})
+
+		process.stderr.on('data', (data) => {
+			core.debug(data.toString())
+			if (data !== undefined && data.length > 0) {
+				stderr += data
+			}
+		})
+
+		process.on('close', (code) => {
+			code !== 0 ? reject(new Error(stderr)) : resolve(stdout.trim())
 		})
 	})
 }
@@ -14137,14 +14155,14 @@ const init = () => {
 	let deploymentUrl
 
 	const deploy = async (commit) => {
-		let command = `vercel -t ${ VERCEL_TOKEN }`
+		let commandArguments = [ `--token=${ VERCEL_TOKEN }` ]
 
 		if (VERCEL_SCOPE) {
-			command += ` --scope ${ VERCEL_SCOPE }`
+			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
 		if (PRODUCTION) {
-			command += ` --prod`
+			commandArguments.push('--prod')
 		}
 
 		if (commit) {
@@ -14162,25 +14180,30 @@ const init = () => {
 			]
 
 			metadata.forEach((item) => {
-				command += ` -m "${ item }"`
+				commandArguments = commandArguments.concat([ '--meta', item ])
 			})
 		}
 
-		const output = await exec(command)
 
-		deploymentUrl = removeSchema(output)
+		core.info('Starting deploy with Vercel CLI')
+		const output = await exec('vercel', commandArguments)
+		const parsed = output.match(/(?<=https?:\/\/)(.*)/g)[0]
+
+		if (!parsed) throw new Error('Could not parse deploymentUrl')
+
+		deploymentUrl = parsed
 
 		return deploymentUrl
 	}
 
 	const assignAlias = async (aliasUrl) => {
-		let command = `vercel alias set ${ deploymentUrl } ${ removeSchema(aliasUrl) } -t ${ VERCEL_TOKEN }`
+		const commandArguments = [ `--token=${ VERCEL_TOKEN }`, 'alias', 'set', deploymentUrl, removeSchema(aliasUrl) ]
 
 		if (VERCEL_SCOPE) {
-			command += ` --scope ${ VERCEL_SCOPE }`
+			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		const output = await exec(command)
+		const output = await exec('vercel', commandArguments)
 
 		return output
 	}
@@ -14457,6 +14480,8 @@ const run = async () => {
 
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
+
+		core.info('Successfully deployed to Vercel!')
 
 		const deploymentUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {

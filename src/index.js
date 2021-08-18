@@ -61,6 +61,8 @@ const run = async () => {
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
 
+		core.info('Successfully deployed to Vercel!')
+
 		const deploymentUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info(`Assigning custom preview domain to PR`)

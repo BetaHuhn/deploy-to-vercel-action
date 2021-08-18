@@ -22,14 +22,14 @@ const init = () => {
 	let deploymentUrl
 
 	const deploy = async (commit) => {
-		let command = `vercel -t ${ VERCEL_TOKEN }`
+		let commandArguments = [ `--token=${ VERCEL_TOKEN }` ]
 
 		if (VERCEL_SCOPE) {
-			command += ` --scope ${ VERCEL_SCOPE }`
+			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
 		if (PRODUCTION) {
-			command += ` --prod`
+			commandArguments.push('--prod')
 		}
 
 		if (commit) {
@@ -47,25 +47,30 @@ const init = () => {
 			]
 
 			metadata.forEach((item) => {
-				command += ` -m "${ item }"`
+				commandArguments = commandArguments.concat([ '--meta', item ])
 			})
 		}
 
-		const output = await exec(command)
 
-		deploymentUrl = removeSchema(output)
+		core.info('Starting deploy with Vercel CLI')
+		const output = await exec('vercel', commandArguments)
+		const parsed = output.match(/(?<=https?:\/\/)(.*)/g)[0]
+
+		if (!parsed) throw new Error('Could not parse deploymentUrl')
+
+		deploymentUrl = parsed
 
 		return deploymentUrl
 	}
 
 	const assignAlias = async (aliasUrl) => {
-		let command = `vercel alias set ${ deploymentUrl } ${ removeSchema(aliasUrl) } -t ${ VERCEL_TOKEN }`
+		const commandArguments = [ `--token=${ VERCEL_TOKEN }`, 'alias', 'set', deploymentUrl, removeSchema(aliasUrl) ]
 
 		if (VERCEL_SCOPE) {
-			command += ` --scope ${ VERCEL_SCOPE }`
+			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		const output = await exec(command)
+		const output = await exec('vercel', commandArguments)
 
 		return output
 	}

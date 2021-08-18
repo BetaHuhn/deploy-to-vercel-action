@@ -22,14 +22,14 @@ const init = () => {
 	let deploymentUrl
 
 	const deploy = async (commit) => {
-		let command = `vercel -t ${ VERCEL_TOKEN }`
+		let commandArguments = [`--token=${ VERCEL_TOKEN }`]
 
 		if (VERCEL_SCOPE) {
-			command += ` --scope ${ VERCEL_SCOPE }`
+			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
 		if (PRODUCTION) {
-			command += ` --prod`
+			commandArguments.push('--prod')
 		}
 
 		if (commit) {
@@ -47,11 +47,11 @@ const init = () => {
 			]
 
 			metadata.forEach((item) => {
-				command += ` -m "${ item }"`
+				commandArguments.push(`--meta="${ item }"`)
 			})
 		}
 
-		const output = await exec(command)
+		const output = await exec('vercel', commandArguments)
 
 		deploymentUrl = removeSchema(output)
 
@@ -59,13 +59,13 @@ const init = () => {
 	}
 
 	const assignAlias = async (aliasUrl) => {
-		let command = `vercel alias set ${ deploymentUrl } ${ removeSchema(aliasUrl) } -t ${ VERCEL_TOKEN }`
+		let commandArguments = [`--token=${ VERCEL_TOKEN }`, 'alias', 'set', deploymentUrl, removeSchema(aliasUrl)]
 
 		if (VERCEL_SCOPE) {
-			command += ` --scope ${ VERCEL_SCOPE }`
+			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		const output = await exec(command)
+		const output = await exec('vercel', commandArguments)
 
 		return output
 	}

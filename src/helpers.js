@@ -1,12 +1,20 @@
 const core = require('@actions/core')
-const { exec } = require('child_process')
+const { spawn } = require('child_process')
 
-const execCmd = (command) => {
+const execCmd = (command, arguments) => {
 	core.debug(`EXEC: "${ command }"`)
 	return new Promise((resolve, reject) => {
-		exec(command, (err, stdout) => {
-			err ? reject(err) : resolve(stdout.trim())
-		})
+		const process = spawn(command, arguments);
+		let stdout;
+		let stderr;
+
+		process.stdout.on('data', (data) => { stdout += data; });
+
+		process.stderr.on('data', (data) => { stderr += data; });
+
+		process.on('close', (code) => {
+			code !== 0 ? reject(new Error(stderr)) : resolve(stdout.trim())
+		});
 	})
 }
 

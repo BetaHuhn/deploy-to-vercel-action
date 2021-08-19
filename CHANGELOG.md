@@ -1,3 +1,18 @@
+## [v1.3.17] - 2021-08-19
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.17) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.16...v1.3.17) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.17) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.17.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.17.tar.gz))
+
+### Updates
+
+- [`b5e1b4f`](https://github.com/betahuhn/deploy-to-vercel-action/commit/b5e1b4f)   Use &#x60;spawn&#x60; instead of &#x60;exec&#x60; so arguments are escaped (#76)
+(Issues: [`#76`](https://github.com/betahuhn/deploy-to-vercel-action/issues/76) [`#75`](https://github.com/betahuhn/deploy-to-vercel-action/issues/75))
+
+### Dependency updates
+
+- [`e80bc44`](https://github.com/betahuhn/deploy-to-vercel-action/commit/e80bc44)  Bump @vercel/ncc from 0.29.0 to 0.29.1
+- [`010e5d7`](https://github.com/betahuhn/deploy-to-vercel-action/commit/010e5d7)  Bump action-input-parser from 1.2.12 to 1.2.13
+- [`35910a1`](https://github.com/betahuhn/deploy-to-vercel-action/commit/35910a1)  Upgrade lock dependencies
+
 ## [v1.3.16] - 2021-08-16
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.3.16) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.15...v1.3.16) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.3.16) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.16.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.3.16.tar.gz))

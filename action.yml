@@ -55,6 +55,10 @@ inputs:
     description: |
       Execute commands from a different Vercel team or user.
     required: false
+  GITHUB_DEPLOYMENT_ENV:
+    description: |
+      Custom environment for GitHub deployment.
+    required: false  
 
 outputs:
   PREVIEW_URL:

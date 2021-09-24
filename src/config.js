@@ -65,8 +65,8 @@ const context = {
 		key: 'GITHUB_REPOSITORY',
 		required: true
 	}),
-	DEPLOY_ENV: parser.getInput({
-		key: 'DEPLOY_ENV'
+	GITHUB_DEPLOYMENT_ENV: parser.getInput({
+		key: 'GITHUB_DEPLOYMENT_ENV'
 	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
 }

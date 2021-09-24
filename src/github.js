@@ -9,7 +9,7 @@ const {
 	REF,
 	LOG_URL,
 	PR_LABELS,
-	DEPLOY_ENV
+	GITHUB_DEPLOYMENT_ENV
 } = require('./config')
 
 const init = () => {
@@ -23,7 +23,7 @@ const init = () => {
 			repo: REPOSITORY,
 			ref: REF,
 			required_contexts: [],
-			environment: DEPLOY_ENV || (PRODUCTION ? 'Production' : 'Preview'),
+			environment: GITHUB_DEPLOYMENT_ENV || (PRODUCTION ? 'Production' : 'Preview'),
 			description: 'Deploy to Vercel',
 			auto_merge: false
 		})

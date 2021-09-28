@@ -12,6 +12,7 @@ const {
 	SHA,
 	IS_PR,
 	PR_LABELS,
+	CREATE_COMMENT,
 	DELETE_EXISTING_COMMENT,
 	PR_PREVIEW_DOMAIN,
 	ALIAS_DOMAINS,
@@ -116,30 +117,32 @@ const run = async () => {
 				if (deletedCommentId) core.info(`Deleted existing comment #${ deletedCommentId }`)
 			}
 
-			core.info('Creating new comment on PR')
-			const body = `
-				This pull request has been deployed to Vercel.
+			if (CREATE_COMMENT) {
+				core.info('Creating new comment on PR')
+				const body = `
+					This pull request has been deployed to Vercel.
 
-				<table>
-					<tr>
-						<td><strong>Latest commit:</strong></td>
-						<td><code>${ SHA.substring(0, 7) }</code></td>
-					</tr>
-					<tr>
-						<td><strong>✅ Preview:</strong></td>
-						<td><a href='${ previewUrl }'>${ previewUrl }</a></td>
-					</tr>
-					<tr>
-						<td><strong>🔍 Inspect:</strong></td>
-						<td><a href='${ deployment.inspectorUrl }'>${ deployment.inspectorUrl }</a></td>
-					</tr>
-				</table>
+					<table>
+						<tr>
+							<td><strong>Latest commit:</strong></td>
+							<td><code>${ SHA.substring(0, 7) }</code></td>
+						</tr>
+						<tr>
+							<td><strong>✅ Preview:</strong></td>
+							<td><a href='${ previewUrl }'>${ previewUrl }</a></td>
+						</tr>
+						<tr>
+							<td><strong>🔍 Inspect:</strong></td>
+							<td><a href='${ deployment.inspectorUrl }'>${ deployment.inspectorUrl }</a></td>
+						</tr>
+					</table>
 
-				[View Workflow Logs](${ LOG_URL })
-			`
+					[View Workflow Logs](${ LOG_URL })
+				`
 
-			const comment = await github.createComment(body)
-			core.info(`Comment created: ${ comment.html_url }`)
+				const comment = await github.createComment(body)
+				core.info(`Comment created: ${ comment.html_url }`)
+			}
 
 			if (PR_LABELS) {
 				core.info('Adding label(s) to PR')
@@ -154,7 +157,7 @@ const run = async () => {
 		core.setOutput('DEPLOYMENT_ID', deployment.id)
 		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deployment.inspectorUrl)
 		core.setOutput('DEPLOYMENT_CREATED', true)
-		core.setOutput('COMMENT_CREATED', IS_PR)
+		core.setOutput('COMMENT_CREATED', IS_PR && CREATE_COMMENT)
 
 		core.info('Done')
 	} catch (err) {

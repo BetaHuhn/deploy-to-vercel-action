@@ -84,6 +84,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `GITHUB_DEPLOYMENT_ENV` | Custom environment for the GitHub deployment. | **No** | `Production` or `Preview` |
 | `PRODUCTION` | Create a production deployment (has no impact on PR deployments) | **No** | true |
 | `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
+| `CREATE_COMMENT` | Create PR comment when deploying | **No** | true |
 | `ATTACH_COMMIT_METADATA` | Attach metadata about the commit to the Vercel deployment | **No** | true |
 | `DEPLOY_PR_FROM_FORK` | Allow PRs which originate from a fork to be deployed (more info [below](#deploying-a-pr-made-from-a-fork-or-dependabot)) | **No** | false |
 | `PR_LABELS` | Labels which will be added to the pull request once deployed. Set it to false to turn off | **No** | `deployed` |
@@ -93,13 +94,13 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 
 ## 🛠️ Configuration
 
-In order for the Action to interact with GitHub and Vercel on your behalf, you have to specify your GitHub and Vercel Access Tokens as well as your Vercel Organisation and Project Id.
+In order for the Action to interact with GitHub and Vercel on your behalf, you have to specify your GitHub and Vercel Access Tokens as well as your Vercel Organization and Project Id.
 
 ### Tokens
 
 You can generate your GitHub Personal Access token [here](https://github.com/settings/tokens) and your Vercel Token [here](https://vercel.com/account/tokens) and then specify them as `GITHUB_TOKEN` and `VERCEL_TOKEN` in the Actions inputs.
 
-> **Note:** It is recommneded to set the tokens as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+> **Note:** It is recommended to set the tokens as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
 
 ### Vercel Project
 
@@ -111,7 +112,7 @@ Once set up, a new `.vercel` directory will be added to your directory. The `.ve
 
 You can then specify them as `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` in the Actions inputs.
 
-> **Note:** It is recommneded to set them as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+> **Note:** It is recommended to set them as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
 
 ### Custom Domains
 
@@ -203,7 +204,7 @@ Here are a few examples to help you get started!
 
 ### Basic Example
 
-The workflow below will run on every push to master and everytime a new PR is created or an existing PR changed. [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) will deploy the master branch to your Vercel production environment and comment on every PR with a preview link to the deployed PR.
+The workflow below will run on every push to master and every time a new PR is created or an existing PR changed. [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) will deploy the master branch to your Vercel production environment and comment on every PR with a preview link to the deployed PR.
 
 **.github/workflows/deploy.yml**
 
@@ -351,6 +352,57 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 ```
 
+### Deploy without creating pull request comment
+
+The workflow below will not automatically create a PR comment. This is useful for example when your PR can trigger multiple deployments (think monorepo for example) and you want to take control over PR comment creation by yourself. You can use output produced by this action to build comment by yourself.
+
+**.github/workflows/deploy.yml**
+
+```yml
+name: Deploy CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy to Vercel Action
+        id: vercel-deploy
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          CREATE_COMMENT: false
+      - uses: phulsechinmay/rewritable-pr-comment@v0.3.0
+        if: ${{ steps.vercel-deploy.outputs.DEPLOYMENT_CREATED }}
+        with:
+          message: |
+            This pull request has been deployed to Vercel.
+
+            <table>
+              <tr>
+                <td><strong>✅ Preview:</strong></td>
+                <td><a href='${{ steps.vercel-deploy.outputs.PREVIEW_URL }}'>${{ steps.vercel-deploy.outputs.PREVIEW_URL }}</a></td>
+              </tr>
+              <tr>
+                <td><strong>🔍 Inspect:</strong></td>
+                <td><a href='${ steps.vercel-deploy.outputs.DEPLOYMENT_INSPECTOR_URL }'>${ steps.vercel-deploy.outputs.DEPLOYMENT_INSPECTOR_URL }</a></td>
+              </tr>
+            </table>
+
+            [View Workflow Logs](${ LOG_URL })
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_IDENTIFIER: 'vercel-deploy'          
+```
+
 ### Deploy on schedule
 
 The workflow below will run at the given interval and deploy your project to Vercel.
@@ -425,7 +477,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 ```
 
-If you have an idea for another usecase, [create a discussion](https://github.com/BetaHuhn/deploy-to-vercel-action/discussions/new?category=show-and-tell) and maybe I will add it here!
+If you have an idea for another use case, [create a discussion](https://github.com/BetaHuhn/deploy-to-vercel-action/discussions/new?category=show-and-tell) and maybe I will add it here!
 
 ## 💻 Development
 

@@ -27,6 +27,10 @@ inputs:
     description: |
       Create a deployment on GitHub (default: true).
     required: false
+  CREATE_COMMENT:
+    description: |
+      Create PR comment when deploying (default: true).
+    required: false    
   DELETE_EXISTING_COMMENT:
     description: |
       Delete existing PR comment when redeploying PR (default: true).
@@ -69,6 +73,8 @@ outputs:
     description: 'True if a Vercel deployment was created.'
   COMMENT_CREATED:
     description: 'True if a comment was created on the PR or commit.'
+  DEPLOYMENT_INSPECTOR_URL:
+    description: 'Main deployment inspection url.'    
 
 runs:
   using: 'node12'

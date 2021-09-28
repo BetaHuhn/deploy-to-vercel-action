@@ -30,6 +30,11 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
+	CREATE_COMMENT: parser.getInput({
+		key: 'CREATE_COMMENT',
+		type: 'boolean',
+		default: true
+	}),
 	DELETE_EXISTING_COMMENT: parser.getInput({
 		key: 'DELETE_EXISTING_COMMENT',
 		type: 'boolean',

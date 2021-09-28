@@ -1,3 +1,16 @@
+## [v1.5.0] - 2021-09-28
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.5.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.4.0...v1.5.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.5.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.5.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.5.0.tar.gz))
+
+### New features
+
+- [`143f99c`](https://github.com/betahuhn/deploy-to-vercel-action/commit/143f99c)  Add CREATE_COMMENT option (#92)
+(Issues: [`#92`](https://github.com/betahuhn/deploy-to-vercel-action/issues/92) [`#90`](https://github.com/betahuhn/deploy-to-vercel-action/issues/90))
+
+### Dependency updates
+
+- [`2bf7e53`](https://github.com/betahuhn/deploy-to-vercel-action/commit/2bf7e53)  Bump action-input-parser from 1.2.18 to 1.2.19
+
 ## [v1.4.0] - 2021-09-24
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.4.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.3.22...v1.4.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.4.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.4.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.4.0.tar.gz))

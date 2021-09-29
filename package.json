@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/marketplace/actions/deploy-to-vercel-action",
   "dependencies": {
-    "@actions/core": "^1.5.0",
+    "@actions/core": "^1.6.0",
     "@actions/exec": "^1.1.0",
     "@actions/github": "^4.0.0",
     "action-input-parser": "^1.2.19",

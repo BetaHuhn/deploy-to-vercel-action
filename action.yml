@@ -62,6 +62,10 @@ inputs:
   GITHUB_DEPLOYMENT_ENV:
     description: |
       Custom environment for GitHub deployment.
+    required: false
+  CANCEL_IN_PROGRESS_DEPLOYMENT:
+    description: |
+      Cancel the deployment when the Action run is cancelled.
     required: false  
 
 outputs:

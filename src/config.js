@@ -73,6 +73,11 @@ const context = {
 	GITHUB_DEPLOYMENT_ENV: parser.getInput({
 		key: 'GITHUB_DEPLOYMENT_ENV'
 	}),
+	CANCEL_IN_PROGRESS_DEPLOYMENT: parser.getInput({
+		key: 'CANCEL_IN_PROGRESS_DEPLOYMENT',
+		type: 'boolean',
+		default: false
+	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
 }
 

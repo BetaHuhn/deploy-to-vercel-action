@@ -13969,6 +13969,11 @@ const context = {
 	GITHUB_DEPLOYMENT_ENV: parser.getInput({
 		key: 'GITHUB_DEPLOYMENT_ENV'
 	}),
+	CANCEL_IN_PROGRESS_DEPLOYMENT: parser.getInput({
+		key: 'CANCEL_IN_PROGRESS_DEPLOYMENT',
+		type: 'boolean',
+		default: false
+	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
 }
 
@@ -14275,6 +14280,17 @@ const init = () => {
 			metadata.forEach((item) => {
 				commandArguments = commandArguments.concat([ '--meta', item ])
 			})
+		} else {
+			const metadata = [
+				`githubOrg=${ USER }`,
+				`githubRepo=${ REPOSITORY }`,
+				`githubDeployment=1`,
+				`githubActionRunId=${ RUN_ID }`
+			]
+
+			metadata.forEach((item) => {
+				commandArguments = commandArguments.concat([ '--meta', item ])
+			})
 		}
 
 
@@ -14564,7 +14580,8 @@ const {
 	DEPLOY_PR_FROM_FORK,
 	IS_FORK,
 	ACTOR,
-	RUN_ID
+	RUN_ID,
+	CANCEL_IN_PROGRESS_DEPLOYMENT
 } = __nccwpck_require__(4570)
 
 let vercel
@@ -14718,40 +14735,43 @@ const run = async () => {
 	GitHub sends a SIGINT to the process when the action is cancelled,
 	see https://github.community/t/graceful-job-termination/121103/3
 */
-process.on('SIGINT', async () => {
-	try {
-		core.info(`Caught SIGINT, starting cleanup...`)
+if (CANCEL_IN_PROGRESS_DEPLOYMENT) {
+	core.debug(`Attaching listener to cancel deployment on SIGINT`)
+	process.on('SIGINT', async () => {
+		try {
+			core.info(`Caught SIGINT, starting cleanup...`)
 
-		if (vercel) {
-			const deployment = await vercel.getDeploymentByRunId(RUN_ID)
+			if (vercel) {
+				const deployment = await vercel.getDeploymentByRunId(RUN_ID)
 
-			if (deployment) {
-				core.debug(`Found matching deployment "${ deployment.uid }" to cancel`)
+				if (deployment) {
+					core.debug(`Found matching deployment "${ deployment.uid }" to cancel`)
 
-				await vercel.cancelDeployment(deployment.uid)
-				core.info(`Deployment "${ deployment.uid }" cancelled!`)
+					await vercel.cancelDeployment(deployment.uid)
+					core.info(`Deployment "${ deployment.uid }" cancelled!`)
+				} else {
+					core.debug(`No matching deployments found to cancel`)
+				}
 			} else {
-				core.debug(`No matching deployments found to cancel`)
+				core.debug('No Vercel instance to cancel')
 			}
-		} else {
-			core.debug('No Vercel instance to cancel')
+
+			if (github) {
+				core.debug(`Updating GitHub deployment status to "inactive"`)
+				await github.updateDeployment('inactive')
+
+				core.info(`GitHub deployment set to "inactive"`)
+			}
+
+			core.info('Cleanup done, exiting...')
+		} catch (err) {
+			core.error('Encountered error during cleanup')
+			core.error(err)
 		}
 
-		if (github) {
-			core.debug(`Updating GitHub deployment status to "inactive"`)
-			await github.updateDeployment('inactive')
-
-			core.info(`GitHub deployment set to "inactive"`)
-		}
-
-		core.info('Cleanup done, exiting...')
-	} catch (err) {
-		core.error('Encountered error during cleanup')
-		core.error(err)
-	}
-
-	process.exit(0)
-})
+		process.exit(0)
+	})
+}
 
 run()
 	.then(() => {})

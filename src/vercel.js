@@ -51,6 +51,17 @@ const init = () => {
 			metadata.forEach((item) => {
 				commandArguments = commandArguments.concat([ '--meta', item ])
 			})
+		} else {
+			const metadata = [
+				`githubOrg=${ USER }`,
+				`githubRepo=${ REPOSITORY }`,
+				`githubDeployment=1`,
+				`githubActionRunId=${ RUN_ID }`
+			]
+
+			metadata.forEach((item) => {
+				commandArguments = commandArguments.concat([ '--meta', item ])
+			})
 		}
 
 

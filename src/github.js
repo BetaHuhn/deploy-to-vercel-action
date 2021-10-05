@@ -116,7 +116,8 @@ const init = () => {
 		deleteExistingComment,
 		createComment,
 		addLabel,
-		getCommit
+		getCommit,
+		deploymentId
 	}
 }
 

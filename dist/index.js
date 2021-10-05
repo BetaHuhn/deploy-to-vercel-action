@@ -14153,7 +14153,8 @@ const init = () => {
 		deleteExistingComment,
 		createComment,
 		addLabel,
-		getCommit
+		getCommit,
+		deploymentId
 	}
 }
 
@@ -14567,9 +14568,10 @@ const {
 } = __nccwpck_require__(4570)
 
 let vercel
+let github
 
 const run = async () => {
-	const github = Github.init()
+	github = Github.init()
 
 	// Refuse to deploy an untrusted fork
 	if (IS_FORK === true && DEPLOY_PR_FROM_FORK === false) {
@@ -14597,7 +14599,7 @@ const run = async () => {
 		core.info(`Deployment #${ ghDeployment.id } created`)
 
 		await github.updateDeployment('pending')
-		core.info(`Deployment #${ ghDeployment.id } status changed to "pending"`)
+		core.debug(`Deployment #${ ghDeployment.id } status changed to "pending"`)
 	}
 
 	try {
@@ -14735,7 +14737,14 @@ process.on('SIGINT', async () => {
 			core.debug('No Vercel instance to cancel')
 		}
 
-		core.debug('Cleanup done, exiting...')
+		if (github) {
+			core.debug(`Updating GitHub deployment status to "inactive"`)
+			await github.updateDeployment('inactive')
+
+			core.info(`GitHub deployment set to "inactive"`)
+		}
+
+		core.info('Cleanup done, exiting...')
 	} catch (err) {
 		core.error('Encountered error during cleanup')
 		core.error(err)

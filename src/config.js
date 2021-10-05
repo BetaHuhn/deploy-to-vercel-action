@@ -91,12 +91,16 @@ const setDynamicVars = () => {
 		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
 		context.ACTOR = process.env.ACTOR || context.USER
 		context.IS_FORK = process.env.IS_FORK === 'true' || false
+		context.RUN_ID = `${ process.env.RUN_ID || '' }-${ Date.now() }`
 
 		return
 	}
 
 	context.IS_PR = [ 'pull_request', 'pull_request_target' ].includes(github.context.eventName)
 	context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/actions/runs/${ process.env.GITHUB_RUN_ID }`
+
+	// Unique ID for each run of the action (even re-runs)
+	context.RUN_ID = `${ github.context.runId }-${ Date.now() }`
 
 	// Use different values depending on if the Action was triggered by a PR
 	if (context.IS_PR) {

@@ -13987,12 +13987,16 @@ const setDynamicVars = () => {
 		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
 		context.ACTOR = process.env.ACTOR || context.USER
 		context.IS_FORK = process.env.IS_FORK === 'true' || false
+		context.RUN_ID = `${ process.env.RUN_ID || '' }-${ Date.now() }`
 
 		return
 	}
 
 	context.IS_PR = [ 'pull_request', 'pull_request_target' ].includes(github.context.eventName)
 	context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/actions/runs/${ process.env.GITHUB_RUN_ID }`
+
+	// Unique ID for each run of the action (even re-runs)
+	context.RUN_ID = `${ github.context.runId }-${ Date.now() }`
 
 	// Use different values depending on if the Action was triggered by a PR
 	if (context.IS_PR) {
@@ -14230,7 +14234,8 @@ const {
 	SHA,
 	USER,
 	REPOSITORY,
-	REF
+	REF,
+	RUN_ID
 } = __nccwpck_require__(4570)
 
 const init = () => {
@@ -14262,7 +14267,8 @@ const init = () => {
 				`githubCommitSha=${ SHA }`,
 				`githubOrg=${ USER }`,
 				`githubRepo=${ REPOSITORY }`,
-				`githubDeployment=1`
+				`githubDeployment=1`,
+				`githubActionRunId=${ RUN_ID }`
 			]
 
 			metadata.forEach((item) => {
@@ -14307,11 +14313,39 @@ const init = () => {
 		return res
 	}
 
+	const getDeploymentByRunId = async (runId) => {
+		const url = `https://api.vercel.com/v5/now/deployments?meta-githubActionRunId=${ runId }&limit=1`
+		const options = {
+			headers: {
+				Authorization: `Bearer ${ VERCEL_TOKEN }`
+			}
+		}
+
+		const res = await got(url, options).json()
+
+		return res.deployments[0] || []
+	}
+
+	const cancelDeployment = async (deploymentId) => {
+		const url = `https://api.vercel.com/v12/now/deployments/${ deploymentId }/cancel`
+		const options = {
+			headers: {
+				Authorization: `Bearer ${ VERCEL_TOKEN }`
+			}
+		}
+
+		const res = await got.patch(url, options).json()
+
+		return res
+	}
+
 	return {
 		deploy,
 		assignAlias,
 		deploymentUrl,
-		getDeployment
+		getDeployment,
+		getDeploymentByRunId,
+		cancelDeployment
 	}
 }
 
@@ -14528,8 +14562,11 @@ const {
 	LOG_URL,
 	DEPLOY_PR_FROM_FORK,
 	IS_FORK,
-	ACTOR
+	ACTOR,
+	RUN_ID
 } = __nccwpck_require__(4570)
+
+let vercel
 
 const run = async () => {
 	const github = Github.init()
@@ -14565,7 +14602,7 @@ const run = async () => {
 
 	try {
 		core.info(`Creating deployment with Vercel CLI`)
-		const vercel = Vercel.init()
+		vercel = Vercel.init()
 
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
@@ -14673,6 +14710,39 @@ const run = async () => {
 		core.setFailed(err.message)
 	}
 }
+
+/*
+	Try to cancel the deployment when the action run is cancelled.
+	GitHub sends a SIGINT to the process when the action is cancelled,
+	see https://github.community/t/graceful-job-termination/121103/3
+*/
+process.on('SIGINT', async () => {
+	try {
+		core.info(`Caught SIGINT, starting cleanup...`)
+
+		if (vercel) {
+			const deployment = await vercel.getDeploymentByRunId(RUN_ID)
+
+			if (deployment) {
+				core.debug(`Found matching deployment "${ deployment.uid }" to cancel`)
+
+				await vercel.cancelDeployment(deployment.uid)
+				core.info(`Deployment "${ deployment.uid }" cancelled!`)
+			} else {
+				core.debug(`No matching deployments found to cancel`)
+			}
+		} else {
+			core.debug('No Vercel instance to cancel')
+		}
+
+		core.debug('Cleanup done, exiting...')
+	} catch (err) {
+		core.error('Encountered error during cleanup')
+		core.error(err)
+	}
+
+	process.exit()
+})
 
 run()
 	.then(() => {})

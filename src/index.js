@@ -20,8 +20,11 @@ const {
 	LOG_URL,
 	DEPLOY_PR_FROM_FORK,
 	IS_FORK,
-	ACTOR
+	ACTOR,
+	RUN_ID
 } = require('./config')
+
+let vercel
 
 const run = async () => {
 	const github = Github.init()
@@ -57,7 +60,7 @@ const run = async () => {
 
 	try {
 		core.info(`Creating deployment with Vercel CLI`)
-		const vercel = Vercel.init()
+		vercel = Vercel.init()
 
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
@@ -165,6 +168,39 @@ const run = async () => {
 		core.setFailed(err.message)
 	}
 }
+
+/*
+	Try to cancel the deployment when the action run is cancelled.
+	GitHub sends a SIGINT to the process when the action is cancelled,
+	see https://github.community/t/graceful-job-termination/121103/3
+*/
+process.on('SIGINT', async () => {
+	try {
+		core.info(`Caught SIGINT, starting cleanup...`)
+
+		if (vercel) {
+			const deployment = await vercel.getDeploymentByRunId(RUN_ID)
+
+			if (deployment) {
+				core.debug(`Found matching deployment "${ deployment.uid }" to cancel`)
+
+				await vercel.cancelDeployment(deployment.uid)
+				core.info(`Deployment "${ deployment.uid }" cancelled!`)
+			} else {
+				core.debug(`No matching deployments found to cancel`)
+			}
+		} else {
+			core.debug('No Vercel instance to cancel')
+		}
+
+		core.debug('Cleanup done, exiting...')
+	} catch (err) {
+		core.error('Encountered error during cleanup')
+		core.error(err)
+	}
+
+	process.exit()
+})
 
 run()
 	.then(() => {})

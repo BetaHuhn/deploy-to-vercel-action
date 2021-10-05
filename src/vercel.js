@@ -11,7 +11,8 @@ const {
 	SHA,
 	USER,
 	REPOSITORY,
-	REF
+	REF,
+	RUN_ID
 } = require('./config')
 
 const init = () => {
@@ -43,7 +44,8 @@ const init = () => {
 				`githubCommitSha=${ SHA }`,
 				`githubOrg=${ USER }`,
 				`githubRepo=${ REPOSITORY }`,
-				`githubDeployment=1`
+				`githubDeployment=1`,
+				`githubActionRunId=${ RUN_ID }`
 			]
 
 			metadata.forEach((item) => {
@@ -88,11 +90,39 @@ const init = () => {
 		return res
 	}
 
+	const getDeploymentByRunId = async (runId) => {
+		const url = `https://api.vercel.com/v5/now/deployments?meta-githubActionRunId=${ runId }&limit=1`
+		const options = {
+			headers: {
+				Authorization: `Bearer ${ VERCEL_TOKEN }`
+			}
+		}
+
+		const res = await got(url, options).json()
+
+		return res.deployments[0] || []
+	}
+
+	const cancelDeployment = async (deploymentId) => {
+		const url = `https://api.vercel.com/v12/now/deployments/${ deploymentId }/cancel`
+		const options = {
+			headers: {
+				Authorization: `Bearer ${ VERCEL_TOKEN }`
+			}
+		}
+
+		const res = await got.patch(url, options).json()
+
+		return res
+	}
+
 	return {
 		deploy,
 		assignAlias,
 		deploymentUrl,
-		getDeployment
+		getDeployment,
+		getDeploymentByRunId,
+		cancelDeployment
 	}
 }
 

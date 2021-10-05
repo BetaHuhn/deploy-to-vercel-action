@@ -14750,7 +14750,7 @@ process.on('SIGINT', async () => {
 		core.error(err)
 	}
 
-	process.exit()
+	process.exit(0)
 })
 
 run()

@@ -26,7 +26,7 @@
     "@actions/github": "^4.0.0",
     "action-input-parser": "^1.2.22",
     "dotenv": "^9.0.2",
-    "got": "^11.8.2",
+    "got": "^11.8.3",
     "vercel": "^22.0.1"
   },
   "devDependencies": {

@@ -1,3 +1,11 @@
+## [v1.5.7] - 2021-12-06
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.5.7) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.5.6...v1.5.7) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.5.7) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.5.7.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.5.7.tar.gz))
+
+### Dependency updates
+
+- [`0b86bb7`](https://github.com/betahuhn/deploy-to-vercel-action/commit/0b86bb7)  Bump @vercel/ncc from 0.32.0 to 0.33.0
+
 ## [v1.5.6] - 2021-11-29
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.5.6) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.5.5...v1.5.6) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.5.6) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.5.6.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.5.6.tar.gz))

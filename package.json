@@ -24,7 +24,7 @@
     "@actions/core": "^1.6.0",
     "@actions/exec": "^1.1.0",
     "@actions/github": "^4.0.0",
-    "action-input-parser": "^1.2.26",
+    "action-input-parser": "^1.2.27",
     "dotenv": "^9.0.2",
     "got": "^11.8.3",
     "vercel": "^22.0.1"

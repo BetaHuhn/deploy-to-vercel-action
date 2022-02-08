@@ -36,7 +36,7 @@ const init = () => {
 			const metadata = [
 				`githubCommitAuthorName=${ commit.authorName }`,
 				`githubCommitAuthorLogin=${ commit.authorLogin }`,
-				`githubCommitMessage=${ commit.commitMessage }`,
+				`githubCommitMessage=${ commit.commitMessage.split(/\r?\n/)[0] }`,
 				`githubCommitOrg=${ USER }`,
 				`githubCommitRepo=${ REPOSITORY }`,
 				`githubCommitRef=${ REF }`,

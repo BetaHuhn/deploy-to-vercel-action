@@ -30,7 +30,7 @@ inputs:
   CREATE_COMMENT:
     description: |
       Create PR comment when deploying (default: true).
-    required: false    
+    required: false
   DELETE_EXISTING_COMMENT:
     description: |
       Delete existing PR comment when redeploying PR (default: true).
@@ -62,7 +62,11 @@ inputs:
   GITHUB_DEPLOYMENT_ENV:
     description: |
       Custom environment for GitHub deployment.
-    required: false  
+    required: false
+  TRIM_COMMIT_MESSAGE:
+    description: |
+      When passing meta data to Vercel deployment, trim the commit message to subject only (default: false).
+    required: false
 
 outputs:
   PREVIEW_URL:
@@ -74,7 +78,7 @@ outputs:
   COMMENT_CREATED:
     description: 'True if a comment was created on the PR or commit.'
   DEPLOYMENT_INSPECTOR_URL:
-    description: 'Main deployment inspection url.'    
+    description: 'Main deployment inspection url.'
 
 runs:
   using: 'node12'

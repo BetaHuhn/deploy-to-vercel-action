@@ -13969,6 +13969,11 @@ const context = {
 	GITHUB_DEPLOYMENT_ENV: parser.getInput({
 		key: 'GITHUB_DEPLOYMENT_ENV'
 	}),
+	TRIM_COMMIT_MESSAGE: parser.getInput({
+		key: 'TRIM_COMMIT_MESSAGE',
+		type: 'boolean',
+		default: false
+	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
 }
 
@@ -13987,6 +13992,7 @@ const setDynamicVars = () => {
 		context.LOG_URL = process.env.LOG_URL || `https://github.com/${ context.USER }/${ context.REPOSITORY }`
 		context.ACTOR = process.env.ACTOR || context.USER
 		context.IS_FORK = process.env.IS_FORK === 'true' || false
+		context.TRIM_COMMIT_MESSAGE = process.env.TRIM_COMMIT_MESSAGE === 'true' || false
 
 		return
 	}
@@ -14230,7 +14236,8 @@ const {
 	SHA,
 	USER,
 	REPOSITORY,
-	REF
+	REF,
+	TRIM_COMMIT_MESSAGE
 } = __nccwpck_require__(4570)
 
 const init = () => {
@@ -14255,7 +14262,7 @@ const init = () => {
 			const metadata = [
 				`githubCommitAuthorName=${ commit.authorName }`,
 				`githubCommitAuthorLogin=${ commit.authorLogin }`,
-				`githubCommitMessage=${ commit.commitMessage.split(/\r?\n/)[0] }`,
+				`githubCommitMessage=${ TRIM_COMMIT_MESSAGE ? commit.commitMessage.split(/\r?\n/)[0] : commit.commitMessage }`,
 				`githubCommitOrg=${ USER }`,
 				`githubCommitRepo=${ REPOSITORY }`,
 				`githubCommitRef=${ REF }`,

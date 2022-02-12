@@ -1,5 +1,5 @@
 <div align="center">
-  
+
 # Deploy to Vercel Action
 
 [![Node CI](https://github.com/BetaHuhn/deploy-to-vercel-action/workflows/Node%20CI/badge.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/actions?query=workflow%3A%22Node+CI%22) [![Release CI](https://github.com/BetaHuhn/deploy-to-vercel-action/workflows/Release%20CI/badge.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/actions?query=workflow%3A%22Release+CI%22) [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/blob/master/LICENSE) ![David](https://img.shields.io/david/betahuhn/deploy-to-vercel-action)
@@ -86,6 +86,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
 | `CREATE_COMMENT` | Create PR comment when deploying | **No** | true |
 | `ATTACH_COMMIT_METADATA` | Attach metadata about the commit to the Vercel deployment | **No** | true |
+| `TRIM_COMMIT_MESSAGE` | When passing meta data to Vercel deployment, trim the commit message to subject only | **No** | false |
 | `DEPLOY_PR_FROM_FORK` | Allow PRs which originate from a fork to be deployed (more info [below](#deploying-a-pr-made-from-a-fork-or-dependabot)) | **No** | false |
 | `PR_LABELS` | Labels which will be added to the pull request once deployed. Set it to false to turn off | **No** | `deployed` |
 | `ALIAS_DOMAINS` | Alias domain(s) to assign to the deployment (more info [below](#custom-domains)) | **No** | N/A |
@@ -148,7 +149,7 @@ This is especially useful if you want to change the PR preview domain with the `
 PR_PREVIEW_DOMAIN: "{REPO}-{PR}.now.sh"
 ```
 
-> **Note:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN` 
+> **Note:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN`
 
 ### Deploying a PR made from a fork or Dependabot
 
@@ -400,7 +401,7 @@ jobs:
 
             [View Workflow Logs](${ LOG_URL })
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMENT_IDENTIFIER: 'vercel-deploy'          
+          COMMENT_IDENTIFIER: 'vercel-deploy'
 ```
 
 ### Deploy on schedule

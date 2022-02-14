@@ -11,7 +11,8 @@ const {
 	SHA,
 	USER,
 	REPOSITORY,
-	REF
+	REF,
+	TRIM_COMMIT_MESSAGE
 } = require('./config')
 
 const init = () => {
@@ -36,7 +37,7 @@ const init = () => {
 			const metadata = [
 				`githubCommitAuthorName=${ commit.authorName }`,
 				`githubCommitAuthorLogin=${ commit.authorLogin }`,
-				`githubCommitMessage=${ commit.commitMessage }`,
+				`githubCommitMessage=${ TRIM_COMMIT_MESSAGE ? commit.commitMessage.split(/\r?\n/)[0] : commit.commitMessage }`,
 				`githubCommitOrg=${ USER }`,
 				`githubCommitRepo=${ REPOSITORY }`,
 				`githubCommitRef=${ REF }`,

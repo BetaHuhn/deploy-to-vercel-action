@@ -1,3 +1,16 @@
+## [v1.6.0] - 2022-02-14
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.6.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.5.11...v1.6.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.6.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.6.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.6.0.tar.gz))
+
+### New features
+
+- [`7375be9`](https://github.com/betahuhn/deploy-to-vercel-action/commit/7375be9)  Add option to trim commit message to prevent hitting env var size limit (#127)
+(Issues: [`#127`](https://github.com/betahuhn/deploy-to-vercel-action/issues/127))
+
+### Dependency updates
+
+- [`3b2e5a5`](https://github.com/betahuhn/deploy-to-vercel-action/commit/3b2e5a5)  Bump @vercel/ncc from 0.33.1 to 0.33.3
+
 ## [v1.5.11] - 2022-01-31
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.5.11) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.5.10...v1.5.11) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.5.11) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.5.11.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.5.11.tar.gz))

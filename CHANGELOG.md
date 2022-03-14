@@ -1,3 +1,11 @@
+## [v1.6.1] - 2022-03-14
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.6.1) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.6.0...v1.6.1) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.6.1) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.6.1.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.6.1.tar.gz))
+
+### Dependency updates
+
+- [`ba19ce9`](https://github.com/betahuhn/deploy-to-vercel-action/commit/ba19ce9)  Bump action-input-parser from 1.2.27 to 1.2.28
+
 ## [v1.6.0] - 2022-02-14
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.6.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.5.11...v1.6.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.6.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.6.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.6.0.tar.gz))

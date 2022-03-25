@@ -67,6 +67,10 @@ inputs:
     description: |
       When passing meta data to Vercel deployment, trim the commit message to subject only (default: false).
     required: false
+  BUILD_ENV:
+    description: |
+      Provide environment variables to the build step.
+    required: false
 
 outputs:
   PREVIEW_URL:

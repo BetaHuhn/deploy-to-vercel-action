@@ -78,6 +78,10 @@ const context = {
 		type: 'boolean',
 		default: false
 	}),
+	BUILD_ENV: parser.getInput({
+		key: 'BUILD_ENV',
+		type: 'array'
+	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
 }
 

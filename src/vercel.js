@@ -12,7 +12,8 @@ const {
 	USER,
 	REPOSITORY,
 	REF,
-	TRIM_COMMIT_MESSAGE
+	TRIM_COMMIT_MESSAGE,
+	BUILD_ENV
 } = require('./config')
 
 const init = () => {
@@ -52,6 +53,11 @@ const init = () => {
 			})
 		}
 
+		if (BUILD_ENV) {
+			BUILD_ENV.forEach((item) => {
+				commandArguments = commandArguments.concat([ '--build-env', item ])
+			})
+		}
 
 		core.info('Starting deploy with Vercel CLI')
 		const output = await exec('vercel', commandArguments)

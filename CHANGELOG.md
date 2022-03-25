@@ -1,3 +1,16 @@
+## [v1.7.0] - 2022-03-25
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.7.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.6.2...v1.7.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.7.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.7.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.7.0.tar.gz))
+
+### New features
+
+- [`78ce3cf`](https://github.com/betahuhn/deploy-to-vercel-action/commit/78ce3cf)  Add input to pass environment variables to the build (#144)
+(Issues: [`#144`](https://github.com/betahuhn/deploy-to-vercel-action/issues/144))
+
+### Dependency updates
+
+- [`ea9eb1d`](https://github.com/betahuhn/deploy-to-vercel-action/commit/ea9eb1d)  Bump action-input-parser from 1.2.29 to 1.2.30
+
 ## [v1.6.2] - 2022-03-21
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.6.2) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.6.1...v1.6.2) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.6.2) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.6.2.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.6.2.tar.gz))

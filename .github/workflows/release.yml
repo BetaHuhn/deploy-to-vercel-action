@@ -61,3 +61,4 @@ jobs:
           GIT_AUTHOR_EMAIL: "bot@mxis.ch"
           GIT_COMMITTER_NAME: "BetaHuhn Bot"
           GIT_COMMITTER_EMAIL: "bot@mxis.ch"
+          COMMIT_ASSETS: dist

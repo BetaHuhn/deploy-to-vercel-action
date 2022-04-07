@@ -14423,7 +14423,7 @@ const core = __nccwpck_require__(2186)
 const { spawn } = __nccwpck_require__(2081)
 
 const execCmd = (command, args) => {
-	core.debug(`EXEC: "${ command }"`)
+	core.debug(`EXEC: "${ command } ${ args }"`)
 	return new Promise((resolve, reject) => {
 		const process = spawn(command, args)
 		let stdout

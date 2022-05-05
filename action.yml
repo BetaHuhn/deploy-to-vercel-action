@@ -21,7 +21,7 @@ inputs:
     required: false
   PRODUCTION:
     description: |
-      Create a production deployment (has no impact on PR deployments).
+      Create a production deployment (default: true, false for PR deployments).
     required: false
   GITHUB_DEPLOYMENT:
     description: |

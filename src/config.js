@@ -3,6 +3,8 @@ const github = require('@actions/github')
 const parser = require('action-input-parser')
 require('dotenv').config()
 
+const IS_PR = [ 'pull_request', 'pull_request_target' ].includes(github.context.eventName)
+
 const context = {
 	GITHUB_TOKEN: parser.getInput({
 		key: [ 'GH_PAT', 'GITHUB_TOKEN' ],
@@ -23,7 +25,7 @@ const context = {
 	PRODUCTION: parser.getInput({
 		key: 'PRODUCTION',
 		type: 'boolean',
-		default: true
+		default: !IS_PR
 	}),
 	GITHUB_DEPLOYMENT: parser.getInput({
 		key: 'GITHUB_DEPLOYMENT',
@@ -105,12 +107,11 @@ const setDynamicVars = () => {
 		return
 	}
 
-	context.IS_PR = [ 'pull_request', 'pull_request_target' ].includes(github.context.eventName)
+	context.IS_PR = IS_PR
 	context.LOG_URL = `https://github.com/${ context.USER }/${ context.REPOSITORY }/actions/runs/${ process.env.GITHUB_RUN_ID }`
 
 	// Use different values depending on if the Action was triggered by a PR
 	if (context.IS_PR) {
-		context.PRODUCTION = false
 		context.PR_NUMBER = github.context.payload.number
 		context.ACTOR = github.context.payload.pull_request.user.login
 		context.REF = github.context.payload.pull_request.head.ref

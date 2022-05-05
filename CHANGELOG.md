@@ -1,3 +1,19 @@
+## [v1.8.0] - 2022-05-05
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.8.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.7.5...v1.8.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.8.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.8.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.8.0.tar.gz))
+
+### New features
+
+- [`0f891b8`](https://github.com/betahuhn/deploy-to-vercel-action/commit/0f891b8)  Add option to change the working directory
+
+### Bug fixes
+
+- [`8c616da`](https://github.com/betahuhn/deploy-to-vercel-action/commit/8c616da)  Prevent PRODUCTION input from being overwritten
+
+### Dependency updates
+
+- [`bfb7ffb`](https://github.com/betahuhn/deploy-to-vercel-action/commit/bfb7ffb)  Bump action-input-parser from 1.2.31 to 1.2.32
+
 ## [v1.7.5] - 2022-05-02
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.7.5) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.7.4...v1.7.5) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.7.5) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.7.5.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.7.5.tar.gz))

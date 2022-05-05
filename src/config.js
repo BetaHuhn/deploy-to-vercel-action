@@ -80,6 +80,9 @@ const context = {
 		type: 'boolean',
 		default: false
 	}),
+	WORKING_DIRECTORY: parser.getInput({
+		key: 'WORKING_DIRECTORY'
+	}),
 	BUILD_ENV: parser.getInput({
 		key: 'BUILD_ENV',
 		type: 'array'

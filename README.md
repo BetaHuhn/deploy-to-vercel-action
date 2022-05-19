@@ -94,6 +94,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_SCOPE` | Execute commands from a different Vercel team or user | **No** | N/A |
 | `BUILD_ENV` | Provide environment variables to the build step | **No** | N/A |
 | `WORKING_DIRECTORY` | Working directory for the Vercel CLI | **No** | N/A |
+| `FORCE` | Used to skip the build cache. | **No** | false
 
 ## 🛠️ Configuration
 

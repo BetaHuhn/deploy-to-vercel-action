@@ -14,7 +14,8 @@ const {
 	REF,
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
-	WORKING_DIRECTORY
+	WORKING_DIRECTORY,
+	FORCE
 } = require('./config')
 
 const init = () => {
@@ -33,6 +34,10 @@ const init = () => {
 
 		if (PRODUCTION) {
 			commandArguments.push('--prod')
+		}
+
+		if (FORCE) {
+			commandArguments.push('--force')
 		}
 
 		if (commit) {

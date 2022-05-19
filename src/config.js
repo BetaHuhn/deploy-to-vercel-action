@@ -87,7 +87,12 @@ const context = {
 		key: 'BUILD_ENV',
 		type: 'array'
 	}),
-	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true'
+	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true',
+	FORCE: parser.getInput({
+		key: 'FORCE',
+		type: 'boolean',
+		default: false
+	})
 }
 
 const setDynamicVars = () => {

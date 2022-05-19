@@ -1,3 +1,16 @@
+## [v1.9.0] - 2022-05-19
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.8.3...v1.9.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.0.tar.gz))
+
+### New features
+
+- [`0b6260b`](https://github.com/betahuhn/deploy-to-vercel-action/commit/0b6260b)  Add force option (#170)
+(Issues: [`#170`](https://github.com/betahuhn/deploy-to-vercel-action/issues/170))
+
+### Dependency updates
+
+- [`e3334f8`](https://github.com/betahuhn/deploy-to-vercel-action/commit/e3334f8)  Bump @actions/core from 1.8.1 to 1.8.2
+
 ## [v1.8.3] - 2022-05-16
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.8.3) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.8.2...v1.8.3) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.8.3) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.8.3.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.8.3.tar.gz))

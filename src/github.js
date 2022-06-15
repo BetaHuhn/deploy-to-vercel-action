@@ -13,9 +13,7 @@ const {
 } = require('./config')
 
 const init = () => {
-	const client = github.getOctokit(GITHUB_TOKEN, {
-		previews: [ 'flash', 'ant-man' ]
-	})
+	const client = github.getOctokit(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
 
 	let deploymentId
 
@@ -60,9 +58,7 @@ const init = () => {
 
 		if (data.length < 1) return
 
-		const comment = data.find((comment) =>
-			comment.body.includes('This pull request has been deployed to Vercel.')
-		)
+		const comment = data.find((comment) => comment.body.includes('This pull request has been deployed to Vercel.'))
 		if (comment) {
 			await client.issues.deleteComment({
 				owner: USER,

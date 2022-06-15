@@ -69,7 +69,7 @@ const run = async () => {
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info(`Assigning custom preview domain to PR`)
 
-			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', USER)
+			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', paramCase(USER))
 				.replace('{REPO}', paramCase(REPOSITORY))
 				.replace('{BRANCH}', paramCase(BRANCH))
 				.replace('{PR}', PR_NUMBER)
@@ -86,7 +86,7 @@ const run = async () => {
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
 				const alias = ALIAS_DOMAINS[i]
-					.replace('{USER}', USER)
+					.replace('{USER}', paramCase(USER))
 					.replace('{REPO}', paramCase(REPOSITORY))
 					.replace('{BRANCH}', paramCase(BRANCH))
 					.replace('{SHA}', SHA.substring(0, 7))

@@ -154,7 +154,7 @@ const run = async () => {
 
 		core.setOutput('PREVIEW_URL', previewUrl)
 		core.setOutput('DEPLOYMENT_URLS', deploymentUrls)
-		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentUrl)
+		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentUrls[deploymentUrls.length - 1])
 		core.setOutput('DEPLOYMENT_ID', deployment.id)
 		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deployment.inspectorUrl)
 		core.setOutput('DEPLOYMENT_CREATED', true)

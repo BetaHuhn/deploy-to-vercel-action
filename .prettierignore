@@ -1,0 +1,7 @@
+src
+dist
+.github
+*.js
+*.yml
+*.md
+*.json

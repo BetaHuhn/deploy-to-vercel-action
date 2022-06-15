@@ -2,6 +2,7 @@ const core = require('@actions/core')
 const Github = require('./github')
 const Vercel = require('./vercel')
 const { addSchema } = require('./helpers')
+const { paramCase } = require('change-case')
 
 const {
 	GITHUB_DEPLOYMENT,
@@ -68,10 +69,9 @@ const run = async () => {
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info(`Assigning custom preview domain to PR`)
 
-			const alias = PR_PREVIEW_DOMAIN
-				.replace('{USER}', USER)
-				.replace('{REPO}', REPOSITORY)
-				.replace('{BRANCH}', BRANCH)
+			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', USER)
+				.replace('{REPO}', paramCase(REPOSITORY))
+				.replace('{BRANCH}', paramCase(BRANCH))
 				.replace('{PR}', PR_NUMBER)
 				.replace('{SHA}', SHA.substring(0, 7))
 				.toLowerCase()
@@ -87,8 +87,8 @@ const run = async () => {
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
 				const alias = ALIAS_DOMAINS[i]
 					.replace('{USER}', USER)
-					.replace('{REPO}', REPOSITORY)
-					.replace('{BRANCH}', BRANCH)
+					.replace('{REPO}', paramCase(REPOSITORY))
+					.replace('{BRANCH}', paramCase(BRANCH))
 					.replace('{SHA}', SHA.substring(0, 7))
 					.toLowerCase()
 

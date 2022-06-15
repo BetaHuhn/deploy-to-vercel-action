@@ -16055,9 +16055,7 @@ const {
 } = __nccwpck_require__(4570)
 
 const init = () => {
-	const client = github.getOctokit(GITHUB_TOKEN, {
-		previews: [ 'flash', 'ant-man' ]
-	})
+	const client = github.getOctokit(GITHUB_TOKEN, { previews: [ 'flash', 'ant-man' ] })
 
 	let deploymentId
 
@@ -16102,9 +16100,7 @@ const init = () => {
 
 		if (data.length < 1) return
 
-		const comment = data.find((comment) =>
-			comment.body.includes('This pull request has been deployed to Vercel.')
-		)
+		const comment = data.find((comment) => comment.body.includes('This pull request has been deployed to Vercel.'))
 		if (comment) {
 			await client.issues.deleteComment({
 				owner: USER,
@@ -16603,7 +16599,7 @@ const run = async () => {
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info(`Assigning custom preview domain to PR`)
 
-			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', USER)
+			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', paramCase(USER))
 				.replace('{REPO}', paramCase(REPOSITORY))
 				.replace('{BRANCH}', paramCase(BRANCH))
 				.replace('{PR}', PR_NUMBER)
@@ -16620,7 +16616,7 @@ const run = async () => {
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
 				const alias = ALIAS_DOMAINS[i]
-					.replace('{USER}', USER)
+					.replace('{USER}', paramCase(USER))
 					.replace('{REPO}', paramCase(REPOSITORY))
 					.replace('{BRANCH}', paramCase(BRANCH))
 					.replace('{SHA}', SHA.substring(0, 7))
@@ -16688,6 +16684,7 @@ const run = async () => {
 
 		core.setOutput('PREVIEW_URL', previewUrl)
 		core.setOutput('DEPLOYMENT_URLS', deploymentUrls)
+		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentUrl)
 		core.setOutput('DEPLOYMENT_ID', deployment.id)
 		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deployment.inspectorUrl)
 		core.setOutput('DEPLOYMENT_CREATED', true)

@@ -16633,7 +16633,7 @@ const run = async () => {
 					prefix = prefix.substring(0, 55)
 					const uniqueSuffix = crypto.createHash('sha256')
 						.update(`git-${ BRANCH }-${ REPOSITORY }`)
-						.digest('base64')
+						.digest('base64url')
 						.slice(0, 6)
 
 					nextAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`

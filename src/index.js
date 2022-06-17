@@ -86,8 +86,11 @@ const run = async () => {
 			const previewDomainSuffix = '.vercel.app'
 			let nextAlias = alias
 
+			core.info(`debug nextAlias ${ nextAlias }`)
+
 			if (alias.endsWith(previewDomainSuffix)) {
 				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
+				core.info(`debug prefix ${ prefix }`)
 
 				if (prefix.length >= 60) {
 					core.info(`${ prefix } exceeds 60 chars in length, truncating using vercel's rules. \n\nSee https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)

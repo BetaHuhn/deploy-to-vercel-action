@@ -92,7 +92,7 @@ const run = async () => {
 
 				if (prefix.length >= 60) {
 					core.info(`The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. \n\nSee https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
-					prefix = prefix.substring(0, 56)
+					prefix = prefix.substring(0, 55)
 					const uniqueSuffix = crypto.createHash('sha256')
 						.update(`git-${ BRANCH }-${ REPOSITORY }`)
 						.digest('base64')

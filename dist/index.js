@@ -16375,6 +16375,14 @@ module.exports = require("child_process");
 
 /***/ }),
 
+/***/ 6113:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("crypto");
+
+/***/ }),
+
 /***/ 9523:
 /***/ ((module) => {
 
@@ -16528,11 +16536,14 @@ module.exports = require("zlib");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
+// @ts-check
 const core = __nccwpck_require__(2186)
 const Github = __nccwpck_require__(8396)
 const Vercel = __nccwpck_require__(847)
 const { addSchema } = __nccwpck_require__(8505)
 const { paramCase } = __nccwpck_require__(9091)
+const crypto = __nccwpck_require__(6113)
+
 
 const {
 	GITHUB_DEPLOYMENT,
@@ -16599,6 +16610,10 @@ const run = async () => {
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info(`Assigning custom preview domain to PR`)
 
+			if (typeof PR_PREVIEW_DOMAIN !== 'string') {
+				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
+			}
+
 			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', paramCase(USER))
 				.replace('{REPO}', paramCase(REPOSITORY))
 				.replace('{BRANCH}', paramCase(BRANCH))
@@ -16606,16 +16621,39 @@ const run = async () => {
 				.replace('{SHA}', SHA.substring(0, 7))
 				.toLowerCase()
 
-			await vercel.assignAlias(alias)
+			const previewDomainSuffix = '.vercel.app'
+			let nextAlias = alias
 
-			deploymentUrls.push(addSchema(alias))
+
+			if (alias.endsWith(previewDomainSuffix)) {
+				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
+
+				if (prefix.length >= 60) {
+					core.info(`The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. \n\nSee https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
+					prefix = prefix.substring(0, 56)
+					const uniqueSuffix = crypto.createHash('sha256')
+						.update(`git-${ BRANCH }-${ REPOSITORY }`)
+						.digest('base64')
+						.slice(0, 6)
+
+					nextAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`
+					core.info(`Updated domain alias: ${ nextAlias }`)
+				}
+			}
+
+			await vercel.assignAlias(nextAlias)
+			deploymentUrls.push(addSchema(nextAlias))
 		}
 
 		if (!IS_PR && ALIAS_DOMAINS) {
 			core.info(`Assigning custom domains to Vercel deployment`)
 
+			if (!Array.isArray(ALIAS_DOMAINS)) {
+				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
+			}
+
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
-				const alias = ALIAS_DOMAINS[i]
+				const alias = /** @type {string} */ (ALIAS_DOMAINS[i])
 					.replace('{USER}', paramCase(USER))
 					.replace('{REPO}', paramCase(REPOSITORY))
 					.replace('{BRANCH}', paramCase(BRANCH))

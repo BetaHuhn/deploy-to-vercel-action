@@ -1,8 +1,11 @@
+// @ts-check
 const core = require('@actions/core')
 const Github = require('./github')
 const Vercel = require('./vercel')
 const { addSchema } = require('./helpers')
 const { paramCase } = require('change-case')
+const crypto = require('crypto')
+
 
 const {
 	GITHUB_DEPLOYMENT,
@@ -69,6 +72,10 @@ const run = async () => {
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info(`Assigning custom preview domain to PR`)
 
+			if (typeof PR_PREVIEW_DOMAIN !== 'string') {
+				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
+			}
+
 			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', paramCase(USER))
 				.replace('{REPO}', paramCase(REPOSITORY))
 				.replace('{BRANCH}', paramCase(BRANCH))
@@ -76,16 +83,38 @@ const run = async () => {
 				.replace('{SHA}', SHA.substring(0, 7))
 				.toLowerCase()
 
-			await vercel.assignAlias(alias)
+			const previewDomainSuffix = '.vercel.app'
+			let nextAlias = alias
 
-			deploymentUrls.push(addSchema(alias))
+			// https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls
+			if (alias.endsWith(previewDomainSuffix)) {
+				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
+
+				if (prefix.length >= 63) {
+					prefix = prefix.substring(0, 56)
+
+					const uniqueSuffix = crypto.createHash('sha256')
+						.update(`git-${ BRANCH }-${ REPOSITORY }`)
+						.digest('base64')
+						.slice(0, 6)
+
+					nextAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`
+				}
+			}
+
+			await vercel.assignAlias(nextAlias)
+			deploymentUrls.push(addSchema(nextAlias))
 		}
 
 		if (!IS_PR && ALIAS_DOMAINS) {
 			core.info(`Assigning custom domains to Vercel deployment`)
 
+			if (!Array.isArray(ALIAS_DOMAINS)) {
+				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
+			}
+
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
-				const alias = ALIAS_DOMAINS[i]
+				const alias = /** @type {string} */ (ALIAS_DOMAINS[i])
 					.replace('{USER}', paramCase(USER))
 					.replace('{REPO}', paramCase(REPOSITORY))
 					.replace('{BRANCH}', paramCase(BRANCH))

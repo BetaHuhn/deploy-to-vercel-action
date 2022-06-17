@@ -86,19 +86,19 @@ const run = async () => {
 			const previewDomainSuffix = '.vercel.app'
 			let nextAlias = alias
 
-			// https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls
 			if (alias.endsWith(previewDomainSuffix)) {
 				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
 
-				if (prefix.length >= 63) {
+				if (prefix.length >= 60) {
+					core.info(`${ prefix } exceeds 60 chars in length, truncating using vercel's rules. \n\nSee https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
 					prefix = prefix.substring(0, 56)
-
 					const uniqueSuffix = crypto.createHash('sha256')
 						.update(`git-${ BRANCH }-${ REPOSITORY }`)
 						.digest('base64')
 						.slice(0, 6)
 
 					nextAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`
+					core.info(`new domain alias: ${ nextAlias }`)
 				}
 			}
 

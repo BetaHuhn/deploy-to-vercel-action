@@ -128,6 +128,15 @@ ALIAS_DOMAINS: |
   example.now.sh
 ```
 
+#### Pro Teams
+If your team is set up to `Pro`, remember to set the `VERCEL_SCOPE` to the slug of your team. 
+```yml
+with:
+  VERCEL_SCOPE: 'your-team-slug'
+```
+Otherwise, the action will fail trying to deploy custom domains with default account credentials. It will result in request for authorisation and action fail. 
+Even if you extend the scope of `VERCEL_TOKEN` to `All non-SAML Team`, without properly set up `VERCEL_SCOPE` the cli will use default account and fail.
+
 > **Note:** You can use `*.vercel.app` or `*.now.sh` without configuration, but any other custom domain needs to be configured in the Vercel Dashboard first
 
 You can also use any of the following variables anywhere in the domain:

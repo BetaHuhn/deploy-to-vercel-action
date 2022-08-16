@@ -104,7 +104,6 @@ const init = () => {
 
 		return {
 			authorName: data.commit.author.name,
-			authorLogin: data.author.login,
 			commitMessage: data.commit.message
 		}
 	}

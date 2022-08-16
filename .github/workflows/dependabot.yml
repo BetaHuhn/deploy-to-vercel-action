@@ -11,6 +11,6 @@ jobs:
       - name: Merge minor/patch updates
         uses: koj-co/dependabot-pr-action@master
         with:
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.BOT_TOKEN }}
           merge-minor: true
           merge-patch: true

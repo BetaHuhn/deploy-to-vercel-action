@@ -73,14 +73,18 @@ inputs:
     required: false
   WORKING_DIRECTORY:
     description: |
-      Working directory for the Vercel CLI
+      Working directory for the Vercel CLI.
+    required: false
+  FORCE:
+    description: |
+      Used to skip the build cache.
     required: false
 
 outputs:
   PREVIEW_URL:
-    description: 'Main deployment preview URL'
+    description: 'Main deployment preview URL.'
   DEPLOYMENT_URLS:
-    description: 'All assigned deployment URLs'
+    description: 'All assigned deployment URLs.'
   DEPLOYMENT_CREATED:
     description: 'True if a Vercel deployment was created.'
   COMMENT_CREATED:

@@ -16001,7 +16001,7 @@ const setDynamicVars = () => {
 		context.ACTOR = github.context.actor
 		context.REF = github.context.ref
 		context.SHA = github.context.sha
-		context.BRANCH = github.context.ref.substr(11)
+		context.BRANCH = github.context.ref.substring(11)
 	}
 }
 
@@ -16224,7 +16224,7 @@ const {
 	SHA,
 	USER,
 	REPOSITORY,
-	REF,
+	BRANCH,
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
 	WORKING_DIRECTORY,
@@ -16260,7 +16260,7 @@ const init = () => {
 				`githubCommitMessage=${ TRIM_COMMIT_MESSAGE ? commit.commitMessage.split(/\r?\n/)[0] : commit.commitMessage }`,
 				`githubCommitOrg=${ USER }`,
 				`githubCommitRepo=${ REPOSITORY }`,
-				`githubCommitRef=${ REF }`,
+				`githubCommitRef=${ BRANCH }`,
 				`githubCommitSha=${ SHA }`,
 				`githubOrg=${ USER }`,
 				`githubRepo=${ REPOSITORY }`,

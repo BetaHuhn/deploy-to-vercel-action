@@ -101,11 +101,20 @@ const init = () => {
 		return res
 	}
 
+	const getDeployLog = async () => {
+		const commandArguments = [ `--token=${ VERCEL_TOKEN }`, 'logs', deploymentUrl ]
+
+		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
+
+		return output
+	}
+
 	return {
 		deploy,
 		assignAlias,
 		deploymentUrl,
-		getDeployment
+		getDeployment,
+		getDeployLog
 	}
 }
 

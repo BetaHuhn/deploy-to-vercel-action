@@ -92,6 +92,11 @@ const context = {
 		key: 'FORCE',
 		type: 'boolean',
 		default: false
+	}),
+	SHOW_LOG_OUTPUT: parser.getInput({
+		key: 'SHOW_LOG_OUTPUT',
+		type: 'boolean',
+		default: false
 	})
 }
 

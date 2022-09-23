@@ -20,7 +20,8 @@ const {
 	LOG_URL,
 	DEPLOY_PR_FROM_FORK,
 	IS_FORK,
-	ACTOR
+	ACTOR,
+	SHOW_LOG_OUTPUT
 } = require('./config')
 
 const run = async () => {
@@ -55,10 +56,9 @@ const run = async () => {
 		core.info(`Deployment #${ ghDeployment.id } status changed to "pending"`)
 	}
 
+	core.info(`Creating deployment with Vercel CLI`)
+	const vercel = Vercel.init()
 	try {
-		core.info(`Creating deployment with Vercel CLI`)
-		const vercel = Vercel.init()
-
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
 
@@ -161,6 +161,9 @@ const run = async () => {
 
 		core.info('Done')
 	} catch (err) {
+		if (SHOW_LOG_OUTPUT && err.code === 'BUILD_ERROR') {
+			vercel.getDeployLog()
+		}
 		await github.updateDeployment('failure')
 		core.setFailed(err.message)
 	}

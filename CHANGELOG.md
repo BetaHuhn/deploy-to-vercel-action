@@ -1,3 +1,11 @@
+## [v1.9.8] - 2022-10-03
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.8) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.7...v1.9.8) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.8) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.8.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.8.tar.gz))
+
+### Dependency updates
+
+- [`cf1f736`](https://github.com/betahuhn/deploy-to-vercel-action/commit/cf1f736)  Bump @actions/core from 1.9.1 to 1.10.0
+
 ## [v1.9.7] - 2022-09-19
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.7) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.6...v1.9.7) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.7) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.7.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.7.tar.gz))

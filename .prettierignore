@@ -1,9 +1,0 @@
-# Don't run prettier on this repo, as it uses eslint instead
-
-src
-dist
-.github
-*.js
-*.yml
-*.md
-*.json

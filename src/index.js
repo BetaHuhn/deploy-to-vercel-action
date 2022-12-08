@@ -3,9 +3,7 @@ const core = require('@actions/core')
 const Github = require('./github')
 const Vercel = require('./vercel')
 const { addSchema } = require('./helpers')
-const { paramCase } = require('change-case')
 const crypto = require('crypto')
-
 
 const {
 	GITHUB_DEPLOYMENT,
@@ -26,6 +24,9 @@ const {
 	IS_FORK,
 	ACTOR
 } = require('./config')
+
+// Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break the URL.
+const urlSafeParameter = (input) => input.replace(/[^a-z0-9_~]/gi, '-')
 
 const run = async () => {
 	const github = Github.init()
@@ -76,9 +77,9 @@ const run = async () => {
 				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
 			}
 
-			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', paramCase(USER))
-				.replace('{REPO}', paramCase(REPOSITORY))
-				.replace('{BRANCH}', paramCase(BRANCH))
+			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', urlSafeParameter(USER))
+				.replace('{REPO}', urlSafeParameter(REPOSITORY))
+				.replace('{BRANCH}', urlSafeParameter(BRANCH))
 				.replace('{PR}', PR_NUMBER)
 				.replace('{SHA}', SHA.substring(0, 7))
 				.toLowerCase()
@@ -116,9 +117,9 @@ const run = async () => {
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
 				const alias = /** @type {string} */ (ALIAS_DOMAINS[i])
-					.replace('{USER}', paramCase(USER))
-					.replace('{REPO}', paramCase(REPOSITORY))
-					.replace('{BRANCH}', paramCase(BRANCH))
+					.replace('{USER}', urlSafeParameter(USER))
+					.replace('{REPO}', urlSafeParameter(REPOSITORY))
+					.replace('{BRANCH}', urlSafeParameter(BRANCH))
 					.replace('{SHA}', SHA.substring(0, 7))
 					.toLowerCase()
 

@@ -91,7 +91,7 @@ outputs:
     description: "The unique deployment url on Vercel"
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 
 branding:

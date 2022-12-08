@@ -1,4 +1,3 @@
-// @ts-check
 const core = require('@actions/core')
 const Github = require('./github')
 const Vercel = require('./vercel')
@@ -116,7 +115,7 @@ const run = async () => {
 			}
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
-				const alias = /** @type {string} */ (ALIAS_DOMAINS[i])
+				const alias = ALIAS_DOMAINS[i]
 					.replace('{USER}', urlSafeParameter(USER))
 					.replace('{REPO}', urlSafeParameter(REPOSITORY))
 					.replace('{BRANCH}', urlSafeParameter(BRANCH))

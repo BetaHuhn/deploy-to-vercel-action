@@ -16536,7 +16536,6 @@ module.exports = require("zlib");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-// @ts-check
 const core = __nccwpck_require__(2186)
 const Github = __nccwpck_require__(8396)
 const Vercel = __nccwpck_require__(847)
@@ -16654,7 +16653,7 @@ const run = async () => {
 			}
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
-				const alias = /** @type {string} */ (ALIAS_DOMAINS[i])
+				const alias = ALIAS_DOMAINS[i]
 					.replace('{USER}', urlSafeParameter(USER))
 					.replace('{REPO}', urlSafeParameter(REPOSITORY))
 					.replace('{BRANCH}', urlSafeParameter(BRANCH))

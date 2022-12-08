@@ -88,7 +88,7 @@ outputs:
   DEPLOYMENT_INSPECTOR_URL:
     description: 'Main deployment inspection url.'
   DEPLOYMENT_UNIQUE_URL:
-    description: "The unique deployment url on Vercel"
+    description: 'The unique deployment url on Vercel'
 
 runs:
   using: 'node16'

@@ -27,7 +27,7 @@
     "action-input-parser": "^1.2.38",
     "dotenv": "^9.0.2",
     "got": "^11.8.3",
-    "vercel": "^22.0.1"
+    "vercel": "^28.10.3"
   },
   "devDependencies": {
     "@betahuhn/config": "^1.2.0",

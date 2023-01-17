@@ -16691,6 +16691,10 @@ const run = async () => {
 							<td><strong>🔍 Inspect:</strong></td>
 							<td><a href='${ deployment.inspectorUrl }'>${ deployment.inspectorUrl }</a></td>
 						</tr>
+						<tr>
+							<td><strong>🕐 Updated:</strong></td>
+							<td>${ new Date().toUTCString() }</td>
+						</tr>
 					</table>
 
 					[View Workflow Logs](${ LOG_URL })

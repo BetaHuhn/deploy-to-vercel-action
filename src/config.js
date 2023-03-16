@@ -42,6 +42,11 @@ const context = {
 		type: 'boolean',
 		default: true
 	}),
+	UPDATE_EXISTING_COMMENT: parser.getInput({
+		key: 'UPDATE_EXISTING_COMMENT',
+		type: 'boolean',
+		default: false
+	}),
 	ATTACH_COMMIT_METADATA: parser.getInput({
 		key: 'ATTACH_COMMIT_METADATA',
 		type: 'boolean',

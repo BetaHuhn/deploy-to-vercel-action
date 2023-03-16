@@ -15,6 +15,7 @@ const {
 	PR_LABELS,
 	CREATE_COMMENT,
 	DELETE_EXISTING_COMMENT,
+	UPDATE_EXISTING_COMMENT,
 	PR_PREVIEW_DOMAIN,
 	ALIAS_DOMAINS,
 	ATTACH_COMMIT_METADATA,
@@ -140,7 +141,7 @@ const run = async () => {
 		}
 
 		if (IS_PR) {
-			if (DELETE_EXISTING_COMMENT) {
+			if (DELETE_EXISTING_COMMENT && !UPDATE_EXISTING_COMMENT) {
 				core.info('Checking for existing comment on PR')
 				const deletedCommentId = await github.deleteExistingComment()
 
@@ -165,13 +166,17 @@ const run = async () => {
 							<td><strong>🔍 Inspect:</strong></td>
 							<td><a href='${ deployment.inspectorUrl }'>${ deployment.inspectorUrl }</a></td>
 						</tr>
+						<tr>
+							<td><strong>🕐 Updated:</strong></td>
+							<td>${ new Date().toUTCString() }</td>
+						</tr>
 					</table>
 
 					[View Workflow Logs](${ LOG_URL })
 				`
 
-				const comment = await github.createComment(body)
-				core.info(`Comment created: ${ comment.html_url }`)
+				const comment = await github.createComment(body, UPDATE_EXISTING_COMMENT)
+				core.info(`Commented: ${ comment.html_url }`)
 			}
 
 			if (PR_LABELS) {

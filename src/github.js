@@ -49,16 +49,20 @@ const init = () => {
 		return deploymentStatus.data
 	}
 
-	const deleteExistingComment = async () => {
+	const findExistingComment = async () => {
 		const { data } = await client.issues.listComments({
 			owner: USER,
 			repo: REPOSITORY,
 			issue_number: PR_NUMBER
 		})
 
-		if (data.length < 1) return
+		return data.find((comment) =>
+			comment.body.includes('This pull request has been deployed to Vercel.')
+		)
+	}
 
-		const comment = data.find((comment) => comment.body.includes('This pull request has been deployed to Vercel.'))
+	const deleteExistingComment = async () => {
+		const comment = await findExistingComment()
 		if (comment) {
 			await client.issues.deleteComment({
 				owner: USER,
@@ -70,16 +74,24 @@ const init = () => {
 		}
 	}
 
-	const createComment = async (body) => {
+	const createComment = async (body, updateExisting = false) => {
 		// Remove indentation
 		const dedented = body.replace(/^[^\S\n]+/gm, '')
 
-		const comment = await client.issues.createComment({
+		const commentParams = {
 			owner: USER,
 			repo: REPOSITORY,
 			issue_number: PR_NUMBER,
 			body: dedented
-		})
+		}
+
+		const existingComment = updateExisting ? await findExistingComment() : null
+		const comment = existingComment ?
+			await client.issues.updateComment({
+				comment_id: existingComment.id, ...commentParams
+			}) :
+			await client.issues.createComment(commentParams)
+
 
 		return comment.data
 	}

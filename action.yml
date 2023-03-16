@@ -95,6 +95,8 @@ outputs:
     description: 'True if a comment was created on the PR or commit.'
   DEPLOYMENT_INSPECTOR_URL:
     description: 'Main deployment inspection url.'
+  DEPLOYMENT_UNIQUE_URL:
+    description: 'The unique deployment url on Vercel'
 
 runs:
   using: 'node16'

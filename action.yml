@@ -23,6 +23,10 @@ inputs:
     description: |
       Create a production deployment (default: true, false for PR deployments).
     required: false
+  PREBUILT:
+    description: |
+      Deploy a prebuilt Vercel Project (default: false).
+    required: false
   GITHUB_DEPLOYMENT:
     description: |
       Create a deployment on GitHub (default: true).

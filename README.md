@@ -408,11 +408,11 @@ jobs:
               </tr>
               <tr>
                 <td><strong>🔍 Inspect:</strong></td>
-                <td><a href='${ steps.vercel-deploy.outputs.DEPLOYMENT_INSPECTOR_URL }'>${ steps.vercel-deploy.outputs.DEPLOYMENT_INSPECTOR_URL }</a></td>
+                <td><a href='${{ steps.vercel-deploy.outputs.DEPLOYMENT_INSPECTOR_URL }}'>${{ steps.vercel-deploy.outputs.DEPLOYMENT_INSPECTOR_URL }}</a></td>
               </tr>
             </table>
 
-            [View Workflow Logs](${ LOG_URL })
+            <a href="https://github.com/${ github.repository }/actions/runs/${ checkrun.id }">View Workflow Logs</a>
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_IDENTIFIER: 'vercel-deploy'
 ```

@@ -412,7 +412,7 @@ jobs:
               </tr>
             </table>
 
-            <a href="https://github.com/${ github.repository }/actions/runs/${ checkrun.id }">View Workflow Logs</a>
+            <a href="https://github.com/${ github.repository }/actions/runs/${ github.run_id }">View Workflow Logs</a>
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_IDENTIFIER: 'vercel-deploy'
 ```

@@ -18899,125 +18899,139 @@ module.exports = {
 /***/ 5525:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(7733)
-const got = __nccwpck_require__(6914)
-const { exec, removeSchema } = __nccwpck_require__(5067)
+const core = __nccwpck_require__(7733);
+const got = __nccwpck_require__(6914);
+const { exec, removeSchema } = __nccwpck_require__(5067);
 
 const {
-	VERCEL_TOKEN,
-	PRODUCTION,
-	VERCEL_SCOPE,
-	VERCEL_ORG_ID,
-	VERCEL_PROJECT_ID,
-	SHA,
-	USER,
-	REPOSITORY,
-	REF,
-	TRIM_COMMIT_MESSAGE,
-	BUILD_ENV,
-	PREBUILT,
-	WORKING_DIRECTORY,
-	FORCE
-} = __nccwpck_require__(9439)
+  VERCEL_TOKEN,
+  PRODUCTION,
+  VERCEL_SCOPE,
+  VERCEL_ORG_ID,
+  VERCEL_PROJECT_ID,
+  SHA,
+  USER,
+  REPOSITORY,
+  REF,
+  BRANCH,
+  TRIM_COMMIT_MESSAGE,
+  BUILD_ENV,
+  PREBUILT,
+  WORKING_DIRECTORY,
+  FORCE,
+} = __nccwpck_require__(9439);
 
 const init = () => {
-	core.info('Setting environment variables for Vercel CLI')
-	core.exportVariable('VERCEL_ORG_ID', VERCEL_ORG_ID)
-	core.exportVariable('VERCEL_PROJECT_ID', VERCEL_PROJECT_ID)
+  core.info(JSON.stringify({ REF, BRANCH, WORKING_DIRECTORY }, null, 2));
 
-	let deploymentUrl
+  core.info("Setting environment variables for Vercel CLI");
+  core.exportVariable("VERCEL_ORG_ID", VERCEL_ORG_ID);
+  core.exportVariable("VERCEL_PROJECT_ID", VERCEL_PROJECT_ID);
 
-	const deploy = async (commit) => {
-		let commandArguments = [ `--token=${ VERCEL_TOKEN }` ]
+  let deploymentUrl;
 
-		if (VERCEL_SCOPE) {
-			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
-		}
+  const deploy = async (commit) => {
+    let commandArguments = [`--token=${VERCEL_TOKEN}`];
 
-		if (PRODUCTION) {
-			commandArguments.push('--prod')
-		}
+    if (VERCEL_SCOPE) {
+      commandArguments.push(`--scope=${VERCEL_SCOPE}`);
+    }
 
-		if (PREBUILT) {
-			commandArguments.push('--prebuilt')
-		}
+    if (PRODUCTION) {
+      commandArguments.push("--prod");
+    }
 
-		if (FORCE) {
-			commandArguments.push('--force')
-		}
+    if (PREBUILT) {
+      commandArguments.push("--prebuilt");
+    }
 
-		if (commit) {
-			const metadata = [
-				`githubCommitAuthorName=${ commit.authorName }`,
-				`githubCommitAuthorLogin=${ commit.authorLogin }`,
-				`githubCommitMessage=${ TRIM_COMMIT_MESSAGE ? commit.commitMessage.split(/\r?\n/)[0] : commit.commitMessage }`,
-				`githubCommitOrg=${ USER }`,
-				`githubCommitRepo=${ REPOSITORY }`,
-				`githubCommitRef=${ REF }`,
-				`githubCommitSha=${ SHA }`,
-				`githubOrg=${ USER }`,
-				`githubRepo=${ REPOSITORY }`,
-				`githubDeployment=1`
-			]
+    if (FORCE) {
+      commandArguments.push("--force");
+    }
 
-			metadata.forEach((item) => {
-				commandArguments = commandArguments.concat([ '--meta', item ])
-			})
-		}
+    if (commit) {
+      const metadata = [
+        `githubCommitAuthorName=${commit.authorName}`,
+        `githubCommitAuthorLogin=${commit.authorLogin}`,
+        `githubCommitMessage=${
+          TRIM_COMMIT_MESSAGE
+            ? commit.commitMessage.split(/\r?\n/)[0]
+            : commit.commitMessage
+        }`,
+        `githubCommitOrg=${USER}`,
+        `githubCommitRepo=${REPOSITORY}`,
+        `githubCommitRef=${BRANCH}`,
+        `githubCommitSha=${SHA}`,
+        `githubOrg=${USER}`,
+        `githubRepo=${REPOSITORY}`,
+        `githubDeployment=1`,
+      ];
 
-		if (BUILD_ENV) {
-			BUILD_ENV.forEach((item) => {
-				commandArguments = commandArguments.concat([ '--build-env', item ])
-			})
-		}
+      metadata.forEach((item) => {
+        commandArguments = commandArguments.concat(["--meta", item]);
+      });
+    }
 
-		core.info('Starting deploy with Vercel CLI')
-		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
-		const parsed = output.match(/(?<=https?:\/\/)(.*)/g)[0]
+    if (BUILD_ENV) {
+      BUILD_ENV.forEach((item) => {
+        commandArguments = commandArguments.concat(["--build-env", item]);
+      });
+    }
 
-		if (!parsed) throw new Error('Could not parse deploymentUrl')
+    core.info("Starting deploy with Vercel CLI");
+    const output = await exec("vercel", commandArguments, WORKING_DIRECTORY);
+    const parsed = output.match(/(?<=https?:\/\/)(.*)/g)[0];
 
-		deploymentUrl = parsed
+    if (!parsed) throw new Error("Could not parse deploymentUrl");
 
-		return deploymentUrl
-	}
+    deploymentUrl = parsed;
 
-	const assignAlias = async (aliasUrl) => {
-		const commandArguments = [ `--token=${ VERCEL_TOKEN }`, 'alias', 'set', deploymentUrl, removeSchema(aliasUrl) ]
+    return deploymentUrl;
+  };
 
-		if (VERCEL_SCOPE) {
-			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
-		}
+  const assignAlias = async (aliasUrl) => {
+    const commandArguments = [
+      `--token=${VERCEL_TOKEN}`,
+      "alias",
+      "set",
+      deploymentUrl,
+      removeSchema(aliasUrl),
+    ];
 
-		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
+    if (VERCEL_SCOPE) {
+      commandArguments.push(`--scope=${VERCEL_SCOPE}`);
+    }
 
-		return output
-	}
+    const output = await exec("vercel", commandArguments, WORKING_DIRECTORY);
 
-	const getDeployment = async () => {
-		const url = `https://api.vercel.com/v11/now/deployments/get?url=${ deploymentUrl }`
-		const options = {
-			headers: {
-				Authorization: `Bearer ${ VERCEL_TOKEN }`
-			}
-		}
+    return output;
+  };
 
-		const res = await got(url, options).json()
+  const getDeployment = async () => {
+    const url = `https://api.vercel.com/v11/now/deployments/get?url=${deploymentUrl}`;
+    const options = {
+      headers: {
+        Authorization: `Bearer ${VERCEL_TOKEN}`,
+      },
+    };
 
-		return res
-	}
+    const res = await got(url, options).json();
 
-	return {
-		deploy,
-		assignAlias,
-		deploymentUrl,
-		getDeployment
-	}
-}
+    return res;
+  };
+
+  return {
+    deploy,
+    assignAlias,
+    deploymentUrl,
+    getDeployment,
+  };
+};
 
 module.exports = {
-	init
-}
+  init,
+};
+
 
 /***/ }),
 

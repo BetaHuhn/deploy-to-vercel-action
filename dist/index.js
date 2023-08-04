@@ -18685,6 +18685,7 @@ const usePerBranchConfig = () => {
     const branchEntry = dict[context.BRANCH];
     if (!branchEntry) {
       core.info(`No config found for branch ${context.BRANCH}`);
+      return;
     }
 
     core.info(branchEntry);

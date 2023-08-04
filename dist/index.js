@@ -18688,7 +18688,7 @@ const usePerBranchConfig = () => {
       return;
     }
 
-    core.info(branchEntry);
+    core.info(JSON.stringify(branchEntry, null, 2));
     context.ALIAS_DOMAINS = branchEntry.aliases;
     context.PRODUCTION = branchEntry.production;
   } else {

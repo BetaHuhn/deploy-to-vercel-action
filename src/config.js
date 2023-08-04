@@ -183,7 +183,6 @@ const usePerBranchConfig = () => {
     // using this to know if this is working
     core.warn("No PER_BRANCH_CONFIG found");
   }
-  context.ALIAS_DOMAINS;
 };
 
 setDynamicVars();

@@ -1,6 +1,6 @@
-name: 'Deploy to Vercel Action'
-description: 'Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.'
-author: 'BetaHuhn'
+name: "Deploy to Vercel Action"
+description: "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments."
+author: "BetaHuhn"
 
 inputs:
   GITHUB_TOKEN:
@@ -83,25 +83,31 @@ inputs:
     description: |
       Used to skip the build cache.
     required: false
+  PER_BRANCH_CONFIG:
+    description: |
+      A dictionary of aliases to be assigned to the deployment, passed as a JSON string.
+      Will set the 
+      Should be in the format of {"${BRANCH}": {"aliases": [...], "production": false } }.
+    required: false
 
 outputs:
   PREVIEW_URL:
-    description: 'Main deployment preview URL.'
+    description: "Main deployment preview URL."
   DEPLOYMENT_URLS:
-    description: 'All assigned deployment URLs.'
+    description: "All assigned deployment URLs."
   DEPLOYMENT_CREATED:
-    description: 'True if a Vercel deployment was created.'
+    description: "True if a Vercel deployment was created."
   COMMENT_CREATED:
-    description: 'True if a comment was created on the PR or commit.'
+    description: "True if a comment was created on the PR or commit."
   DEPLOYMENT_INSPECTOR_URL:
-    description: 'Main deployment inspection url.'
+    description: "Main deployment inspection url."
   DEPLOYMENT_UNIQUE_URL:
-    description: 'The unique deployment url on Vercel'
+    description: "The unique deployment url on Vercel"
 
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"
 
 branding:
-  icon: 'triangle'
-  color: 'white'
+  icon: "triangle"
+  color: "white"

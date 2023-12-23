@@ -44,7 +44,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
@@ -130,12 +130,12 @@ ALIAS_DOMAINS: |
 ```
 
 #### Pro Teams
-If your team is set up to `Pro`, remember to set the `VERCEL_SCOPE` to the slug of your team. 
+If your team is set up to `Pro`, remember to set the `VERCEL_SCOPE` to the slug of your team.
 ```yml
 with:
   VERCEL_SCOPE: 'your-team-slug'
 ```
-Otherwise, the action will fail trying to deploy custom domains with default account credentials. It will result in request for authorisation and action fail. 
+Otherwise, the action will fail trying to deploy custom domains with default account credentials. It will result in request for authorisation and action fail.
 Even if you extend the scope of `VERCEL_TOKEN` to `All non-SAML Team`, without properly set up `VERCEL_SCOPE` the cli will use default account and fail.
 
 > **Note:** You can use `*.vercel.app` or `*.now.sh` without configuration, but any other custom domain needs to be configured in the Vercel Dashboard first
@@ -187,7 +187,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - id: script
-        uses: actions/github-script@v3
+        uses: actions/github-script@v7
         with:
           script: |
             const isPr = [ 'pull_request', 'pull_request_target' ].includes(context.eventName)
@@ -195,7 +195,7 @@ jobs:
             core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.full_name)
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: ${{ steps.script.outputs.ref }}
           repository: ${{ steps.script.outputs.repo }}
@@ -235,7 +235,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
@@ -262,7 +262,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
@@ -290,7 +290,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
@@ -319,7 +319,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
@@ -356,7 +356,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
@@ -385,7 +385,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         id: vercel-deploy
         uses: BetaHuhn/deploy-to-vercel-action@v1
@@ -435,7 +435,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       # maybe do something else first
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
@@ -452,7 +452,7 @@ As described in the [Deploying a PR made from a fork or Dependabot](#deploying-a
 
 To overcome this limitation you can use the `pull_request_target` event and checkout the PR branch manually:
 
-> Note: By default this action doesn't deploy any forks so you can use pull_request_target without any security concerns
+> Note: By default this action doesn't deploy any forks so you can use `pull_request_target` without any security concerns
 
 **.github/workflows/deploy.yml**
 
@@ -469,7 +469,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - id: script
-        uses: actions/github-script@v3
+        uses: actions/github-script@v7
         with:
           script: |
             const isPr = [ 'pull_request', 'pull_request_target' ].includes(context.eventName)
@@ -477,7 +477,7 @@ jobs:
             core.setOutput('repo', isPr ? context.payload.pull_request.head.repo.full_name : context.repo.full_name)
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: ${{ steps.script.outputs.ref }}
           repository: ${{ steps.script.outputs.repo }}
@@ -510,7 +510,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:

@@ -1,20 +1,34 @@
 {
   "name": "deploy-to-vercel-action",
-  "version": "1.9.12",
+  "version": "1.9.13-beta.0",
   "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint ./src",
     "dev": "node src/index.js",
     "start": "node dist/index.js",
-    "build": "ncc build src/index.js -o dist"
+    "build": "ncc build src/index.js -m -o dist"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/betahuhn/deploy-to-vercel-action.git"
   },
-  "keywords": [],
+  "keywords": [
+    "vercel",
+    "deploy",
+    "deployment",
+    "github",
+    "actions",
+    "upload"
+  ],
   "author": "Maximilian Schiller <schiller@mxis.ch>",
+  "contributors": [
+    {
+      "name": "@mountainash",
+      "url": "https://mountainash.id.au",
+      "github": "mountainash"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/betahuhn/deploy-to-vercel-action/issues"
@@ -23,15 +37,15 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
-    "@actions/github": "^4.0.0",
+    "@actions/github": "6.0.0",
     "action-input-parser": "^1.2.38",
-    "dotenv": "^9.0.2",
-    "got": "^11.8.3",
-    "vercel": "^22.0.1"
+    "dotenv": "16.3.1",
+    "got": "14.0.0",
+    "vercel": "33.0.1"
   },
   "devDependencies": {
     "@betahuhn/config": "^1.2.0",
-    "@vercel/ncc": "^0.36.1",
-    "eslint": "^7.32.0"
+    "@vercel/ncc": "^0.38.1",
+    "eslint": "8.56.0"
   }
 }

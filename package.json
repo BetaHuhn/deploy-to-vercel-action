@@ -1,13 +1,14 @@
 {
   "name": "deploy-to-vercel-action",
-  "version": "1.10.0-beta",
+  "version": "1.10.0-beta.1",
   "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
+  "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint ./src",
     "dev": "node src/index.js",
     "start": "node dist/index.js",
-    "build": "ncc build src/index.js -m -o dist"
+    "build": "ncc build src/index.js --target es6 -o dist"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,7 @@
   },
   "homepage": "https://github.com/marketplace/actions/deploy-to-vercel-action",
   "dependencies": {
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^1.10.1",
     "@actions/exec": "^1.1.1",
     "@actions/github": "6.0.0",
     "dotenv": "16.3.1",

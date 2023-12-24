@@ -64,7 +64,7 @@ const setDynamicVars = () => {
 		context.ACTOR = github.context.actor
 		context.REF = github.context.ref
 		context.SHA = github.context.sha
-		context.BRANCH = github.context.ref.substr(11)
+		context.BRANCH = github.context.ref.substring(11)
 	}
 }
 

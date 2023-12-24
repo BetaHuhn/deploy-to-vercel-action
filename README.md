@@ -1,8 +1,16 @@
+### @mountainash fork changes
+
+- [x] Added `--archive=tgz` arg to Vercel deploy when using `PREBUILT` option to allow built deployments over 1500 files.
+- [x] Updated from NodeJS v16 to NodeJS v20.
+- [x] Updated from Vercel CLI v22.0.1 to v33.0.1
+- [x] Updated from `@actions/github` v^4.0.0 to v6.0.0
+- [x] Removed dependency on [`got`](https://www.npmjs.com/package/got/v/13.0.0) ("no longer maintained") and [`action-input-parser`](https://www.npmjs.com/package/action-input-parser) packages.
+
 <div align="center">
 
 # Deploy to Vercel Action
 
-[![Node CI](https://github.com/BetaHuhn/deploy-to-vercel-action/workflows/Node%20CI/badge.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/actions?query=workflow%3A%22Node+CI%22) [![Release CI](https://github.com/BetaHuhn/deploy-to-vercel-action/workflows/Release%20CI/badge.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/actions?query=workflow%3A%22Release+CI%22) [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/blob/master/LICENSE) ![David](https://img.shields.io/david/betahuhn/deploy-to-vercel-action)
+[![Node CI](https://github.com/BetaHuhn/deploy-to-vercel-action/workflows/Node%20CI/badge.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/actions?query=workflow%3A%22Node+CI%22) [![Release CI](https://github.com/BetaHuhn/deploy-to-vercel-action/workflows/Release%20CI/badge.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/actions?query=workflow%3A%22Release+CI%22) [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/BetaHuhn/deploy-to-vercel-action/blob/master/LICENSE)
 
 Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.
 

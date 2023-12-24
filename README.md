@@ -41,7 +41,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -121,12 +121,12 @@ You can then specify them as `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` in the Acti
 
 ### Custom Domains
 
-Instead of using the auto generated domain (`name-randomString.vercel.app`) for each deployment, you can specify custom domains. Use the `ALIAS_DOMAINS` input and seperate each domain on a new line like this:
+Instead of using the auto generated domain (`name-randomString.vercel.app`) for each deployment, you can specify custom domains. Use the `ALIAS_DOMAINS` input and separate each domain on a new line like this:
 
 ```yml
 ALIAS_DOMAINS: |
   example.com
-  example.now.sh
+  example.vercel.app
 ```
 
 #### Pro Teams
@@ -153,13 +153,13 @@ Examples:
 ```yml
 ALIAS_DOMAINS: |
   {BRANCH}.example.com
-  {USER}-{REPO}-{SHA}.now.sh
+  {USER}-{REPO}-{SHA}.vercel.app
 ```
 
 This is especially useful if you want to change the PR preview domain with the `PR_PREVIEW_DOMAIN` input:
 
 ```yml
-PR_PREVIEW_DOMAIN: "{REPO}-{PR}.now.sh"
+PR_PREVIEW_DOMAIN: "{REPO}-{PR}.vercel.app"
 ```
 
 > **Note:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN`
@@ -184,7 +184,7 @@ on:
 jobs:
   vercel:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - id: script
         uses: actions/github-script@v7
@@ -232,7 +232,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -259,7 +259,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -287,7 +287,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -316,7 +316,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -382,7 +382,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -466,7 +466,7 @@ on:
 jobs:
   vercel:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - id: script
         uses: actions/github-script@v7
@@ -507,7 +507,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -534,6 +534,8 @@ The actual source code of this Action is in the `src` folder.
 - run `yarn lint` or `npm run lint` to run eslint.
 - run `yarn start` or `npm run start` to run the Action locally.
 - run `yarn build` or `npm run build` to produce a production version of [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) in the `dist` folder.
+
+Pass in inputs as environment variables with the prefix `INPUT_` (e.g. `INPUT_GITHUB_TOKEN`).
 
 ## ❔ About
 

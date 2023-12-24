@@ -1,0 +1,65 @@
+name: Debug Action CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Ref to run the workflow on'
+        required: true
+        default: 'refs/heads/master'
+
+jobs:
+  debug:
+    name: Debug Action CI
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      deployments: write
+
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: Checkout ${{ github.event.inputs.ref }} 📥
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.2
+          cache: yarn
+
+      - name: Install Vercel CLI 📦
+        run: yarn --cwd website/ add global vercel@latest
+
+      - name: Pull Vercel environment information 🔑
+        run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build website 🏗
+        env:
+          LOCAL_REF: ${{ github.event.inputs.ref }}
+        run: touch index.html && echo "LOCAL_REF=$LOCAL_REF" >> index.html
+
+      - name: Deploy to Vercel 🚀
+        id: verceldeploy
+        # Fork of https://github.com/BetaHuhn/deploy-to-vercel-action
+        uses: mountainash/fork-deploy-to-vercel-action@924ce29dfa0ee1980ef938dfee6c853fe7e5732d
+        with:
+          # GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Deploy to Vercel outputs ✍️
+        run: |
+            echo "PREVIEW_URL: ${{ needs.verceldeploy.outputs.PREVIEW_URL }}"
+            echo "DEPLOYMENT_URLS: ${{ needs.verceldeploy.outputs.DEPLOYMENT_URLS }}"
+            echo "COMMENT_CREATED: ${{ needs.verceldeploy.outputs.COMMENT_CREATED }}"
+            echo "DEPLOYMENT_INSPECTOR_URL: ${{ needs.verceldeploy.outputs.DEPLOYMENT_INSPECTOR_URL }}"
+            echo "DEPLOYMENT_UNIQUE_URL: ${{ needs.verceldeploy.outputs.DEPLOYMENT_UNIQUE_URL }}"

@@ -45,7 +45,7 @@ jobs:
         # Fork of https://github.com/BetaHuhn/deploy-to-vercel-action
         uses: mountainash/fork-deploy-to-vercel-action@924ce29dfa0ee1980ef938dfee6c853fe7e5732d
         with:
-          # GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

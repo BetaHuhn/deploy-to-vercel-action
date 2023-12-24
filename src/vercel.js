@@ -1,5 +1,4 @@
 const core = require('@actions/core')
-const got = require('got')
 const { exec, removeSchema } = require('./helpers')
 
 const {
@@ -101,9 +100,9 @@ const init = () => {
 			}
 		}
 
-		const res = await got(url, options).json()
+		const res = await fetch(url, options)
 
-		return res
+		return await res.json()
 	}
 
 	return {

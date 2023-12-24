@@ -1,6 +1,6 @@
 {
   "name": "deploy-to-vercel-action",
-  "version": "1.9.13-beta.0",
+  "version": "1.10.0-beta",
   "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
   "main": "dist/index.js",
   "scripts": {
@@ -38,9 +38,7 @@
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
     "@actions/github": "6.0.0",
-    "action-input-parser": "^1.2.38",
     "dotenv": "16.3.1",
-    "got": "14.0.0",
     "vercel": "33.0.1"
   },
   "devDependencies": {

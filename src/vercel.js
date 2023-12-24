@@ -37,7 +37,8 @@ const init = () => {
 		}
 
 		if (PREBUILT) {
-			commandArguments.push('--prebuilt  --archive=tgz')
+			commandArguments.push('--prebuilt')
+			commandArguments.push('--archive=tgz')
 		}
 
 		if (FORCE) {

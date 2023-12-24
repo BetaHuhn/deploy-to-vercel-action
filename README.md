@@ -535,7 +535,7 @@ The actual source code of this Action is in the `src` folder.
 - run `yarn start` or `npm run start` to run the Action locally.
 - run `yarn build` or `npm run build` to produce a production version of [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) in the `dist` folder.
 
-Pass in inputs as environment variables with the prefix `INPUT_` (e.g. `INPUT_GITHUB_TOKEN`).
+Pass in inputs as environment variables with the prefix `INPUT_` (e.g. `INPUT_GITHUB_TOKEN`) & `RUNNING_LOCAL=true`.
 
 ## ❔ About
 

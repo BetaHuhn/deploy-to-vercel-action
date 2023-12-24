@@ -31147,7 +31147,7 @@ const setDynamicVars = () => {
 		context.ACTOR = github.context.actor
 		context.REF = github.context.ref
 		context.SHA = github.context.sha
-		context.BRANCH = github.context.ref.substr(11)
+		context.BRANCH = github.context.ref.substring(11)
 	}
 }
 
@@ -31396,7 +31396,8 @@ const init = () => {
 		}
 
 		if (PREBUILT) {
-			commandArguments.push('--prebuilt  --archive=tgz')
+			commandArguments.push('--prebuilt')
+			commandArguments.push('--archive=tgz')
 		}
 
 		if (FORCE) {

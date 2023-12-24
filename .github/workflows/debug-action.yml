@@ -29,11 +29,6 @@ jobs:
         with:
           ref: ${{ github.event.inputs.ref }}
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.2
-          cache: yarn
-
       - name: Install Vercel CLI 📦
         run: npm i -g vercel
 

@@ -18609,6 +18609,11 @@ const context = {
 		key: 'FORCE',
 		type: 'boolean',
 		default: false
+	}),
+	DEBUG: parser.getInput({
+		key: 'DEBUG',
+		type: 'boolean',
+		default: false
 	})
 }
 
@@ -18876,7 +18881,8 @@ const {
 	BUILD_ENV,
 	PREBUILT,
 	WORKING_DIRECTORY,
-	FORCE
+	FORCE,
+	DEBUG
 } = __nccwpck_require__(9439)
 
 const init = () => {
@@ -18903,6 +18909,9 @@ const init = () => {
 
 		if (FORCE) {
 			commandArguments.push('--force')
+		}
+		if (DEBUG) {
+			commandArguments.push('--debug')
 		}
 
 		if (commit) {

@@ -16,7 +16,8 @@ const {
 	BUILD_ENV,
 	PREBUILT,
 	WORKING_DIRECTORY,
-	FORCE
+	FORCE,
+	DEBUG
 } = require('./config')
 
 const init = () => {
@@ -43,6 +44,9 @@ const init = () => {
 
 		if (FORCE) {
 			commandArguments.push('--force')
+		}
+		if (DEBUG) {
+			commandArguments.push('--debug')
 		}
 
 		if (commit) {

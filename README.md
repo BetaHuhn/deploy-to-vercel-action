@@ -96,7 +96,9 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `WORKING_DIRECTORY` | Working directory for the Vercel CLI | **No** | N/A |
 | `FORCE` | Used to skip the build cache. | **No** | false
 | `PREBUILT` | Deploy a prebuilt Vercel Project. | **No** | false
-| `DEBUG` | Show debug information when executing Vercel commands. | **No** | false
+| `DEBUG` | Show debug information when executing Vercel commands. | **No** | false |
+| `VERCEL_ARCHIVE` | Value passed to the --archive vercel flag. Used to compress files before uploading to Vercel. | **No** | N/A |
+
 
 
 ## 🛠️ Configuration

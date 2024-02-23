@@ -18614,6 +18614,9 @@ const context = {
 		key: 'DEBUG',
 		type: 'boolean',
 		default: false
+	}),
+	VERCEL_ARCHIVE: parser.getInput({
+		key: 'VERCEL_ARCHIVE'
 	})
 }
 
@@ -18882,7 +18885,8 @@ const {
 	PREBUILT,
 	WORKING_DIRECTORY,
 	FORCE,
-	DEBUG
+	DEBUG,
+	VERCEL_ARCHIVE
 } = __nccwpck_require__(9439)
 
 const init = () => {
@@ -18912,6 +18916,9 @@ const init = () => {
 		}
 		if (DEBUG) {
 			commandArguments.push('--debug')
+		}
+		if (VERCEL_ARCHIVE) {
+			commandArguments.push(`--archive=${ VERCEL_ARCHIVE }`)
 		}
 
 		if (commit) {

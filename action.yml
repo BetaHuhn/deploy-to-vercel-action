@@ -87,6 +87,10 @@ inputs:
     description: |
       Show debug information when executing Vercel commands.
     required: false
+  VERCEL_ARCHIVE:
+    description: |
+      Value passed to the --archive vercel flag. Used to compress files before uploading to Vercel.
+    required: false
 
 outputs:
   PREVIEW_URL:

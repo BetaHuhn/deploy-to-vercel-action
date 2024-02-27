@@ -103,6 +103,9 @@ const context = {
 		key: 'DEBUG',
 		type: 'boolean',
 		default: false
+	}),
+	VERCEL_ARCHIVE: parser.getInput({
+		key: 'VERCEL_ARCHIVE'
 	})
 }
 

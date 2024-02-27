@@ -17,7 +17,8 @@ const {
 	PREBUILT,
 	WORKING_DIRECTORY,
 	FORCE,
-	DEBUG
+	DEBUG,
+	VERCEL_ARCHIVE
 } = require('./config')
 
 const init = () => {
@@ -47,6 +48,9 @@ const init = () => {
 		}
 		if (DEBUG) {
 			commandArguments.push('--debug')
+		}
+		if (VERCEL_ARCHIVE) {
+			commandArguments.push(`--archive=${ VERCEL_ARCHIVE }`)
 		}
 
 		if (commit) {

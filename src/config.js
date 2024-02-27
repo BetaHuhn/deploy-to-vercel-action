@@ -98,6 +98,11 @@ const context = {
 		key: 'FORCE',
 		type: 'boolean',
 		default: false
+	}),
+	DEBUG: parser.getInput({
+		key: 'DEBUG',
+		type: 'boolean',
+		default: false
 	})
 }
 

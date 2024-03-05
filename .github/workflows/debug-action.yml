@@ -29,6 +29,11 @@ jobs:
         with:
           ref: ${{ github.event.inputs.ref }}
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
       - name: Install Vercel CLI 📦
         run: npm i -g vercel
 
@@ -53,8 +58,8 @@ jobs:
 
       - name: Deploy to Vercel outputs ✍️
         run: |
-            echo "PREVIEW_URL: ${{ needs.verceldeploy.outputs.PREVIEW_URL }}"
-            echo "DEPLOYMENT_URLS: ${{ needs.verceldeploy.outputs.DEPLOYMENT_URLS }}"
-            echo "COMMENT_CREATED: ${{ needs.verceldeploy.outputs.COMMENT_CREATED }}"
-            echo "DEPLOYMENT_INSPECTOR_URL: ${{ needs.verceldeploy.outputs.DEPLOYMENT_INSPECTOR_URL }}"
-            echo "DEPLOYMENT_UNIQUE_URL: ${{ needs.verceldeploy.outputs.DEPLOYMENT_UNIQUE_URL }}"
+            echo "PREVIEW_URL: ${{ steps.verceldeploy.outputs.PREVIEW_URL }}"
+            echo "DEPLOYMENT_URLS: ${{ steps.verceldeploy.outputs.DEPLOYMENT_URLS }}"
+            echo "COMMENT_CREATED: ${{ steps.verceldeploy.outputs.COMMENT_CREATED }}"
+            echo "DEPLOYMENT_INSPECTOR_URL: ${{ steps.verceldeploy.outputs.DEPLOYMENT_INSPECTOR_URL }}"
+            echo "DEPLOYMENT_UNIQUE_URL: ${{ steps.verceldeploy.outputs.DEPLOYMENT_UNIQUE_URL }}"

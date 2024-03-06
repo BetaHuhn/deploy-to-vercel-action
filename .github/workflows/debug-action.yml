@@ -40,21 +40,31 @@ jobs:
       - name: Pull Vercel environment information 🔑
         run: npx vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build website 🏗
+      - name: Make sample website 📄
         env:
           LOCAL_REF: ${{ github.event.inputs.ref }}
-        run: touch index.html && echo "LOCAL_REF=$LOCAL_REF" >> index.html
+          BUILD_DIR: .vercel/output/static
+        run: mkdir -p $BUILD_DIR/ && touch $BUILD_DIR/index.html && echo "LOCAL_REF=$LOCAL_REF" > $BUILD_DIR/index.html
+
+      - name: Make sample config 📄
+        env:
+          CONFIG_DIR: .vercel/output
+
+      - name: Create config.json 📄
+        run: |
+          touch $CONFIG_DIR/config.json
+          echo "{\"version\": 3}" > $CONFIG_DIR/config.json
 
       - name: Deploy to Vercel 🚀
         id: verceldeploy
         # Fork of https://github.com/BetaHuhn/deploy-to-vercel-action
         uses: mountainash/fork-deploy-to-vercel-action@924ce29dfa0ee1980ef938dfee6c853fe7e5732d
         with:
-          GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          PREBUILT: true
 
       - name: Deploy to Vercel outputs ✍️
         run: |

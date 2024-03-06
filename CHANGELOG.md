@@ -12,6 +12,7 @@
 - Removed [`got`](https://www.npmjs.com/package/got/v/13.0.0) _"no longer maintained"_
 - Removed [`action-input-parser`](https://www.npmjs.com/package/action-input-parser)
 - Removed dotenv
+- Removed vercel (it's a requirement that the Workflow file has to install the Vercel CLI before running the action)
 
 ## [v1.9.12] - 2023-01-30
 

@@ -18,11 +18,6 @@ jobs:
       pull-requests: write
       deployments: write
 
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
     steps:
       - name: Checkout ${{ github.event.inputs.ref }} 📥
         uses: actions/checkout@v4
@@ -49,8 +44,6 @@ jobs:
       - name: Make sample config 📄
         env:
           CONFIG_DIR: .vercel/output
-
-      - name: Create config.json 📄
         run: |
           touch $CONFIG_DIR/config.json
           echo "{\"version\": 3}" > $CONFIG_DIR/config.json

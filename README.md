@@ -1,10 +1,11 @@
 ### @mountainash fork changes
 
-- [x] Added `--archive=tgz` arg to Vercel deploy when using `PREBUILT` option to allow built deployments over 1500 files.
-- [x] Updated from NodeJS v16 to NodeJS v20.
-- [x] Updated from Vercel CLI v22.0.1 to v33.0.1
-- [x] Updated from `@actions/github` v^4.0.0 to v6.0.0
-- [x] Removed dependency on [`got`](https://www.npmjs.com/package/got/v/13.0.0) ("no longer maintained") and [`action-input-parser`](https://www.npmjs.com/package/action-input-parser) packages.
+- [x] Added `--archive=tgz` arg to Vercel deploy when using `PREBUILT` option to allow built deployments over 1500 files
+- [x] Added [defaults](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions?learn=create_actions&learnProduct=actions#inputsinput_iddefault)
+- [x] Added GitHub Actions workflow to test the action
+- [x] See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20)
+- [ ] Remove 📦 dotenv dependency
+- [ ] Fix need for `GITHUB_REPOSITORY` var passsing
 
 <div align="center">
 

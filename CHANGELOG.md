@@ -1,3 +1,17 @@
+# Change Log
+
+## [v2.0.1] - 2024
+
+- _See top of README_
+
+### Dependency updates
+
+- Updated from NodeJS v16 to NodeJS v20.
+- Updated from Vercel CLI v22.0.1 to v33.0.1
+- Updated from `@actions/github` v^4.0.0 to v6.0.0
+- Removed [`got`](https://www.npmjs.com/package/got/v/13.0.0) _"no longer maintained"_
+- Removed [`action-input-parser`](https://www.npmjs.com/package/action-input-parser)
+
 ## [v1.9.12] - 2023-01-30
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.12) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.11...v1.9.12) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.12) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.12.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.12.tar.gz))

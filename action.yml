@@ -13,44 +13,52 @@ inputs:
     required: false
   VERCEL_PROJECT_ID:
     description: |
-      Id of your Vercel project (can be found in .vercel/project.json).
+      ID of your Vercel project (can be found in .vercel/project.json).
     required: false
   VERCEL_ORG_ID:
     description: |
-      Id of your Vercel organisation (can be found in .vercel/project.json).
+      ID of your Vercel organisation (can be found in .vercel/project.json).
     required: false
   PRODUCTION:
     description: |
       Create a production deployment (default: true, false for PR deployments).
     required: false
+    default: 'true'
   PREBUILT:
     description: |
       Deploy a prebuilt Vercel Project (default: false).
     required: false
+    default: 'false'
   GITHUB_DEPLOYMENT:
     description: |
       Create a deployment on GitHub (default: true).
     required: false
+    default: 'true'
   CREATE_COMMENT:
     description: |
       Create PR comment when deploying (default: true).
     required: false
+    default: 'true'
   DELETE_EXISTING_COMMENT:
     description: |
       Delete existing PR comment when redeploying PR (default: true).
     required: false
+    default: 'true'
   ATTACH_COMMIT_METADATA:
     description: |
       Attach metadata about the commit to the Vercel deployment (default: true).
     required: false
+    default: 'true'
   DEPLOY_PR_FROM_FORK:
     description: |
       Allow PRs which originate from a fork to be deployed (default: false).
     required: false
+    default: 'false'
   PR_LABELS:
     description: |
       Labels which will be added to the pull request once deployed. Set it to false to turn off (default: deployed).
     required: false
+    default: 'deployed'
   ALIAS_DOMAINS:
     description: |
       Assign alias domain(s) to the deployment.
@@ -71,6 +79,7 @@ inputs:
     description: |
       When passing meta data to Vercel deployment, trim the commit message to subject only (default: false).
     required: false
+    default: 'false'
   BUILD_ENV:
     description: |
       Provide environment variables to the build step.
@@ -83,6 +92,7 @@ inputs:
     description: |
       Used to skip the build cache.
     required: false
+    default: 'false'
 
 outputs:
   PREVIEW_URL:
@@ -94,9 +104,9 @@ outputs:
   COMMENT_CREATED:
     description: 'True if a comment was created on the PR or commit.'
   DEPLOYMENT_INSPECTOR_URL:
-    description: 'Main deployment inspection url.'
+    description: 'Main deployment inspection URL.'
   DEPLOYMENT_UNIQUE_URL:
-    description: 'The unique deployment url on Vercel'
+    description: 'The unique deployment URL on Vercel'
 
 runs:
   using: 'node20'

@@ -1,6 +1,6 @@
 {
   "name": "deploy-to-vercel-action",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.1",
   "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
   "type": "commonjs",
   "main": "dist/index.js",

@@ -1,6 +1,6 @@
 # Change Log
 
-## [v2.0.1] - 2024
+## [v2.0.4] - 2024
 
 - _See top of README_
 
@@ -13,6 +13,7 @@
 - Removed [`action-input-parser`](https://www.npmjs.com/package/action-input-parser)
 - Removed dotenv
 - Removed vercel (it's a requirement that the Workflow file has to install the Vercel CLI before running the action)
+- Added NodeJS TS types
 
 ## [v1.9.12] - 2023-01-30
 

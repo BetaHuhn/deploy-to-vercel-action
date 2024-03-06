@@ -6,6 +6,8 @@
 - [x] See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20)
 - [ ] Fix need for `GITHUB_REPOSITORY` var passsing
 
+---
+
 <div align="center">
 
 # Deploy to Vercel Action
@@ -37,7 +39,7 @@ Before you can start using the Action, you have to setup a few Action inputs. Re
 
 Then create a `.yml` file in your `.github/workflows` folder (you can find more info about the structure in the [GitHub Docs](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)) and add the following:
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -102,8 +104,8 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_SCOPE` | Execute commands from a different Vercel team or user | **No** | N/A |
 | `BUILD_ENV` | Provide environment variables to the build step | **No** | N/A |
 | `WORKING_DIRECTORY` | Working directory for the Vercel CLI | **No** | N/A |
-| `FORCE` | Used to skip the build cache. | **No** | false
-| `PREBUILT` | Deploy a prebuilt Vercel Project. | **No** | false
+| `FORCE` | Used to skip the build cache. | **No** | false |
+| `PREBUILT` | Deploy a prebuilt Vercel Project. | **No** | false |
 
 ## 🛠️ Configuration
 
@@ -184,6 +186,8 @@ You also have to manually checkout the PR branch, as `pull_request_target` runs 
 
 Here's a complete workflow as an example:
 
+**`.github/workflows/deploy.yml`**
+
 ```yml
 name: Deploy CI
 on:
@@ -230,7 +234,7 @@ Here are a few examples to help you get started!
 
 The workflow below will run on every push to master and every time a new PR is created or an existing PR changed. [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) will deploy the master branch to your Vercel production environment and comment on every PR with a preview link to the deployed PR.
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -259,7 +263,7 @@ jobs:
 
 The workflow below will run on every push to the staging branch. The Action will then deploy it to the preview environment on Vercel.
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy staging CI
@@ -287,7 +291,7 @@ jobs:
 
 The workflow below will only run after a new release is created on GitHub.
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -314,7 +318,7 @@ jobs:
 
 If you want, [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) can assign multiple domains to each deployment and also change the PR preview domain:
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -347,7 +351,7 @@ jobs:
 
 The workflow below will wait until your other CI jobs are completed until it will deploy your project to Vercel.
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -380,7 +384,7 @@ jobs:
 
 The workflow below will not automatically create a PR comment. This is useful for example when your PR can trigger multiple deployments (think monorepo for example) and you want to take control over PR comment creation by yourself. You can use output produced by this action to build comment by yourself.
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -433,7 +437,7 @@ The workflow below will run at the given interval and deploy your project to Ver
 
 > Note: You can use any other action to change your project or run your own script before deploying those changes to Vercel
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -460,11 +464,11 @@ jobs:
 
 As described in the [Deploying a PR made from a fork or Dependabot](#deploying-a-pr-made-from-a-fork-or-dependabot) section, Pull Requests created by Dependabot behave as if they where created from a fork and thus the Workflow triggered by the `pull_request` event doesn't have access to any secrets.
 
-To overcome this limitation you can use the `pull_request_target` event and checkout the PR branch manually:
+To overcome this limitation you can use the `pull_request_target` event and checkout the PR branch manually
 
 > Note: By default this action doesn't deploy any forks so you can use `pull_request_target` without any security concerns
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -505,7 +509,7 @@ jobs:
 
 You can define the build environment variables when using the action:
 
-**.github/workflows/deploy.yml**
+**`.github/workflows/deploy.yml`**
 
 ```yml
 name: Deploy CI
@@ -549,11 +553,9 @@ Pass in inputs as environment variables with the prefix `INPUT_` (e.g. `INPUT_GI
 
 ## ❔ About
 
-This project was developed by me ([@betahuhn](https://github.com/BetaHuhn)) in my free time. If you want to support me:
+This project was developed by me ([@betahuhn](https://github.com/BetaHuhn)) and upgraded and extended by [@mountainash](https://github.com/mountainash) in my free time. If you want to support me: [![Donate via PayPal](https://img.shields.io/badge/paypal-donate-009cde.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=394RTSBEEEFEE) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F81S2RK)
 
-[![Donate via PayPal](https://img.shields.io/badge/paypal-donate-009cde.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=394RTSBEEEFEE)
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F81S2RK)
+If you want to support @mountainash [![Sponsor via GitHub](https://img.shields.io/badge/sponsor-via%20github-94a1f2.svg)](https://github.com/sponsors/mountainash)
 
 **[deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) is in no way affiliated with Vercel.**
 

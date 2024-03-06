@@ -4,7 +4,7 @@
 - [x] Added [defaults](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions?learn=create_actions&learnProduct=actions#inputsinput_iddefault)
 - [x] Added GitHub Actions workflow to test the action
 - [x] See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20)
-- [ ] Fix need for `GITHUB_REPOSITORY` var passsing
+- [X] Remove need for `GITHUB_REPOSITORY` var passsing
 
 ---
 
@@ -91,7 +91,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_ORG_ID` | Id of your Vercel Organisation (more info [below](#vercel-project)) | **Yes** | N/A |
 | `VERCEL_PROJECT_ID` | Id of your Vercel project (more info [below](#vercel-project)) | **Yes** | N/A |
 | `GITHUB_DEPLOYMENT` | Create a deployment on GitHub | **No** | true |
-| `GITHUB_DEPLOYMENT_ENV` | Custom environment for the GitHub deployment. | **No** | `Production` or `Preview` |
+| `GITHUB_DEPLOYMENT_ENV` | Custom environment for the GitHub deployment | **No** | `Production` or `Preview` |
 | `PRODUCTION` | Create a production deployment on Vercel and GitHub | **No** | true (false for PR deployments) |
 | `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
 | `CREATE_COMMENT` | Create PR comment when deploying | **No** | true |
@@ -104,8 +104,8 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_SCOPE` | Execute commands from a different Vercel team or user | **No** | N/A |
 | `BUILD_ENV` | Provide environment variables to the build step | **No** | N/A |
 | `WORKING_DIRECTORY` | Working directory for the Vercel CLI | **No** | N/A |
-| `FORCE` | Used to skip the build cache. | **No** | false |
-| `PREBUILT` | Deploy a prebuilt Vercel Project. | **No** | false |
+| `FORCE` | Used to skip the build cache | **No** | false |
+| `PREBUILT` | Deploy a prebuilt Vercel Project | **No** | false |
 
 ## 🛠️ Configuration
 
@@ -550,6 +550,8 @@ The actual source code of this Action is in the `src` folder.
 - run `yarn build` or `npm run build` to produce a production version of [deploy-to-vercel-action](https://github.com/BetaHuhn/deploy-to-vercel-action) in the `dist` folder.
 
 Pass in inputs as environment variables with the prefix `INPUT_` (e.g. `INPUT_GITHUB_TOKEN`) & `RUNNING_LOCAL=true`.
+
+<!-- Minimal Example: `RUNNING_LOCAL=true INPUT_GITHUB_TOKEN=10 INPUT_VERCEL_TOKEN=10 INPUT_VERCEL_ORG_ID=11 INPUT_VERCEL_PROJECT_ID=12 GITHUB_REPOSITORY="you/me" npm run start` -->
 
 ## ❔ About
 

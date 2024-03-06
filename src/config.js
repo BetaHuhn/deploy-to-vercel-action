@@ -18,7 +18,6 @@ const context = {
 	ALIAS_DOMAINS: core.getInput('ALIAS_DOMAINS') ? core.getInput('ALIAS_DOMAINS').split(',') : [],
 	PR_PREVIEW_DOMAIN: core.getInput('PR_PREVIEW_DOMAIN'),
 	VERCEL_SCOPE: core.getInput('VERCEL_SCOPE'),
-	GITHUB_REPOSITORY: core.getInput('GITHUB_REPOSITORY', { required: true }),
 	GITHUB_DEPLOYMENT_ENV: core.getInput('GITHUB_DEPLOYMENT_ENV'),
 	TRIM_COMMIT_MESSAGE: core.getInput('TRIM_COMMIT_MESSAGE') !== 'false',
 	WORKING_DIRECTORY: core.getInput('WORKING_DIRECTORY'),
@@ -29,8 +28,9 @@ const context = {
 }
 
 const setDynamicVars = () => {
-	context.USER = context.GITHUB_REPOSITORY.split('/')[0]
-	context.REPOSITORY = context.GITHUB_REPOSITORY.split('/')[1]
+	const { owner, repo } = github.context.repo
+	context.USER = owner
+	context.REPOSITORY = repo
 
 	// If running the action locally, use env vars instead of github.context
 	if (context.RUNNING_LOCAL) {
@@ -58,7 +58,7 @@ const setDynamicVars = () => {
 		context.REF = github.context.payload.pull_request.head.ref
 		context.SHA = github.context.payload.pull_request.head.sha
 		context.BRANCH = github.context.payload.pull_request.head.ref
-		context.IS_FORK = github.context.payload.pull_request.head.repo.full_name !== context.GITHUB_REPOSITORY
+		context.IS_FORK = github.context.payload.pull_request.head.repo.full_name !== process.env.GITHUB_REPOSITORY
 	} else {
 		context.ACTOR = github.context.actor
 		context.REF = github.context.ref

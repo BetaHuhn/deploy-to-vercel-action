@@ -11,6 +11,7 @@
 - Updated from `@actions/github` v^4.0.0 to v6.0.0
 - Removed [`got`](https://www.npmjs.com/package/got/v/13.0.0) _"no longer maintained"_
 - Removed [`action-input-parser`](https://www.npmjs.com/package/action-input-parser)
+- Removed dotenv
 
 ## [v1.9.12] - 2023-01-30
 

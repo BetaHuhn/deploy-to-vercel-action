@@ -4,7 +4,6 @@
 - [x] Added [defaults](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions?learn=create_actions&learnProduct=actions#inputsinput_iddefault)
 - [x] Added GitHub Actions workflow to test the action
 - [x] See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20)
-- [ ] Remove 📦 dotenv dependency
 - [ ] Fix need for `GITHUB_REPOSITORY` var passsing
 
 <div align="center">
@@ -140,10 +139,12 @@ ALIAS_DOMAINS: |
 
 #### Pro Teams
 If your team is set up to `Pro`, remember to set the `VERCEL_SCOPE` to the slug of your team.
+
 ```yml
 with:
   VERCEL_SCOPE: 'your-team-slug'
 ```
+
 Otherwise, the action will fail trying to deploy custom domains with default account credentials. It will result in request for authorisation and action fail.
 Even if you extend the scope of `VERCEL_TOKEN` to `All non-SAML Team`, without properly set up `VERCEL_SCOPE` the cli will use default account and fail.
 

@@ -1,6 +1,5 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
-require('dotenv').config()
 
 const IS_PR = [ 'pull_request', 'pull_request_target' ].includes(github.context.eventName)
 

@@ -32064,7 +32064,7 @@ const setDynamicVars = () => {
 		context.ACTOR = github.context.actor
 		context.REF = github.context.ref
 		context.SHA = github.context.sha
-		context.BRANCH = github.context.ref.substring(11)
+		context.BRANCH = github.context.ref.substring('refs/heads/'.length)
 	}
 }
 
@@ -32284,7 +32284,7 @@ const {
 	SHA,
 	USER,
 	REPOSITORY,
-	REF,
+	BRANCH,
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
 	PREBUILT,
@@ -32300,7 +32300,7 @@ const init = () => {
 	let deploymentUrl
 
 	const deploy = async (commit) => {
-		let commandArguments = [ `--token=${ VERCEL_TOKEN }` ]
+		let commandArguments = [ `--token=${ VERCEL_TOKEN }`, 'deploy' ]
 
 		if (VERCEL_SCOPE) {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
@@ -32326,7 +32326,7 @@ const init = () => {
 				`githubCommitMessage=${ TRIM_COMMIT_MESSAGE ? commit.commitMessage.split(/\r?\n/)[0] : commit.commitMessage }`,
 				`githubCommitOrg=${ USER }`,
 				`githubCommitRepo=${ REPOSITORY }`,
-				`githubCommitRef=${ REF }`,
+				`githubCommitRef=${ BRANCH }`,
 				`githubCommitSha=${ SHA }`,
 				`githubOrg=${ USER }`,
 				`githubRepo=${ REPOSITORY }`,
@@ -32345,7 +32345,7 @@ const init = () => {
 		}
 
 		core.info('Starting deploy with Vercel ▲ CLI')
-		const output = await execCmd('vercel deploy', commandArguments, WORKING_DIRECTORY)
+		const output = await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
 		const match = output.match(/(?<=https:\/\/)(.*)/g)
 		const parsed = match ? match[0] : null
 
@@ -32363,7 +32363,7 @@ const init = () => {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		return await execCmd('vercel deploy', commandArguments, WORKING_DIRECTORY)
+		return await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
 	}
 
 	const getDeployment = async () => {

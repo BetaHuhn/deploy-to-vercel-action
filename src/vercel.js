@@ -1,5 +1,5 @@
 const core = require('@actions/core')
-const { exec, removeSchema } = require('./helpers')
+const { execCmd, removeSchema } = require('./helpers')
 
 const {
 	VERCEL_TOKEN,
@@ -19,7 +19,7 @@ const {
 } = require('./config')
 
 const init = () => {
-	core.info('Setting environment variables for Vercel CLI')
+	core.info('Setting environment variables for Vercel ▲ CLI')
 	core.exportVariable('VERCEL_ORG_ID', VERCEL_ORG_ID)
 	core.exportVariable('VERCEL_PROJECT_ID', VERCEL_PROJECT_ID)
 
@@ -71,7 +71,7 @@ const init = () => {
 		}
 
 		core.info('Starting deploy with Vercel ▲ CLI')
-		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
+		const output = await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
 		const match = output.match(/(?<=https?:\/\/)(.*)/g)
 		const parsed = match ? match[0] : null
 
@@ -89,7 +89,7 @@ const init = () => {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		return await exec('vercel', commandArguments, WORKING_DIRECTORY)
+		return await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
 	}
 
 	const getDeployment = async () => {

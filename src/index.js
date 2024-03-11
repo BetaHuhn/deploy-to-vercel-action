@@ -60,13 +60,13 @@ const run = async () => {
 	}
 
 	try {
-		core.info('Creating deployment with Vercel CLI')
+		core.info('Creating deployment with Vercel ▲ CLI')
 		const vercel = Vercel.init()
 
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
 
-		core.info('Successfully deployed to Vercel!')
+		core.info('Successfully deployed to Vercel ▲')
 
 		const deploymentUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
@@ -85,7 +85,6 @@ const run = async () => {
 
 			const previewDomainSuffix = '.vercel.app'
 			let nextAlias = alias
-
 
 			if (alias.endsWith(previewDomainSuffix)) {
 				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
@@ -108,7 +107,7 @@ const run = async () => {
 		}
 
 		if (ALIAS_DOMAINS) {
-			core.info('Assigning custom domains to Vercel deployment')
+			core.info('Assigning alias domains to Vercel ▲ deployment')
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {
 				throw new Error('🛑 invalid type for ALIAS_DOMAINS')
@@ -144,7 +143,8 @@ const run = async () => {
 				core.info('Checking for existing comment on PR')
 				const deletedCommentId = await github.deleteExistingComment()
 
-				if (deletedCommentId) core.info(`Deleted existing comment #${ deletedCommentId }`)
+				if (deletedCommentId)
+					core.info(`Deleted existing comment #${ deletedCommentId }`)
 			}
 
 			if (CREATE_COMMENT) {

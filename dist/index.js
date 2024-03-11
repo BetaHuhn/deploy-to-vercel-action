@@ -32237,9 +32237,9 @@ const execCmd = async (command, args, cwd) => {
 	}
 	options.cwd = cwd
 
+	core.info(`▻ EXEC: "${ command } ${ args }"`)
 	const exitCode = await exec(command, args, options)
 
-	core.info(`▻ EXEC: "${ command } ${ args }"`)
 	if (exitCode === 0)
 		throw new Error(`${ stderr } - ${ stdout.trim() }`)
 	return stdout.trim()
@@ -32260,7 +32260,7 @@ const removeSchema = (url) => {
 }
 
 module.exports = {
-	exec: execCmd,
+	execCmd,
 	addSchema,
 	removeSchema
 }
@@ -32271,7 +32271,7 @@ module.exports = {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(2186)
-const { exec, removeSchema } = __nccwpck_require__(5946)
+const { execCmd, removeSchema } = __nccwpck_require__(5946)
 
 const {
 	VERCEL_TOKEN,
@@ -32291,7 +32291,7 @@ const {
 } = __nccwpck_require__(7779)
 
 const init = () => {
-	core.info('Setting environment variables for Vercel CLI')
+	core.info('Setting environment variables for Vercel ▲ CLI')
 	core.exportVariable('VERCEL_ORG_ID', VERCEL_ORG_ID)
 	core.exportVariable('VERCEL_PROJECT_ID', VERCEL_PROJECT_ID)
 
@@ -32343,7 +32343,7 @@ const init = () => {
 		}
 
 		core.info('Starting deploy with Vercel ▲ CLI')
-		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
+		const output = await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
 		const match = output.match(/(?<=https?:\/\/)(.*)/g)
 		const parsed = match ? match[0] : null
 
@@ -32361,7 +32361,7 @@ const init = () => {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		return await exec('vercel', commandArguments, WORKING_DIRECTORY)
+		return await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
 	}
 
 	const getDeployment = async () => {
@@ -32494,13 +32494,13 @@ const run = async () => {
 	}
 
 	try {
-		core.info('Creating deployment with Vercel CLI')
+		core.info('Creating deployment with Vercel ▲ CLI')
 		const vercel = Vercel.init()
 
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
 		const deploymentUrl = await vercel.deploy(commit)
 
-		core.info('Successfully deployed to Vercel!')
+		core.info('Successfully deployed to Vercel ▲')
 
 		const deploymentUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
@@ -32519,7 +32519,6 @@ const run = async () => {
 
 			const previewDomainSuffix = '.vercel.app'
 			let nextAlias = alias
-
 
 			if (alias.endsWith(previewDomainSuffix)) {
 				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
@@ -32542,7 +32541,7 @@ const run = async () => {
 		}
 
 		if (ALIAS_DOMAINS) {
-			core.info('Assigning custom domains to Vercel deployment')
+			core.info('Assigning alias domains to Vercel ▲ deployment')
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {
 				throw new Error('🛑 invalid type for ALIAS_DOMAINS')
@@ -32578,7 +32577,8 @@ const run = async () => {
 				core.info('Checking for existing comment on PR')
 				const deletedCommentId = await github.deleteExistingComment()
 
-				if (deletedCommentId) core.info(`Deleted existing comment #${ deletedCommentId }`)
+				if (deletedCommentId)
+					core.info(`Deleted existing comment #${ deletedCommentId }`)
 			}
 
 			if (CREATE_COMMENT) {

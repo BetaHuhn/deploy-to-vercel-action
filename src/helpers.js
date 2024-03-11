@@ -16,9 +16,9 @@ const execCmd = async (command, args, cwd) => {
 	}
 	options.cwd = cwd
 
+	core.info(`▻ EXEC: "${ command } ${ args }"`)
 	const exitCode = await exec(command, args, options)
 
-	core.info(`▻ EXEC: "${ command } ${ args }"`)
 	if (exitCode === 0)
 		throw new Error(`${ stderr } - ${ stdout.trim() }`)
 	return stdout.trim()
@@ -39,7 +39,7 @@ const removeSchema = (url) => {
 }
 
 module.exports = {
-	exec: execCmd,
+	execCmd,
 	addSchema,
 	removeSchema
 }

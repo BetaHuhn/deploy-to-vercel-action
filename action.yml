@@ -58,7 +58,6 @@ inputs:
     description: |
       Labels which will be added to the pull request once deployed (default: none).
     required: false
-    default: ''
   ALIAS_DOMAINS:
     description: |
       Assign alias domain(s) to the deployment.

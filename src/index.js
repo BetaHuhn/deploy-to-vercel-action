@@ -191,6 +191,15 @@ const run = async () => {
 		core.setOutput('DEPLOYMENT_CREATED', true)
 		core.setOutput('COMMENT_CREATED', IS_PR && CREATE_COMMENT)
 
+		core.summary.addLink('PREVIEW_URL', previewUrl)
+		core.summary.addEOL()
+		core.summary.addHeading('DEPLOYMENT_URLS', '2')
+		core.summary.addList(deploymentUrls)
+		core.summary.addEOL()
+		core.summary.addLink('DEPLOYMENT_UNIQUE_URL', deploymentUrls[deploymentUrls.length - 1])
+		core.summary.addEOL()
+		core.summary.write()
+
 		core.info('Done')
 	} catch (err) {
 		await github.updateDeployment('failure')

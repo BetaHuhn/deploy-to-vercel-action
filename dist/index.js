@@ -32240,7 +32240,9 @@ const execCmd = async (command, args, cwd) => {
 	const exitCode = await exec(command, args, options)
 
 	core.info(`▻ EXEC: "${ command } ${ args }"`)
-	exitCode === 0 ? stdout.trim() : new Error(`${ stderr } - ${ stdout.trim() }`)
+	if (exitCode === 0)
+		throw new Error(`${ stderr } - ${ stdout.trim() }`)
+	return stdout.trim()
 }
 
 const addSchema = (url) => {
@@ -32340,9 +32342,10 @@ const init = () => {
 			})
 		}
 
-		core.info('Starting deploy with Vercel CLI')
+		core.info('Starting deploy with Vercel ▲ CLI')
 		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
-		const parsed = output.match(/(?<=https?:\/\/)(.*)/g)[0]
+		const match = output.match(/(?<=https?:\/\/)(.*)/g)
+		const parsed = match ? match[0] : null
 
 		if (!parsed) throw new Error('🛑 Could not parse deploymentUrl')
 
@@ -32358,9 +32361,7 @@ const init = () => {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
-
-		return output
+		return await exec('vercel', commandArguments, WORKING_DIRECTORY)
 	}
 
 	const getDeployment = async () => {

@@ -8,6 +8,7 @@
 - [x] Allow Vercel domain aliases to be set on PRs
 - [x] Emojis in error logs to better see source of error/log
 - [x] Using `@actions/exec` instead of spawn = require('child_process') for better OS portability
+- [x] Fix: EditorConfig conflicted with Eslint rules
 
 ---
 

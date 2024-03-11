@@ -19,7 +19,9 @@ const execCmd = async (command, args, cwd) => {
 	const exitCode = await exec(command, args, options)
 
 	core.info(`▻ EXEC: "${ command } ${ args }"`)
-	exitCode === 0 ? stdout.trim() : new Error(`${ stderr } - ${ stdout.trim() }`)
+	if (exitCode === 0)
+		throw new Error(`${ stderr } - ${ stdout.trim() }`)
+	return stdout.trim()
 }
 
 const addSchema = (url) => {

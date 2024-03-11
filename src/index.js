@@ -107,7 +107,7 @@ const run = async () => {
 			deploymentUrls.push(addSchema(nextAlias))
 		}
 
-		if (!IS_PR && ALIAS_DOMAINS) {
+		if (ALIAS_DOMAINS) {
 			core.info(`Assigning custom domains to Vercel deployment`)
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {

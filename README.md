@@ -4,7 +4,8 @@
 - [x] Added [defaults](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions?learn=create_actions&learnProduct=actions#inputsinput_iddefault)
 - [x] Added GitHub Actions workflow to test the action
 - [x] See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20)
-- [X] Remove need for `GITHUB_REPOSITORY` var passsing
+- [x] `GITHUB_REPOSITORY` is no longer a required input (it can be deduced using the `GITHUB_TOKEN`)
+- [x] Allow Vercel domain aliases to be set on PRs
 
 ---
 

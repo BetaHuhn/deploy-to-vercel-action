@@ -203,8 +203,8 @@ const run = async () => {
 		core.summary.write()
 
 		// Set environment variable for use in subsequent job steps
-		core.exportVariable('PREVIEW_URL', previewUrl)
-		core.exportVariable('DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
+		core.exportVariable('VERCEL_PREVIEW_URL', previewUrl)
+		core.exportVariable('VERCEL_DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
 
 		core.info('Done')
 	} catch (err) {

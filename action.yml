@@ -56,9 +56,9 @@ inputs:
     default: 'false'
   PR_LABELS:
     description: |
-      Labels which will be added to the pull request once deployed. Set it to false to turn off (default: deployed).
+      Labels which will be added to the pull request once deployed (default: none).
     required: false
-    default: 'deployed'
+    default: ''
   ALIAS_DOMAINS:
     description: |
       Assign alias domain(s) to the deployment.

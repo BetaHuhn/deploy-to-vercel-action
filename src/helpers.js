@@ -27,7 +27,7 @@ const execCmd = async (command, args, cwd) => {
 
 	options.silent = false
 
-	core.info(`▻ EXEC: "${ command } ${ args }"`)
+	core.info(`\u001b[33m▻ EXEC: "${ command } ${ args }"`)
 
 	try {
 		exitCode = await exec(command, args, options)

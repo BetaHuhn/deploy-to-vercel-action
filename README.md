@@ -9,8 +9,11 @@
 - [x] Emojis in error logs to better see source of error/log
 - [x] Using `@actions/exec` instead of spawn = require('child_process') for better OS portability
 - [x] Fix: EditorConfig conflicted with Eslint rules
+- [x] Using npx to run Vercel CLI to avoid version missmatches (as seen in #374, #367, #226)
 - [ ] Add a Workflow Summary to each run _basic one created, but could be improved_
-- [x] Exporting `PREVIEW_URL` and `DEPLOYMENT_UNIQUE_URL` for use in other job steps
+- [x] Exporting `VERCEL_PREVIEW_URL` and `VERCEL_DEPLOYMENT_UNIQUE_URL` for use in other job steps
+- [x] Using @actions/core to correctly get boolean and multilined inputs
+- [x] Removed default "deploy" label from PRs
 
 ---
 
@@ -557,7 +560,7 @@ The actual source code of this Action is in the `src` folder.
 
 Pass in inputs as environment variables with the prefix `INPUT_` (e.g. `INPUT_GITHUB_TOKEN`) & `RUNNING_LOCAL=true`.
 
-<!-- Minimal Example: `RUNNING_LOCAL=true INPUT_GITHUB_TOKEN=10 INPUT_VERCEL_TOKEN=10 INPUT_VERCEL_ORG_ID=11 INPUT_VERCEL_PROJECT_ID=12 GITHUB_REPOSITORY="you/me" npm run start` -->
+<!-- Minimal Example: `RUNNING_LOCAL=true INPUT_GITHUB_TOKEN=10 INPUT_VERCEL_TOKEN=10 INPUT_VERCEL_ORG_ID=11 INPUT_VERCEL_PROJECT_ID=12 GITHUB_REPOSITORY="you/me" INPUT_PRODUCTION="true" npm run start` -->
 
 ## ❔ About
 

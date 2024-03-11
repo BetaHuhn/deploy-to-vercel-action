@@ -1,6 +1,7 @@
 name: Debug Action CI
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       ref:
@@ -50,8 +51,7 @@ jobs:
 
       - name: Deploy to Vercel 🚀
         id: verceldeploy
-        # Fork of https://github.com/BetaHuhn/deploy-to-vercel-action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: ./
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

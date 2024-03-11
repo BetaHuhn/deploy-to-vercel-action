@@ -1,31 +1,25 @@
 const core = require('@actions/core')
-const { spawn } = require('child_process')
+const { exec } = require('@actions/exec')
 
-const execCmd = (command, args, cwd) => {
-	core.info(`▶︎ EXEC: "${ command } ${ args }" in ${ cwd || '.' }`)
-	return new Promise((resolve, reject) => {
-		const process = spawn(command, args, { cwd })
-		let stdout = '▲ '
-		let stderr = '🔺 '
+const execCmd = async (command, args, cwd) => {
+	const options = {}
+	let stdout = '▲ '
+	let stderr = '🔺 '
 
-		process.stdout.on('data', (data) => {
-			core.debug(data.toString())
-			if (data !== undefined && data.length > 0) {
-				stdout += data
-			}
-		})
+	options.listeners = {
+		stdout: (data) => {
+			stdout += data.toString()
+		},
+		stderr: (data) => {
+			stderr += data.toString()
+		}
+	}
+	options.cwd = cwd
 
-		process.stderr.on('data', (data) => {
-			core.debug(data.toString())
-			if (data !== undefined && data.length > 0) {
-				stderr += data
-			}
-		})
+	const exitCode = await exec(command, args, options)
 
-		process.on('close', (code) => {
-			code !== 0 ? reject(new Error(stderr)) : resolve(stdout.trim())
-		})
-	})
+	core.info(`▻ EXEC: "${ command } ${ args }"`)
+	exitCode === 0 ? stdout.trim() : new Error(`${ stderr } - ${ stdout.trim() }`)
 }
 
 const addSchema = (url) => {

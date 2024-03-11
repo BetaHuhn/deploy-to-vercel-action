@@ -6,6 +6,8 @@
 - [x] See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20)
 - [x] `GITHUB_REPOSITORY` is no longer a required input (it can be deduced using the `GITHUB_TOKEN`)
 - [x] Allow Vercel domain aliases to be set on PRs
+- [x] Emojis in error logs to better see source of error/log
+- [x] Using `@actions/exec` instead of spawn = require('child_process') for better OS portability
 
 ---
 

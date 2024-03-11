@@ -32242,6 +32242,8 @@ const execCmd = async (command, args, cwd) => {
 
 	if (exitCode === 0)
 		throw new Error(`${ stderr } - ${ stdout.trim() }`)
+
+	core.info(stdout)
 	return stdout.trim()
 }
 
@@ -32344,7 +32346,7 @@ const init = () => {
 
 		core.info('Starting deploy with Vercel ▲ CLI')
 		const output = await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
-		const match = output.match(/(?<=https?:\/\/)(.*)/g)
+		const match = output.match(/(?<=https:\/\/)(.*)/g)
 		const parsed = match ? match[0] : null
 
 		if (!parsed) throw new Error('🛑 Could not parse deploymentUrl')

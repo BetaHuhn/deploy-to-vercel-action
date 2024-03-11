@@ -21,6 +21,8 @@ const execCmd = async (command, args, cwd) => {
 
 	if (exitCode === 0)
 		throw new Error(`${ stderr } - ${ stdout.trim() }`)
+
+	core.info(stdout)
 	return stdout.trim()
 }
 

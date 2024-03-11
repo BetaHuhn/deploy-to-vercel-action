@@ -183,9 +183,11 @@ const run = async () => {
 			}
 		}
 
+		const deploymentUniqueURL = deploymentUrls[deploymentUrls.length - 1]
+
 		core.setOutput('PREVIEW_URL', previewUrl)
 		core.setOutput('DEPLOYMENT_URLS', deploymentUrls)
-		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentUrls[deploymentUrls.length - 1])
+		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
 		core.setOutput('DEPLOYMENT_ID', deployment.id)
 		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deployment.inspectorUrl)
 		core.setOutput('DEPLOYMENT_CREATED', true)
@@ -196,9 +198,13 @@ const run = async () => {
 		core.summary.addHeading('DEPLOYMENT_URLS', '2')
 		core.summary.addList(deploymentUrls)
 		core.summary.addEOL()
-		core.summary.addLink('DEPLOYMENT_UNIQUE_URL', deploymentUrls[deploymentUrls.length - 1])
+		core.summary.addLink('DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
 		core.summary.addEOL()
 		core.summary.write()
+
+		// Set environment variable for use in subsequent job steps
+		core.exportVariable('PREVIEW_URL', previewUrl)
+		core.exportVariable('DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
 
 		core.info('Done')
 	} catch (err) {

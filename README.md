@@ -9,6 +9,8 @@
 - [x] Emojis in error logs to better see source of error/log
 - [x] Using `@actions/exec` instead of spawn = require('child_process') for better OS portability
 - [x] Fix: EditorConfig conflicted with Eslint rules
+- [ ] Add a Workflow Summary to each run _basic one created, but could be improved_
+- [x] Exporting `PREVIEW_URL` and `DEPLOYMENT_UNIQUE_URL` for use in other job steps
 
 ---
 

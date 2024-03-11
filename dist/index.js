@@ -32363,7 +32363,7 @@ const init = () => {
 		}
 
 		core.info('Starting deploy with Vercel ▲ CLI')
-		const output = await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
+		const output = await execCmd('npx vercel', commandArguments, WORKING_DIRECTORY)
 		const match = output.match(/(?<=https:\/\/)(.*)/g)
 		const parsed = match ? match[0] : null
 
@@ -32381,7 +32381,7 @@ const init = () => {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		return await execCmd('vercel', commandArguments, WORKING_DIRECTORY)
+		return await execCmd('npx vercel', commandArguments, WORKING_DIRECTORY)
 	}
 
 	const getDeployment = async () => {

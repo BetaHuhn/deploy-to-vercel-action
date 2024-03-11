@@ -3,7 +3,7 @@ const { exec } = require('@actions/exec')
 
 const execCmd = async (command, args, cwd) => {
 	const options = {}
-	let stdout = '▲ '
+	let stdout = ''
 	let stderr = '🔺 '
 
 	options.listeners = {

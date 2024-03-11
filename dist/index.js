@@ -32224,7 +32224,7 @@ const { exec } = __nccwpck_require__(1514)
 
 const execCmd = async (command, args, cwd) => {
 	const options = {}
-	let stdout = '▲ '
+	let stdout = ''
 	let stderr = '🔺 '
 
 	options.listeners = {
@@ -32537,6 +32537,7 @@ const run = async () => {
 			}
 
 			await vercel.assignAlias(nextAlias)
+
 			deploymentUrls.push(addSchema(nextAlias))
 		}
 
@@ -32627,16 +32628,12 @@ const run = async () => {
 		core.info('Done')
 	} catch (err) {
 		await github.updateDeployment('failure')
+		core.error(`Catch Error: ${ err }`)
 		core.setFailed(err.message)
 	}
 }
 
 run()
-	.then(() => {})
-	.catch((err) => {
-		core.error('ERROR')
-		core.setFailed(err.message)
-	})
 })();
 
 module.exports = __webpack_exports__;

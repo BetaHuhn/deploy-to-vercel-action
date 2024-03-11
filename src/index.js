@@ -103,6 +103,7 @@ const run = async () => {
 			}
 
 			await vercel.assignAlias(nextAlias)
+
 			deploymentUrls.push(addSchema(nextAlias))
 		}
 
@@ -193,13 +194,9 @@ const run = async () => {
 		core.info('Done')
 	} catch (err) {
 		await github.updateDeployment('failure')
+		core.error(`Catch Error: ${ err }`)
 		core.setFailed(err.message)
 	}
 }
 
 run()
-	.then(() => {})
-	.catch((err) => {
-		core.error('ERROR')
-		core.setFailed(err.message)
-	})

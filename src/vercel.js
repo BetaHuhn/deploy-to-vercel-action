@@ -74,7 +74,7 @@ const init = () => {
 		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
 		const parsed = output.match(/(?<=https?:\/\/)(.*)/g)[0]
 
-		if (!parsed) throw new Error('Could not parse deploymentUrl')
+		if (!parsed) throw new Error('🛑 Could not parse deploymentUrl')
 
 		deploymentUrl = parsed
 

@@ -60,7 +60,7 @@ const run = async () => {
 	}
 
 	try {
-		core.info(`Creating deployment with Vercel CLI`)
+		core.info('Creating deployment with Vercel CLI')
 		const vercel = Vercel.init()
 
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
@@ -70,10 +70,10 @@ const run = async () => {
 
 		const deploymentUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
-			core.info(`Assigning custom preview domain to PR`)
+			core.info('Assigning custom preview domain to PR')
 
 			if (typeof PR_PREVIEW_DOMAIN !== 'string') {
-				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
+				throw new Error('🛑 invalid type for PR_PREVIEW_DOMAIN')
 			}
 
 			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', urlSafeParameter(USER))
@@ -108,10 +108,10 @@ const run = async () => {
 		}
 
 		if (ALIAS_DOMAINS) {
-			core.info(`Assigning custom domains to Vercel deployment`)
+			core.info('Assigning custom domains to Vercel deployment')
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {
-				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
+				throw new Error('🛑 invalid type for ALIAS_DOMAINS')
 			}
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {

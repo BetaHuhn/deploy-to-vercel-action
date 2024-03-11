@@ -193,12 +193,14 @@ const run = async () => {
 		core.setOutput('DEPLOYMENT_CREATED', true)
 		core.setOutput('COMMENT_CREATED', IS_PR && CREATE_COMMENT)
 
-		core.summary.addLink('PREVIEW_URL', previewUrl)
+		core.summary.addHeading('VERCEL_PREVIEW_URL', '2')
+		core.summary.addLink(previewUrl, previewUrl)
+		core.summary.addEOL()
+		core.summary.addHeading('VERCEL_DEPLOYMENT_UNIQUE_URL', '2')
+		core.summary.addLink(deploymentUniqueURL, deploymentUniqueURL)
 		core.summary.addEOL()
 		core.summary.addHeading('DEPLOYMENT_URLS', '2')
 		core.summary.addList(deploymentUrls)
-		core.summary.addEOL()
-		core.summary.addLink('DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
 		core.summary.addEOL()
 		core.summary.write()
 

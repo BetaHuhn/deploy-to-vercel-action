@@ -32355,7 +32355,7 @@ const init = () => {
 			})
 		}
 
-		if (BUILD_ENV) {
+		if (BUILD_ENV.length) {
 			BUILD_ENV.forEach((item) => {
 				commandArguments = commandArguments.concat([ '--build-env', item ])
 			})

@@ -16,6 +16,8 @@
 - [x] Removed default "deploy" label from PRs
 - [x] More emojis in logs 📝
 - [x] Better accessability formatting for comment table
+- [ ] Build within action (not just PREBUILT)
+- [ ] Transfer secrets/envars from GHAction to Vercel Settings
 
 ---
 

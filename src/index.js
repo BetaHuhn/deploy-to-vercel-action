@@ -107,7 +107,7 @@ const run = async () => {
 			deploymentUrls.push(addSchema(nextAlias))
 		}
 
-		if (ALIAS_DOMAINS) {
+		if (ALIAS_DOMAINS.length) {
 			core.info('Assigning alias domains to deployment 🌐')
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {

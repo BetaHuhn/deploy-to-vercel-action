@@ -32604,19 +32604,19 @@ const run = async () => {
 			if (CREATE_COMMENT) {
 				core.info('Creating new comment on PR 💬')
 				const body = `
-					This pull request has been deployed to Vercel.
+					This pull request has been deployed to Vercel ▲.
 
 					<table>
 						<tr>
-							<thd><strong>Latest commit:</th>
+							<th>Latest Commit</th>
 							<td><code>${ SHA.substring(0, 7) }</code></td>
 						</tr>
 						<tr>
-							<th>👀 Preview:</th>
+							<th>👀 Preview</th>
 							<td><a href='${ previewUrl }'>${ previewUrl }</a></td>
 						</tr>
 						<tr>
-							<th>🔍 Inspect:</th>
+							<th>🔍 Inspect</th>
 							<td><a href='${ deployment.inspectorUrl }'>${ deployment.inspectorUrl }</a></td>
 						</tr>
 					</table>
@@ -32647,12 +32647,12 @@ const run = async () => {
 		core.setOutput('COMMENT_CREATED', IS_PR && CREATE_COMMENT)
 
 		const summaryMD = `## Deploy to Vercel ▲
-		| Name | Link |
-		| :--- | :--- |
-		| 📝 Deployment Details | <${ deployment.inspectorUrl }> |
-		| 👀 Preview	| <${ previewUrl }> |
-		| 🌐 Unique 	| <${ deploymentUniqueURL }> |
-		| 🌐 Others 	| ${ deploymentUrls } |
+| Name | Link |
+| :--- | :--- |
+| 🔍 Inspect	| <${ deployment.inspectorUrl }> |
+| 👀 Preview	| <${ previewUrl }> |
+| 🌐 Unique 	| <${ deploymentUniqueURL }> |
+| 🌐 Others 	| ${ deploymentUrls } |
 		`
 
 		await core.summary.addRaw(summaryMD).write()

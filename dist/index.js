@@ -32509,7 +32509,7 @@ const run = async () => {
 		core.info(`Deployment #${ ghDeployment.id } created`)
 
 		await github.updateDeployment('pending')
-		core.info(`Deployment #${ ghDeployment.id } status changed to "pending"`)
+		core.info(`Deployment #${ ghDeployment.id } status changed to "pending" ⌛`)
 	}
 
 	try {
@@ -32523,7 +32523,7 @@ const run = async () => {
 
 		const deploymentUrls = []
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
-			core.info('Assigning custom preview domain to PR')
+			core.info('Assigning custom preview domain to PR 🌐')
 
 			if (typeof PR_PREVIEW_DOMAIN !== 'string') {
 				throw new Error('🛑 invalid type for PR_PREVIEW_DOMAIN')
@@ -32543,7 +32543,7 @@ const run = async () => {
 				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
 
 				if (prefix.length >= 60) {
-					core.warning(`The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. See https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
+					core.warning(`⚠️ The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. See https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
 					prefix = prefix.substring(0, 55)
 					const uniqueSuffix = crypto.createHash('sha256')
 						.update(`git-${ BRANCH }-${ REPOSITORY }`)
@@ -32561,7 +32561,7 @@ const run = async () => {
 		}
 
 		if (ALIAS_DOMAINS) {
-			core.info('Assigning alias domains to Vercel ▲ deployment')
+			core.info('Assigning alias domains to deployment 🌐')
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {
 				throw new Error('🛑 invalid type for ALIAS_DOMAINS')
@@ -32588,48 +32588,48 @@ const run = async () => {
 		core.info(`Deployment "${ deployment.id }" available at: ${ deploymentUrls.join(', ') }`)
 
 		if (GITHUB_DEPLOYMENT) {
-			core.info('Changing GitHub deployment status to "success"')
+			core.info('Changing GitHub deployment status to "success" ✔︎')
 			await github.updateDeployment('success', previewUrl)
 		}
 
 		if (IS_PR) {
 			if (DELETE_EXISTING_COMMENT) {
-				core.info('Checking for existing comment on PR')
+				core.info('Checking for existing comment on PR 🔎')
 				const deletedCommentId = await github.deleteExistingComment()
 
 				if (deletedCommentId)
-					core.info(`Deleted existing comment #${ deletedCommentId }`)
+					core.info(`Deleted existing comment #${ deletedCommentId } 🚮`)
 			}
 
 			if (CREATE_COMMENT) {
-				core.info('Creating new comment on PR')
+				core.info('Creating new comment on PR 💬')
 				const body = `
 					This pull request has been deployed to Vercel.
 
 					<table>
 						<tr>
-							<td><strong>Latest commit:</strong></td>
+							<thd><strong>Latest commit:</th>
 							<td><code>${ SHA.substring(0, 7) }</code></td>
 						</tr>
 						<tr>
-							<td><strong>✅ Preview:</strong></td>
+							<th>✅ Preview:</th>
 							<td><a href='${ previewUrl }'>${ previewUrl }</a></td>
 						</tr>
 						<tr>
-							<td><strong>🔍 Inspect:</strong></td>
+							<th>🔍 Inspect:</th>
 							<td><a href='${ deployment.inspectorUrl }'>${ deployment.inspectorUrl }</a></td>
 						</tr>
 					</table>
 
-					[View Workflow Logs](${ LOG_URL })
+					[View GitHub Actions Workflow Logs](${ LOG_URL })
 				`
 
 				const comment = await github.createComment(body)
 				core.info(`Comment created: ${ comment.html_url }`)
 			}
 
-			if (PR_LABELS) {
-				core.info('Adding label(s) to PR')
+			if (PR_LABELS.length) {
+				core.info('Adding label(s) to PR 🏷️')
 				const labels = await github.addLabel()
 
 				core.info(`Label(s) "${ labels.map((label) => label.name).join(', ') }" added`)

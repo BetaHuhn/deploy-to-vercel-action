@@ -14,6 +14,8 @@
 - [x] Exporting `VERCEL_PREVIEW_URL` and `VERCEL_DEPLOYMENT_UNIQUE_URL` for use in other job steps
 - [x] Using @actions/core to correctly get boolean and multilined inputs
 - [x] Removed default "deploy" label from PRs
+- [x] More emojis in logs 📝
+- [x] Better accessability formatting for comment table
 
 ---
 

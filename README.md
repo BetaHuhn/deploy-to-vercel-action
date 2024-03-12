@@ -10,7 +10,7 @@
 - [x] Using `@actions/exec` instead of spawn = require('child_process') for better OS portability
 - [x] Fix: EditorConfig conflicted with Eslint rules
 - [x] Using npx to run Vercel CLI to avoid version missmatches (as seen in #374, #367, #226)
-- [ ] Add a Workflow Summary to each run _basic one created, but could be improved_
+- [x] Add a Workflow Summary to each run
 - [x] Exporting `VERCEL_PREVIEW_URL` and `VERCEL_DEPLOYMENT_UNIQUE_URL` for use in other job steps
 - [x] Using @actions/core to correctly get boolean and multilined inputs
 - [x] Removed default "deploy" label from PRs

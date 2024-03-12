@@ -32612,7 +32612,7 @@ const run = async () => {
 							<td><code>${ SHA.substring(0, 7) }</code></td>
 						</tr>
 						<tr>
-							<th>✅ Preview:</th>
+							<th>👀 Preview:</th>
 							<td><a href='${ previewUrl }'>${ previewUrl }</a></td>
 						</tr>
 						<tr>
@@ -32646,16 +32646,16 @@ const run = async () => {
 		core.setOutput('DEPLOYMENT_CREATED', true)
 		core.setOutput('COMMENT_CREATED', IS_PR && CREATE_COMMENT)
 
-		core.summary.addHeading('VERCEL_PREVIEW_URL', '2')
-		core.summary.addLink(previewUrl, previewUrl)
-		core.summary.addEOL()
-		core.summary.addHeading('VERCEL_DEPLOYMENT_UNIQUE_URL', '2')
-		core.summary.addLink(deploymentUniqueURL, deploymentUniqueURL)
-		core.summary.addEOL()
-		core.summary.addHeading('DEPLOYMENT_URLS', '2')
-		core.summary.addList(deploymentUrls)
-		core.summary.addEOL()
-		core.summary.write()
+		const summaryMD = `## Deploy to Vercel ▲
+		| Name | Link |
+		| :--- | :--- |
+		| 📝 Deployment Details | <${ deployment.inspectorUrl }> |
+		| 👀 Preview	| <${ previewUrl }> |
+		| 🌐 Unique 	| <${ deploymentUniqueURL }> |
+		| 🌐 Others 	| ${ deploymentUrls } |
+		`
+
+		await core.summary.addRaw(summaryMD).write()
 
 		// Set environment variable for use in subsequent job steps
 		core.exportVariable('VERCEL_PREVIEW_URL', previewUrl)

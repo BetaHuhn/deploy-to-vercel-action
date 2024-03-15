@@ -69,7 +69,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -88,7 +88,7 @@ uses: mountainash/fork-deploy-to-vercel-action@latest
 If you want to make sure that your Workflow doesn't suddenly break when a new major version is released, use the `v1` tag instead (recommended usage):
 
 ```yml
-uses: mountainash/fork-deploy-to-vercel-action@v1
+uses: mountainash/fork-deploy-to-vercel-action@develop
 ```
 
 With the `v1` tag you will always get the latest non-breaking version which will include potential bug fixes in the future. If you use a specific version, make sure to regularly check if a new version is available, or enable Dependabot.
@@ -264,7 +264,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -291,7 +291,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -319,7 +319,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -348,7 +348,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -385,7 +385,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -415,7 +415,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         id: vercel-deploy
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -465,7 +465,7 @@ jobs:
         uses: actions/checkout@v4
       # maybe do something else first
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -539,7 +539,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@v1
+        uses: mountainash/fork-deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

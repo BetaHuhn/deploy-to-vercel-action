@@ -199,7 +199,7 @@ const run = async () => {
 | 🔍 Inspect	| <${ deployment.inspectorUrl }> |
 | 👀 Preview	| <${ previewUrl }> |
 | 🌐 Unique 	| <${ deploymentUniqueURL }> |
-| 🌐 Others 	| ${ deploymentUrls } |
+| 🌐 Others 	| ${ deploymentUrls.join('<br>') } |
 		`
 
 		await core.summary.addRaw(summaryMD).write()

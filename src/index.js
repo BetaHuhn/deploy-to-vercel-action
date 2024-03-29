@@ -17,6 +17,7 @@ const {
 	DELETE_EXISTING_COMMENT,
 	PR_PREVIEW_DOMAIN,
 	ALIAS_DOMAINS,
+	RUNTIME_ENV,
 	ATTACH_COMMIT_METADATA,
 	LOG_URL,
 	DEPLOY_PR_FROM_FORK,
@@ -60,6 +61,28 @@ const run = async () => {
 	}
 
 	try {
+		if (RUNTIME_ENV.length) {
+			core.info('Setting environment variables on Vercel ▲')
+
+			core.debug(`RUNTIME_ENV: ${ RUNTIME_ENV }`)
+
+			if (!Array.isArray(RUNTIME_ENV)) {
+				throw new Error('🛑 RUNTIME_ENV should be in array format')
+			}
+
+			for (let i = 0; i < RUNTIME_ENV.length; i++) {
+				const [ key, value ] = RUNTIME_ENV[i].split('=')
+				core.debug(`RUNTIME_ENV ${ i }: ${ key }, ${ value }`)
+
+				if (!key || !value) {
+					throw new Error('🛑 RUNTIME_ENV each line should be in the format "key=value"')
+				}
+
+				const res = await Vercel.setEnvironment(key, value)
+				core.debug(`RUNTIME_ENV Response: ${ JSON.stringify(res) }`)
+			}
+		}
+
 		core.info('Creating deployment with Vercel ▲ CLI')
 		const vercel = Vercel.init()
 
@@ -111,7 +134,7 @@ const run = async () => {
 			core.info('Assigning alias domains to deployment 🌐')
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {
-				throw new Error('🛑 invalid type for ALIAS_DOMAINS')
+				throw new Error('🛑 ALIAS_DOMAINS should be in array format')
 			}
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {

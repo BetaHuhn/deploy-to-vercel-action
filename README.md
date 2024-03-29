@@ -16,7 +16,21 @@
 - [x] More emojis in logs 📝
 - [x] Better accessability formatting for comment table
 - [ ] FEATURE ✨ Build within action (not just PREBUILT)
-- [ ] FEATURE ✨ Transfer secrets/envars from GHAction to Vercel Settings
+- [x] FEATURE ✨ Transfer runtime secrets/envars from GHAction to Vercel Settings
+
+---
+
+⚠️ This is a fork of "deploy-to-vercel-action" is under heavy development - use with care.
+
+If you'd like to try it, please use the `develop` branch or the latest SHA, eg:
+
+```yml
+uses: mountainash/fork-deploy-to-vercel-action@develop
+
+## OR
+
+uses: mountainash/fork-deploy-to-vercel-action@e9eb65d39e2d13257f5d5613e771ba2da8357dd9
+```
 
 ---
 
@@ -115,6 +129,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/mountainash
 | `PR_PREVIEW_DOMAIN` | Custom preview domain for PRs (more info [below](#custom-domains)) | **No** | N/A |
 | `VERCEL_SCOPE` | Execute commands from a different Vercel team or user | **No** | N/A |
 | `BUILD_ENV` | Provide environment variables to the build step | **No** | N/A |
+| `RUNTIME_ENV` | 🆕 Push environment variables to the Vercel deployment environment (more info [below](#runtime-envvars)) | **No** | N/A |
 | `WORKING_DIRECTORY` | Working directory for the Vercel CLI | **No** | N/A |
 | `FORCE` | Used to skip the build cache | **No** | false |
 | `PREBUILT` | Deploy a prebuilt Vercel Project | **No** | false |
@@ -187,6 +202,27 @@ PR_PREVIEW_DOMAIN: "{REPO}-{PR}.vercel.app"
 ```
 
 > **Note:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN`
+
+### Runtime EnvVars
+
+> **Note:** 🆕 This feature is still in development and may not work as expected!
+
+You can set environment variables in the Vercel deployment environment using the `RUNTIME_ENV` array input. This is useful for environment variables that are needed by Severless & Edge functions, or other runtime variables.
+
+**WARNING:** Variables are set on Vercel in plain text, so be careful with sensitive data.
+
+**WARNING:** Existing variable values will be overwritten without warning.
+
+**TIP:** (for Next.js) You can see what your project needs by by running `vercel build` and then searching the file contents of `.next/` directory for the `process.env` use.
+
+```yml
+RUNTIME_ENV: |
+  CMS_API_KEY=${{ vars.CMS_API_KEY }}
+  CMS_API_TOKEN=${{ secrets.CMS_API_KEY }}
+  CMS_API_URL=https://api.example.com
+```
+
+Environment variables will be set to the Vercel Preview environment, unless `PRODUCTION` is set to `true`. `GITHUB_DEPLOYMENT_ENV` will also be respected if set.
 
 ### Deploying a PR made from a fork or Dependabot
 

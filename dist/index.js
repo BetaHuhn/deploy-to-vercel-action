@@ -32023,6 +32023,7 @@ const context = {
 	TRIM_COMMIT_MESSAGE: core.getBooleanInput('TRIM_COMMIT_MESSAGE', { required: false }),
 	WORKING_DIRECTORY: core.getInput('WORKING_DIRECTORY'),
 	BUILD_ENV: core.getMultilineInput('BUILD_ENV', { required: false }),
+	RUNTIME_ENV: core.getMultilineInput('RUNTIME_ENV', { required: false }),
 	PREBUILT: core.getBooleanInput('PREBUILT', { required: false }),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true',
 	FORCE: core.getBooleanInput('FORCE', { required: false })
@@ -32073,11 +32074,7 @@ core.setSecret(context.GITHUB_TOKEN)
 core.setSecret(context.VERCEL_TOKEN)
 
 core.debug(
-	JSON.stringify(
-		context,
-		null,
-		2
-	)
+	JSON.stringify(context)
 )
 
 module.exports = context
@@ -32306,8 +32303,17 @@ const {
 	BUILD_ENV,
 	PREBUILT,
 	WORKING_DIRECTORY,
-	FORCE
+	FORCE,
+	GITHUB_DEPLOYMENT_ENV
 } = __nccwpck_require__(7779)
+
+
+const VercelAPIBase = 'https://api.vercel.com'
+const options = {
+	headers: {
+		Authorization: `Bearer ${ VERCEL_TOKEN }`
+	}
+}
 
 const init = () => {
 	core.info('Setting environment variables for Vercel ▲ CLI')
@@ -32384,13 +32390,9 @@ const init = () => {
 	}
 
 	const getDeployment = async () => {
-		const url = `https://api.vercel.com/v11/now/deployments/get?url=${ deploymentUrl }`
-		const options = {
-			headers: {
-				Authorization: `Bearer ${ VERCEL_TOKEN }`
-			}
-		}
-
+		// API Reference: https://vercel.com/docs/rest-api/endpoints/deployments#get-a-deployment-by-id-or-url
+		const endpoint = `/v11/now/deployments/get?url=${ deploymentUrl }`
+		const url = new URL(endpoint, VercelAPIBase)
 		const res = await fetch(url, options)
 
 		return await res.json()
@@ -32404,8 +32406,44 @@ const init = () => {
 	}
 }
 
+const setEnvironment = async (key, value) => {
+	// API Reference: https://vercel.com/docs/rest-api/endpoints/projects#create-one-or-more-environment-variables
+	const endpoint = `/v10/projects/${ VERCEL_PROJECT_ID }/env`
+
+	const url = new URL(endpoint, VercelAPIBase)
+	const params = new URLSearchParams(url.search.slice(1))
+
+	params.set('upsert', 'true')
+	if (typeof VERCEL_SCOPE !== 'undefined')
+		params.set('teamId', VERCEL_SCOPE)
+
+	url.search = params.toString()
+
+	const body = {
+		key: key,
+		value: value,
+		target: [ PRODUCTION ? 'production' : 'preview' ],
+		type: 'plain',
+		comment: `Set by deploy-to-vercel GitHub Action (${ SHA.substring(0, 7) })`
+	}
+
+	if (GITHUB_DEPLOYMENT_ENV) {
+		body.target = [ 'preview' ]
+		body.gitBranch = GITHUB_DEPLOYMENT_ENV
+	}
+
+	const envOptions = structuredClone(options)
+	envOptions.method = 'post'
+	envOptions.body = JSON.stringify(body)
+
+	const res = await fetch(url, envOptions)
+
+	return await res.json()
+}
+
 module.exports = {
-	init
+	init,
+	setEnvironment
 }
 
 /***/ })
@@ -32470,6 +32508,7 @@ const {
 	DELETE_EXISTING_COMMENT,
 	PR_PREVIEW_DOMAIN,
 	ALIAS_DOMAINS,
+	RUNTIME_ENV,
 	ATTACH_COMMIT_METADATA,
 	LOG_URL,
 	DEPLOY_PR_FROM_FORK,
@@ -32513,6 +32552,28 @@ const run = async () => {
 	}
 
 	try {
+		if (RUNTIME_ENV.length) {
+			core.info('Setting environment variables on Vercel ▲')
+
+			core.debug(`RUNTIME_ENV: ${ RUNTIME_ENV }`)
+
+			if (!Array.isArray(RUNTIME_ENV)) {
+				throw new Error('🛑 RUNTIME_ENV should be in array format')
+			}
+
+			for (let i = 0; i < RUNTIME_ENV.length; i++) {
+				const [ key, value ] = RUNTIME_ENV[i].split('=')
+				core.debug(`RUNTIME_ENV ${ i }: ${ key }, ${ value }`)
+
+				if (!key || !value) {
+					throw new Error('🛑 RUNTIME_ENV each line should be in the format "key=value"')
+				}
+
+				const res = await Vercel.setEnvironment(key, value)
+				core.debug(`RUNTIME_ENV Response: ${ JSON.stringify(res) }`)
+			}
+		}
+
 		core.info('Creating deployment with Vercel ▲ CLI')
 		const vercel = Vercel.init()
 
@@ -32564,7 +32625,7 @@ const run = async () => {
 			core.info('Assigning alias domains to deployment 🌐')
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {
-				throw new Error('🛑 invalid type for ALIAS_DOMAINS')
+				throw new Error('🛑 ALIAS_DOMAINS should be in array format')
 			}
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
@@ -32652,7 +32713,7 @@ const run = async () => {
 | 🔍 Inspect	| <${ deployment.inspectorUrl }> |
 | 👀 Preview	| <${ previewUrl }> |
 | 🌐 Unique 	| <${ deploymentUniqueURL }> |
-| 🌐 Others 	| ${ deploymentUrls } |
+| 🌐 Others 	| ${ deploymentUrls.join('<br>') } |
 		`
 
 		await core.summary.addRaw(summaryMD).write()

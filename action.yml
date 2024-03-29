@@ -83,6 +83,10 @@ inputs:
     description: |
       Provide environment variables to the build step.
     required: false
+  RUNTIME_ENV:
+    description: |
+      Push environment variables to the Vercel deployment environment.
+    required: false
   WORKING_DIRECTORY:
     description: |
       Working directory for the Vercel CLI.

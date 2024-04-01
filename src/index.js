@@ -80,6 +80,10 @@ const run = async () => {
 
 				const res = await Vercel.setEnvironment(key, value)
 				core.debug(`RUNTIME_ENV Response: ${ JSON.stringify(res) }`)
+
+				if (res.error) {
+					throw new Error(`🛑 RUNTIME_ENV API Error: ${ res.error.message }`)
+				}
 			}
 		}
 

@@ -25,8 +25,8 @@ const {
 	ACTOR
 } = require('./config')
 
-// Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break the URL.
-const urlSafeParameter = (input) => input.replace(/[^a-z0-9_~]/gi, '-')
+// Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break as a domainname
+const urlSafeParameter = (input) => input.replace(/[^a-z0-9~]/gi, '-')
 
 const run = async () => {
 	const github = Github.init()

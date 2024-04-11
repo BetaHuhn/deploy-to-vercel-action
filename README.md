@@ -15,7 +15,6 @@ uses: mountainash/fork-deploy-to-vercel-action@65a8b653a66a8ad5b0abd59d47589aef4
 - [x] FEATURE ✨ Added `--archive=tgz` arg to Vercel deploy when using `PREBUILT` option to allow built deployments over 1500 files
 - [x] Added [defaults](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions?learn=create_actions&learnProduct=actions#inputsinput_iddefault)
 - [x] Added GitHub Actions workflow to test the action
-- [x] See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20)
 - [x] `GITHUB_REPOSITORY` is no longer a required input (it can be deduced using the `GITHUB_TOKEN`)
 - [x] Allow Vercel domain aliases to be set on PRs
 - [x] Using `@actions/exec` instead of spawn = require('child_process') for better OS portability
@@ -29,6 +28,8 @@ uses: mountainash/fork-deploy-to-vercel-action@65a8b653a66a8ad5b0abd59d47589aef4
 - [x] Better accessability formatting for comment table
 - [ ] FEATURE ✨ Build within action (not just PREBUILT)
 - [x] FEATURE ✨ Transfer runtime secrets/envars from GHAction to Vercel Settings
+
+- See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20) and bug fixes
 
 ---
 

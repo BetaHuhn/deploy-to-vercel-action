@@ -141,9 +141,12 @@ const setEnvironment = async (key, value) => {
 	}
 
 	if (GITHUB_DEPLOYMENT_ENV.trim() && GITHUB_DEPLOYMENT_ENV !== 'false' && GITHUB_DEPLOYMENT_ENV !== 'null') {
+		core.debug(`setEnvironment() gitBranch: ${ GITHUB_DEPLOYMENT_ENV }`)
 		body.target = [ 'preview' ]
 		body.gitBranch = GITHUB_DEPLOYMENT_ENV
 	}
+
+	core.debug(`setEnvironment() body: ${ JSON.stringify(body) }`)
 
 	const envOptions = structuredClone(options)
 	envOptions.method = 'post'

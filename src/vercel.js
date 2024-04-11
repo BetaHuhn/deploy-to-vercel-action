@@ -15,8 +15,17 @@ const {
 	BUILD_ENV,
 	PREBUILT,
 	WORKING_DIRECTORY,
-	FORCE
+	FORCE,
+	GITHUB_DEPLOYMENT_ENV
 } = require('./config')
+
+
+const VercelAPIBase = 'https://api.vercel.com'
+const options = {
+	headers: {
+		Authorization: `Bearer ${ VERCEL_TOKEN }`
+	}
+}
 
 const init = () => {
 	core.info('Setting environment variables for Vercel ▲ CLI')
@@ -93,13 +102,9 @@ const init = () => {
 	}
 
 	const getDeployment = async () => {
-		const url = `https://api.vercel.com/v11/now/deployments/get?url=${ deploymentUrl }`
-		const options = {
-			headers: {
-				Authorization: `Bearer ${ VERCEL_TOKEN }`
-			}
-		}
-
+		// API Reference: https://vercel.com/docs/rest-api/endpoints/deployments#get-a-deployment-by-id-or-url
+		const endpoint = `/v11/now/deployments/get?url=${ deploymentUrl }`
+		const url = new URL(endpoint, VercelAPIBase)
 		const res = await fetch(url, options)
 
 		return await res.json()
@@ -113,6 +118,46 @@ const init = () => {
 	}
 }
 
+const setEnvironment = async (key, value) => {
+	// API Reference: https://vercel.com/docs/rest-api/endpoints/projects#create-one-or-more-environment-variables
+	const endpoint = `/v10/projects/${ VERCEL_PROJECT_ID }/env`
+
+	const url = new URL(endpoint, VercelAPIBase)
+	const params = new URLSearchParams(url.search.slice(1))
+
+	params.set('upsert', 'true')
+
+	if (typeof VERCEL_SCOPE !== 'undefined')
+		params.set('teamId', VERCEL_SCOPE)
+
+	url.search = params.toString()
+
+	const body = {
+		key: key,
+		value: value,
+		target: [ PRODUCTION ? 'production' : 'preview' ],
+		type: 'plain',
+		comment: `Set by deploy-to-vercel GitHub Action (${ SHA.substring(0, 7) })`
+	}
+
+	if (GITHUB_DEPLOYMENT_ENV.trim() && GITHUB_DEPLOYMENT_ENV !== 'false' && GITHUB_DEPLOYMENT_ENV !== 'null') {
+		core.debug(`setEnvironment() gitBranch: ${ GITHUB_DEPLOYMENT_ENV }`)
+		body.target = [ 'preview' ]
+		body.gitBranch = GITHUB_DEPLOYMENT_ENV
+	}
+
+	core.debug(`setEnvironment() body: ${ JSON.stringify(body) }`)
+
+	const envOptions = structuredClone(options)
+	envOptions.method = 'post'
+	envOptions.body = JSON.stringify(body)
+
+	const res = await fetch(url, envOptions)
+
+	return await res.json()
+}
+
 module.exports = {
-	init
+	init,
+	setEnvironment
 }

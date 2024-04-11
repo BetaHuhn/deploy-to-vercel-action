@@ -1,8 +1,9 @@
 # Change Log
 
-## [v2.0.4] - 2024
+## [v2.2.0] - 2024
 
 - _See top of README_
+- Added RUNTIME_ENV to set runtime environment variables on Vercel
 
 ### Dependency updates
 

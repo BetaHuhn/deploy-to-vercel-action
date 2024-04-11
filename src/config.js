@@ -22,6 +22,7 @@ const context = {
 	TRIM_COMMIT_MESSAGE: core.getBooleanInput('TRIM_COMMIT_MESSAGE', { required: false }),
 	WORKING_DIRECTORY: core.getInput('WORKING_DIRECTORY'),
 	BUILD_ENV: core.getMultilineInput('BUILD_ENV', { required: false }),
+	RUNTIME_ENV: core.getMultilineInput('RUNTIME_ENV', { required: false }),
 	PREBUILT: core.getBooleanInput('PREBUILT', { required: false }),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true',
 	FORCE: core.getBooleanInput('FORCE', { required: false })
@@ -72,11 +73,7 @@ core.setSecret(context.GITHUB_TOKEN)
 core.setSecret(context.VERCEL_TOKEN)
 
 core.debug(
-	JSON.stringify(
-		context,
-		null,
-		2
-	)
+	JSON.stringify(context)
 )
 
 module.exports = context

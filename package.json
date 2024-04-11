@@ -1,6 +1,6 @@
 {
-  "name": "deploy-to-vercel-action",
-  "version": "2.1.0",
+  "name": "fork-deploy-to-vercel-action",
+  "version": "2.2.4",
   "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -12,14 +12,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/betahuhn/deploy-to-vercel-action.git"
+    "url": "git+https://github.com/mountainash/fork-deploy-to-vercel-action.git"
   },
   "keywords": [
     "vercel",
     "deploy",
     "deployment",
-    "github",
-    "actions",
+    "github action",
     "upload"
   ],
   "author": "Maximilian Schiller <schiller@mxis.ch>",
@@ -32,7 +31,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/betahuhn/deploy-to-vercel-action/issues"
+    "url": "https://github.com/mountainash/fork-deploy-to-vercel-action/issues"
   },
   "homepage": "https://github.com/marketplace/actions/deploy-to-vercel-action",
   "dependencies": {
@@ -42,7 +41,7 @@
   },
   "devDependencies": {
     "@betahuhn/config": "1.2.0",
-    "@types/node": "20.11.25",
+    "@types/node": "20.12.2",
     "@vercel/ncc": "0.38.1",
     "eslint": "8.57.0"
   }

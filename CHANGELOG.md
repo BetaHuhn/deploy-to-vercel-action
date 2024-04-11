@@ -1,9 +1,16 @@
 # Change Log
 
+## [v2.2.5] - 2024-04-11
+
+- Replace `_` in alias domains with `-` to match allowed domains names
+
+## [v2.2.4] - 2024-04-11
+
+- Added RUNTIME_ENV to set runtime environment variables on Vercel
+
 ## [v2.2.0] - 2024
 
 - _See top of README_
-- Added RUNTIME_ENV to set runtime environment variables on Vercel
 
 ### Dependency updates
 

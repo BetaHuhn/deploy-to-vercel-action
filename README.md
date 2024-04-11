@@ -1,9 +1,20 @@
-### @mountainash fork changes
+# Deploy to Vercel Action
+
+## @mountainash fork use
+
+Until this fork is merged into the main repo, you can use the following to get the latest changes:
+
+```yml
+uses: mountainash/fork-deploy-to-vercel-action@develop
+OR
+uses: mountainash/fork-deploy-to-vercel-action@65a8b653a66a8ad5b0abd59d47589aef4c111806
+```
+
+## @mountainash fork changes
 
 - [x] FEATURE ✨ Added `--archive=tgz` arg to Vercel deploy when using `PREBUILT` option to allow built deployments over 1500 files
 - [x] Added [defaults](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions?learn=create_actions&learnProduct=actions#inputsinput_iddefault)
 - [x] Added GitHub Actions workflow to test the action
-- [x] See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20)
 - [x] `GITHUB_REPOSITORY` is no longer a required input (it can be deduced using the `GITHUB_TOKEN`)
 - [x] Allow Vercel domain aliases to be set on PRs
 - [x] Using `@actions/exec` instead of spawn = require('child_process') for better OS portability
@@ -17,6 +28,8 @@
 - [x] Better accessability formatting for comment table
 - [ ] FEATURE ✨ Build within action (not just PREBUILT)
 - [x] FEATURE ✨ Transfer runtime secrets/envars from GHAction to Vercel Settings
+
+- See [CHANGELOG](./CHANGELOG.md) for many 📦 dependencies updates (inc. Node 20) and bug fixes
 
 ---
 
@@ -35,8 +48,6 @@ uses: mountainash/fork-deploy-to-vercel-action@e9eb65d39e2d13257f5d5613e771ba2da
 ---
 
 <div align="center">
-
-# Deploy to Vercel Action
 
 [![Node CI](https://github.com/mountainash/fork-deploy-to-vercel-action/workflows/Node%20CI/badge.svg)](https://github.com/mountainash/fork-deploy-to-vercel-action/actions?query=workflow%3A%22Node+CI%22) [![Release CI](https://github.com/mountainash/fork-deploy-to-vercel-action/workflows/Release%20CI/badge.svg)](https://github.com/mountainash/fork-deploy-to-vercel-action/actions?query=workflow%3A%22Release+CI%22) [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/mountainash/fork-deploy-to-vercel-action/blob/master/LICENSE)
 
@@ -585,7 +596,7 @@ jobs:
             SOME_TOKEN="${{ secrets.SOME_TOKEN }}"
 ```
 
-If you have an idea for another use case, [create a discussion](https://github.com/mountainash/fork-deploy-to-vercel-action/discussions/new?category=show-and-tell) and maybe I will add it here!
+If you have an idea for another use case, [create a discussion](https://github.com/BetaHuhn/deploy-to-vercel-action/discussions/new?category=show-and-tell) and maybe I will add it here!
 
 ## 💻 Development
 

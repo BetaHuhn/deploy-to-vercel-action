@@ -11,9 +11,9 @@ A clear and concise description of what the bug is.
 
 ### 📚 To Reproduce
 
-Steps to reproduce the behavior.
+Steps to reproduce the behaviour.
 
-### 💡 Expected behavior
+### 💡 Expected behaviour
 
 A clear and concise description of what you expected to happen.
 

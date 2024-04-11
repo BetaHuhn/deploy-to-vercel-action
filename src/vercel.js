@@ -126,6 +126,7 @@ const setEnvironment = async (key, value) => {
 	const params = new URLSearchParams(url.search.slice(1))
 
 	params.set('upsert', 'true')
+
 	if (typeof VERCEL_SCOPE !== 'undefined')
 		params.set('teamId', VERCEL_SCOPE)
 
@@ -139,7 +140,7 @@ const setEnvironment = async (key, value) => {
 		comment: `Set by deploy-to-vercel GitHub Action (${ SHA.substring(0, 7) })`
 	}
 
-	if (GITHUB_DEPLOYMENT_ENV !== 'false' && GITHUB_DEPLOYMENT_ENV !== 'null') {
+	if (GITHUB_DEPLOYMENT_ENV && GITHUB_DEPLOYMENT_ENV !== 'false' && GITHUB_DEPLOYMENT_ENV !== 'null') {
 		body.target = [ 'preview' ]
 		body.gitBranch = GITHUB_DEPLOYMENT_ENV
 	}

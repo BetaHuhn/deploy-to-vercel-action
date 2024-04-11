@@ -109,7 +109,7 @@ outputs:
   DEPLOYMENT_INSPECTOR_URL:
     description: 'Main deployment inspection URL.'
   DEPLOYMENT_UNIQUE_URL:
-    description: 'The unique deployment URL on Vercel'
+    description: 'The unique deployment URL on Vercel.'
 
 runs:
   using: 'node20'

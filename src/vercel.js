@@ -140,7 +140,7 @@ const setEnvironment = async (key, value) => {
 		comment: `Set by deploy-to-vercel GitHub Action (${ SHA.substring(0, 7) })`
 	}
 
-	if (GITHUB_DEPLOYMENT_ENV && GITHUB_DEPLOYMENT_ENV !== 'false' && GITHUB_DEPLOYMENT_ENV !== 'null') {
+	if (GITHUB_DEPLOYMENT_ENV.trim() && GITHUB_DEPLOYMENT_ENV !== 'false' && GITHUB_DEPLOYMENT_ENV !== 'null') {
 		body.target = [ 'preview' ]
 		body.gitBranch = GITHUB_DEPLOYMENT_ENV
 	}

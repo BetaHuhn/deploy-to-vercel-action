@@ -1,8 +1,9 @@
 # Change Log
 
-## [v2.2.6] - 2024-04-11
+## [v2.2.6] - 2024-04-12
 
 - 📦 devDependencies updates
+- Default branch renamed from `master` to `main` @mountainash
 
 ## [v2.2.5] - 2024-04-11
 

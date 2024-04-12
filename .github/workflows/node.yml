@@ -2,10 +2,10 @@ name: Node CI
 on:
   push:
     branches-ignore:
-      - master
+      - main
   pull_request:
     branches-ignore:
-      - master
+      - main
 jobs:
   lint:
     name: Lint

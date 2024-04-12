@@ -1,9 +1,15 @@
 # Change Log
 
+## [2.3.0] - 2024-04-12
+
+- Updated to eslint v9
+- Removed dependency on remote eslint config
+
 ## [v2.2.6] - 2024-04-12
 
 - 📦 devDependencies updates
 - Default branch renamed from `master` to `main` @mountainash
+- Docs: remove references of `[skip ci]`, it's [deprecated](https://github.blog/changelog/2021-02-08-github-actions-skip-ci/) @mountainash
 
 ## [v2.2.5] - 2024-04-11
 

@@ -15,7 +15,7 @@
 
 ## [v2.2.5] - 2024-04-11
 
-- Replace `_` in alias domains with `-` to match allowed domains names @mountainash #3
+- Replace `_` in alias domains with `-` to match allowed domain names @mountainash #3
 
 ## [v2.2.4] - 2024-04-11
 

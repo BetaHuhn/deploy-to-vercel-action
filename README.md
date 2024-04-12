@@ -7,7 +7,7 @@ Until this fork is merged into the main repo, you can use the following to get t
 ```yml
 uses: mountainash/fork-deploy-to-vercel-action@develop
 OR
-uses: mountainash/fork-deploy-to-vercel-action@65a8b653a66a8ad5b0abd59d47589aef4c111806
+uses: mountainash/fork-deploy-to-vercel-action@65a8b653a<< replace with latest commit >>_aef4c111806
 ```
 
 ## @mountainash fork changes
@@ -19,31 +19,17 @@ uses: mountainash/fork-deploy-to-vercel-action@65a8b653a66a8ad5b0abd59d47589aef4
 - [x] Allow Vercel domain aliases to be set on PRs
 - [x] Using `@actions/exec` instead of spawn = require('child_process') for better OS portability
 - [x] Fix: EditorConfig conflicted with Eslint rules
-- [x] Using npx to run Vercel CLI to avoid version missmatches (as seen in #374, #367, #226)
+- [x] Using npx to run Vercel CLI to avoid version miss-matches (as seen in #374, #367, #226)
 - [x] FEATURE ✨ Add a Workflow Summary to each run
 - [x] Exporting `VERCEL_PREVIEW_URL` and `VERCEL_DEPLOYMENT_UNIQUE_URL` for use in other job steps
-- [x] Using @actions/core to correctly get boolean and multilined inputs
+- [x] Using @actions/core to correctly get boolean and multi-lined inputs
 - [x] Removed default "deploy" label from PRs
 - [x] More emojis in logs 📝
-- [x] Better accessability formatting for comment table
+- [x] Better accessibility formatting for comment table
 - [x] FEATURE ✨ Transfer runtime secrets/envars from GHAction to Vercel Settings
 - [ ] FEATURE ✨ Build within action (not just PREBUILT)
 
 - See [CHANGELOG](./CHANGELOG.md) for _**many**_ 📦 dependencies updates (inc. [Node 20](https://github.com/BetaHuhn/deploy-to-vercel-action/pull/379)) and bug fixes
-
----
-
-⚠️ This is a fork of "deploy-to-vercel-action" is under heavy development - use with care.
-
-If you'd like to try it, please use the `develop` branch or the latest SHA, eg:
-
-```yml
-uses: mountainash/fork-deploy-to-vercel-action@develop
-
-## OR
-
-uses: mountainash/fork-deploy-to-vercel-action@e9eb65d39e2d13257f5d5613e771ba2da8357dd9
-```
 
 ---
 

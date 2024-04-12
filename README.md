@@ -88,7 +88,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -257,7 +256,6 @@ on:
 jobs:
   vercel:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - id: script
         uses: actions/github-script@v7
@@ -305,7 +303,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -331,8 +328,7 @@ on:
     branches: [ staging ]
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -360,7 +356,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -389,7 +384,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -455,7 +449,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -539,7 +532,6 @@ on:
 jobs:
   vercel:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - id: script
         uses: actions/github-script@v7
@@ -580,7 +572,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

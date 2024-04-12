@@ -31,7 +31,7 @@ const execCmd = async (command, args, cwd) => {
 
 	try {
 		exitCode = await exec(command, args, options)
-	} catch (error) {
+	} catch (ignoreErr) {
 		exitCode = 1
 	}
 

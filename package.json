@@ -1,11 +1,12 @@
 {
   "name": "fork-deploy-to-vercel-action",
-  "version": "2.2.5",
+  "version": "2.3.0",
   "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
   "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "dev": "node src/index.js",
     "start": "node dist/index.js",
     "build": "ncc build src/index.js --target es6 -o dist"
@@ -40,9 +41,12 @@
     "@actions/github": "6.0.0"
   },
   "devDependencies": {
-    "@betahuhn/config": "1.2.0",
-    "@types/node": "20.12.2",
+    "@types/node": "20.12.7",
     "@vercel/ncc": "0.38.1",
-    "eslint": "8.57.0"
+    "eslint": "9.0.0",
+    "globals": "^15.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

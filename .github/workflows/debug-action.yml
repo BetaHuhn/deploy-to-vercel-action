@@ -7,7 +7,7 @@ on:
       ref:
         description: 'Ref to run the workflow on'
         required: true
-        default: 'refs/heads/master'
+        default: 'refs/heads/main'
 
 jobs:
   debug:

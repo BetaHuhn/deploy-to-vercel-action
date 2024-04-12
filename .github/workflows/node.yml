@@ -1,11 +1,9 @@
 name: Node CI
+
 on:
   push:
-    branches-ignore:
-      - main
   pull_request:
-    branches-ignore:
-      - main
+
 jobs:
   lint:
     name: Lint
@@ -13,25 +11,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
-      - name: Cache node modules
-        uses: c-hive/gha-npm-cache@v1
+        with:
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
+
       - name: Run lint command
         run: npm run lint
+
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
-      - name: Cache node modules
-        uses: c-hive/gha-npm-cache@v1
+        with:
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
+
       - name: Run build command
         run: npm run build

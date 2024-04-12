@@ -5,7 +5,7 @@
 - Updated to eslint v9
 - Removed dependency on remote eslint config
 - Docs: `secrets.GH_PAT` replaced with `secrets.GITHUB_TOKEN`
-
+- GHActions workflows updated to use cache built into the Node setup step
 
 ## [v2.2.6] - 2024-04-12
 

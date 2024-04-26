@@ -32654,7 +32654,7 @@ const run = async () => {
 		const previewUrl = deploymentUrls[0]
 
 		const deployment = await vercel.getDeployment()
-		core.info(`Deployment "${ deployment.id }" available at: ${ deploymentUrls.join(', ') }`)
+		core.info(`Deployment "${ deployment.id }" available at: ${ deploymentUrls.join(' ') }`)
 
 		if (GITHUB_DEPLOYMENT) {
 			core.info('Changing GitHub deployment status to "success" ✔︎')

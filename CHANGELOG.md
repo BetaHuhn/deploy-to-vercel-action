@@ -1,3 +1,47 @@
+# Change Log
+
+## [2.3.1] - 2024-04-26
+
+- better logging of ALIAS_DOMAINS output
+- skipping falsey ALIAS_DOMAINS values
+- 📦 eslint@9.1.1
+
+## [2.3.0] - 2024-04-12
+
+- Updated to eslint v9
+- Removed dependency on remote eslint config
+- Docs: `secrets.GH_PAT` replaced with `secrets.GITHUB_TOKEN`
+- GHActions workflows updated to use cache built into the Node setup step
+
+## [v2.2.6] - 2024-04-12
+
+- 📦 devDependencies updates
+- Default branch renamed from `master` to `main` @mountainash
+- Docs: remove references of `[skip ci]`, it's [deprecated](https://github.blog/changelog/2021-02-08-github-actions-skip-ci/) @mountainash
+
+## [v2.2.5] - 2024-04-11
+
+- Replace `_` in alias domains with `-` to match allowed domain names @mountainash #3
+
+## [v2.2.4] - 2024-04-11
+
+- Added RUNTIME_ENV to set runtime environment variables on Vercel @mountainash #2
+
+## [v2.2.0] - 2024
+
+- _See top of README_
+
+### Dependency updates
+
+- Updated from NodeJS v16 to NodeJS v20.
+- Updated from Vercel CLI v22.0.1 to v33.0.1
+- Updated from `@actions/github` v^4.0.0 to v6.0.0
+- Removed [`got`](https://www.npmjs.com/package/got/v/13.0.0) _"no longer maintained"_
+- Removed [`action-input-parser`](https://www.npmjs.com/package/action-input-parser)
+- Removed dotenv
+- Removed vercel (it's a requirement that the Workflow file has to install the Vercel CLI before running the action)
+- Added NodeJS TS types
+
 ## [v1.9.12] - 2023-01-30
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.12) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.11...v1.9.12) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.12) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.12.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.12.tar.gz))

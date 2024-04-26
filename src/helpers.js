@@ -1,31 +1,47 @@
+const { StringDecoder } = require('string_decoder')
+
 const core = require('@actions/core')
-const { spawn } = require('child_process')
+const { exec } = require('@actions/exec')
 
-const execCmd = (command, args, cwd) => {
-	core.debug(`EXEC: "${ command } ${ args }" in ${ cwd || '.' }`)
-	return new Promise((resolve, reject) => {
-		const process = spawn(command, args, { cwd })
-		let stdout
-		let stderr
+const execCmd = async (command, args, cwd) => {
+	const options = {}
+	let stdout = ''
+	let stderr = ''
+	let exitCode = 0
 
-		process.stdout.on('data', (data) => {
-			core.debug(data.toString())
-			if (data !== undefined && data.length > 0) {
-				stdout += data
-			}
-		})
+	const stdoutDecoder = new StringDecoder('utf8')
+	const stderrDecoder = new StringDecoder('utf8')
 
-		process.stderr.on('data', (data) => {
-			core.debug(data.toString())
-			if (data !== undefined && data.length > 0) {
-				stderr += data
-			}
-		})
+	options.listeners = {
+		stdout: (data) => {
+			stdout += stdoutDecoder.write(data)
+		},
+		stderr: (data) => {
+			stderr += stderrDecoder.write(data)
+		}
+	}
 
-		process.on('close', (code) => {
-			code !== 0 ? reject(new Error(stderr)) : resolve(stdout.trim())
-		})
-	})
+	if (cwd !== '') {
+		options.cwd = cwd
+	}
+
+	options.silent = false
+
+	core.info(`\u001b[33m▻ EXEC: "${ command } ${ args }"`)
+
+	try {
+		exitCode = await exec(command, args, options)
+	} catch (ignoreErr) {
+		exitCode = 1
+	}
+
+	stdout += stdoutDecoder.end()
+	stderr += stderrDecoder.end()
+
+	if (exitCode === 0)
+		return stdout.trim()
+
+	throw new Error(`${ command } ${ args.join(' ') } returned code ${ exitCode } \nSTDOUT: ${ stdout }\nSTDERR: ${ stderr }`)
 }
 
 const addSchema = (url) => {
@@ -43,7 +59,7 @@ const removeSchema = (url) => {
 }
 
 module.exports = {
-	exec: execCmd,
+	execCmd,
 	addSchema,
 	removeSchema
 }

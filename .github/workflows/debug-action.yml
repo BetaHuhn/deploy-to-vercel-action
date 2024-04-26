@@ -1,0 +1,74 @@
+name: Debug Action CI
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Ref to run the workflow on'
+        required: true
+        default: 'refs/heads/main'
+
+jobs:
+  debug:
+    name: Debug Action CI
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      deployments: write
+
+    steps:
+      - name: Checkout ${{ github.event.inputs.ref }} 📥
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Vercel CLI 📦
+        run: npm i -g vercel
+
+      - name: Pull Vercel environment information 🔑
+        run: npx vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Make sample website 📄
+        env:
+          LOCAL_REF: ${{ github.event.inputs.ref }}
+          BUILD_DIR: .vercel/output/static
+        run: mkdir -p $BUILD_DIR/ && touch $BUILD_DIR/index.html && echo "LOCAL_REF=$LOCAL_REF" > $BUILD_DIR/index.html
+
+      - name: Make sample config 📄
+        env:
+          CONFIG_DIR: .vercel/output
+        run: |
+          touch $CONFIG_DIR/config.json
+          echo "{\"version\": 3}" > $CONFIG_DIR/config.json
+
+      - name: Deploy to Vercel 🚀
+        id: verceldeploy
+        uses: ./
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          ALIAS_DOMAINS: |
+            {REPO}-{BRANCH}.vercel.app
+            {USER}-{REPO}-{SHA}.vercel.app
+          RUNTIME_ENV: |
+            LATEST_SHA=${{ github.sha }}
+            DEBUG_URL=https://api.example.com
+          PREBUILT: true
+
+      - name: Deploy to Vercel outputs ✍️
+        run: |
+            echo "PREVIEW_URL: ${{ steps.verceldeploy.outputs.PREVIEW_URL }}"
+            echo "DEPLOYMENT_URLS: ${{ steps.verceldeploy.outputs.DEPLOYMENT_URLS }}"
+            echo "COMMENT_CREATED: ${{ steps.verceldeploy.outputs.COMMENT_CREATED }}"
+            echo "DEPLOYMENT_INSPECTOR_URL: ${{ steps.verceldeploy.outputs.DEPLOYMENT_INSPECTOR_URL }}"
+            echo "DEPLOYMENT_UNIQUE_URL: ${{ steps.verceldeploy.outputs.DEPLOYMENT_UNIQUE_URL }}"

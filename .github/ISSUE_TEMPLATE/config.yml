@@ -1,8 +1,7 @@
-blank_issues_enabled: false
 contact_links:
   - name: 📚 Docs
-    url: https://github.com/BetaHuhn/deploy-to-vercel-action#-usage
-    about: Checkout the documentation.
+    url: https://github.com/mountainash/fork-deploy-to-vercel-action#-usage
+    about: Checkout the documentation
   - name: 🚀 Feature Request
     url: https://github.com/BetaHuhn/deploy-to-vercel-action/discussions/new?category=ideas
     about: Share ideas for new features

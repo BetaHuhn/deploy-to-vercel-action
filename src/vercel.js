@@ -1,6 +1,5 @@
 const core = require('@actions/core')
-const got = require('got')
-const { exec, removeSchema } = require('./helpers')
+const { execCmd, removeSchema } = require('./helpers')
 
 const {
 	VERCEL_TOKEN,
@@ -11,23 +10,32 @@ const {
 	SHA,
 	USER,
 	REPOSITORY,
-	REF,
+	BRANCH,
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
 	PREBUILT,
 	WORKING_DIRECTORY,
-	FORCE
+	FORCE,
+	GITHUB_DEPLOYMENT_ENV
 } = require('./config')
 
+
+const VercelAPIBase = 'https://api.vercel.com'
+const options = {
+	headers: {
+		Authorization: `Bearer ${ VERCEL_TOKEN }`
+	}
+}
+
 const init = () => {
-	core.info('Setting environment variables for Vercel CLI')
+	core.info('Setting environment variables for Vercel ▲ CLI')
 	core.exportVariable('VERCEL_ORG_ID', VERCEL_ORG_ID)
 	core.exportVariable('VERCEL_PROJECT_ID', VERCEL_PROJECT_ID)
 
 	let deploymentUrl
 
 	const deploy = async (commit) => {
-		let commandArguments = [ `--token=${ VERCEL_TOKEN }` ]
+		let commandArguments = [ `--token=${ VERCEL_TOKEN }`, 'deploy' ]
 
 		if (VERCEL_SCOPE) {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
@@ -39,6 +47,7 @@ const init = () => {
 
 		if (PREBUILT) {
 			commandArguments.push('--prebuilt')
+			commandArguments.push('--archive=tgz')
 		}
 
 		if (FORCE) {
@@ -52,7 +61,7 @@ const init = () => {
 				`githubCommitMessage=${ TRIM_COMMIT_MESSAGE ? commit.commitMessage.split(/\r?\n/)[0] : commit.commitMessage }`,
 				`githubCommitOrg=${ USER }`,
 				`githubCommitRepo=${ REPOSITORY }`,
-				`githubCommitRef=${ REF }`,
+				`githubCommitRef=${ BRANCH }`,
 				`githubCommitSha=${ SHA }`,
 				`githubOrg=${ USER }`,
 				`githubRepo=${ REPOSITORY }`,
@@ -64,17 +73,18 @@ const init = () => {
 			})
 		}
 
-		if (BUILD_ENV) {
+		if (BUILD_ENV.length) {
 			BUILD_ENV.forEach((item) => {
 				commandArguments = commandArguments.concat([ '--build-env', item ])
 			})
 		}
 
-		core.info('Starting deploy with Vercel CLI')
-		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
-		const parsed = output.match(/(?<=https?:\/\/)(.*)/g)[0]
+		core.info('Starting deploy with Vercel ▲ CLI')
+		const output = await execCmd('npx vercel', commandArguments, WORKING_DIRECTORY)
+		const match = output.match(/(?<=https:\/\/)(.*)/g)
+		const parsed = match ? match[0] : null
 
-		if (!parsed) throw new Error('Could not parse deploymentUrl')
+		if (!parsed) throw new Error('🛑 Could not parse deploymentUrl')
 
 		deploymentUrl = parsed
 
@@ -88,22 +98,16 @@ const init = () => {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		const output = await exec('vercel', commandArguments, WORKING_DIRECTORY)
-
-		return output
+		return await execCmd('npx vercel', commandArguments, WORKING_DIRECTORY)
 	}
 
 	const getDeployment = async () => {
-		const url = `https://api.vercel.com/v11/now/deployments/get?url=${ deploymentUrl }`
-		const options = {
-			headers: {
-				Authorization: `Bearer ${ VERCEL_TOKEN }`
-			}
-		}
+		// API Reference: https://vercel.com/docs/rest-api/endpoints/deployments#get-a-deployment-by-id-or-url
+		const endpoint = `/v11/now/deployments/get?url=${ deploymentUrl }`
+		const url = new URL(endpoint, VercelAPIBase)
+		const res = await fetch(url, options)
 
-		const res = await got(url, options).json()
-
-		return res
+		return await res.json()
 	}
 
 	return {
@@ -114,6 +118,46 @@ const init = () => {
 	}
 }
 
+const setEnvironment = async (key, value) => {
+	// API Reference: https://vercel.com/docs/rest-api/endpoints/projects#create-one-or-more-environment-variables
+	const endpoint = `/v10/projects/${ VERCEL_PROJECT_ID }/env`
+
+	const url = new URL(endpoint, VercelAPIBase)
+	const params = new URLSearchParams(url.search.slice(1))
+
+	params.set('upsert', 'true')
+
+	if (typeof VERCEL_SCOPE !== 'undefined')
+		params.set('teamId', VERCEL_SCOPE)
+
+	url.search = params.toString()
+
+	const body = {
+		key: key,
+		value: value,
+		target: [ PRODUCTION ? 'production' : 'preview' ],
+		type: 'plain',
+		comment: `Set by deploy-to-vercel GitHub Action (${ SHA.substring(0, 7) })`
+	}
+
+	if (GITHUB_DEPLOYMENT_ENV.trim() && GITHUB_DEPLOYMENT_ENV !== 'false' && GITHUB_DEPLOYMENT_ENV !== 'null') {
+		core.debug(`setEnvironment() gitBranch: ${ GITHUB_DEPLOYMENT_ENV }`)
+		body.target = [ 'preview' ]
+		body.gitBranch = GITHUB_DEPLOYMENT_ENV
+	}
+
+	core.debug(`setEnvironment() body: ${ JSON.stringify(body) }`)
+
+	const envOptions = structuredClone(options)
+	envOptions.method = 'post'
+	envOptions.body = JSON.stringify(body)
+
+	const res = await fetch(url, envOptions)
+
+	return await res.json()
+}
+
 module.exports = {
-	init
+	init,
+	setEnvironment
 }

@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.3.1] - 2024-04-26
+
+- better logging of ALIAS_DOMAINS output
+- skipping falsey ALIAS_DOMAINS values
+- 📦 eslint@9.1.1
+
 ## [2.3.0] - 2024-04-12
 
 - Updated to eslint v9

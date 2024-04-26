@@ -32637,6 +32637,9 @@ const run = async () => {
 			}
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
+				// check for "falsey" can often be null and empty values
+				if (!ALIAS_DOMAINS[i]) continue
+
 				const alias = ALIAS_DOMAINS[i]
 					.replace('{USER}', urlSafeParameter(USER))
 					.replace('{REPO}', urlSafeParameter(REPOSITORY))

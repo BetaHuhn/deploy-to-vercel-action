@@ -1,3 +1,23 @@
+## [v1.10.0] - 2024-05-05
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.10.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.12...v1.10.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.10.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.10.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.10.0.tar.gz))
+
+### New features
+
+- [`39ad2e1`](https://github.com/betahuhn/deploy-to-vercel-action/commit/39ad2e1)  Add prebuilt option (#302)
+(Issues: [`#302`](https://github.com/betahuhn/deploy-to-vercel-action/issues/302))
+
+### Bug fixes
+
+- [`643bc80`](https://github.com/betahuhn/deploy-to-vercel-action/commit/643bc80)  Make repo, user and branch url safe (#289)
+(Issues: [`#289`](https://github.com/betahuhn/deploy-to-vercel-action/issues/289))- [`9c29c6f`](https://github.com/betahuhn/deploy-to-vercel-action/commit/9c29c6f)  Fix prevent trimming attempts on undefined value (#389)
+(Issues: [`#389`](https://github.com/betahuhn/deploy-to-vercel-action/issues/389))
+
+### Security issues
+
+- [`e49bbe3`](https://github.com/betahuhn/deploy-to-vercel-action/commit/e49bbe3)  Update action to use Node 20 (#379)
+(Issues: [`#379`](https://github.com/betahuhn/deploy-to-vercel-action/issues/379) [`#390`](https://github.com/betahuhn/deploy-to-vercel-action/issues/390))
+
 ## [v1.9.12] - 2023-01-30
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.12) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.11...v1.9.12) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.12) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.12.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.12.tar.gz))

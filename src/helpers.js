@@ -1,7 +1,16 @@
 const { StringDecoder } = require('string_decoder')
 
+const crypto = require('crypto')
 const core = require('@actions/core')
 const { exec } = require('@actions/exec')
+
+const {
+	USER,
+	REPOSITORY,
+	BRANCH,
+	PR_NUMBER,
+	SHA
+} = require('./config')
 
 const execCmd = async (command, args, cwd) => {
 	const options = {}
@@ -58,8 +67,39 @@ const removeSchema = (url) => {
 	return url.replace(regex, '')
 }
 
+// Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break as a domain name
+const urlSafeParameter = (input) => input.replace(/[^a-z0-9~]/gi, '-')
+
+const aliasFormatting = (alias) => {
+	let validAlias = alias.replace('{USER}', urlSafeParameter(USER))
+		.replace('{REPO}', urlSafeParameter(REPOSITORY))
+		.replace('{BRANCH}', urlSafeParameter(BRANCH))
+		.replace('{PR}', PR_NUMBER)
+		.replace('{SHA}', SHA.substring(0, 7))
+		.toLowerCase()
+
+	const previewDomainSuffix = '.vercel.app'
+
+	if (validAlias.endsWith(previewDomainSuffix)) {
+		let prefix = validAlias.substring(0, validAlias.indexOf(previewDomainSuffix))
+
+		if (prefix.length >= 60) {
+			core.warning(`⚠️ The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. See https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
+			prefix = prefix.substring(0, 55)
+			const uniqueSuffix = crypto.createHash('sha256')
+				.update(`git-${ BRANCH }-${ REPOSITORY }`)
+				.digest('hex')
+				.slice(0, 6)
+
+			validAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`
+		}
+	}
+	return validAlias
+}
+
 module.exports = {
 	execCmd,
 	addSchema,
-	removeSchema
+	removeSchema,
+	aliasFormatting
 }

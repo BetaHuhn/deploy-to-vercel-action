@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.3.3] - 2024-05-07
+
+- BUG: checking for "false" and "null" ALIAS's as strings
+
 ## [2.3.2] - 2024-05-07
 
 - Unique domain added to PR comment

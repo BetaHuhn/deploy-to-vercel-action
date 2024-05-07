@@ -106,21 +106,22 @@ const run = async () => {
 
 		if (ALIAS_DOMAINS.length) {
 			core.info('Assigning alias domains to deployment 🌐')
+			core.debug(`ALIAS_DOMAINS ${ ALIAS_DOMAINS }`)
 
 			if (!Array.isArray(ALIAS_DOMAINS)) {
 				throw new Error('🛑 ALIAS_DOMAINS should be in array format')
 			}
 
-			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
+			ALIAS_DOMAINS.forEach(async (aliasDomain) => {
 				// check for "falsey" can often be null and empty values
-				if (!ALIAS_DOMAINS[i]) continue
+				if (!aliasDomain || aliasDomain.toLowerCase() === 'false' || aliasDomain.toLowerCase() === 'null') return
 
-				const alias = aliasFormatting(ALIAS_DOMAINS[i])
+				const alias = aliasFormatting(aliasDomain)
 
 				await vercel.assignAlias(alias)
 
 				deploymentUrls.push(addSchema(alias))
-			}
+			})
 		}
 
 		deploymentUrls.push(addSchema(deploymentUrl))

@@ -145,25 +145,13 @@ const run = async () => {
 
 			if (CREATE_COMMENT) {
 				core.info('Creating new comment on PR 💬')
-				const body = `
-					This pull request has been deployed to Vercel ▲.
+				const body = `This pull request (commit \`${ SHA.substring(0, 7) }\`) has been deployed to Vercel ▲ - [View GitHub Actions Workflow Logs](${ LOG_URL })
 
-					<table>
-						<tr>
-							<th>Latest Commit</th>
-							<td><code>${ SHA.substring(0, 7) }</code></td>
-						</tr>
-						<tr>
-							<th>👀 Preview</th>
-							<td><a href='${ previewUrl }'>${ previewUrl }</a></td>
-						</tr>
-						<tr>
-							<th>🔍 Inspect</th>
-							<td><a href='${ deployment.inspectorUrl }'>${ deployment.inspectorUrl }</a></td>
-						</tr>
-					</table>
-
-					[View GitHub Actions Workflow Logs](${ LOG_URL })
+| Name | Link |
+| :--- | :--- |
+| 👀 Preview	| <${ previewUrl }> |
+| 🌐 Unique 	| <${ deploymentUniqueURL }> |
+| 🔍 Inspect	| <${ deployment.inspectorUrl }> |
 				`
 
 				const comment = await github.createComment(body)
@@ -171,14 +159,13 @@ const run = async () => {
 			}
 
 			if (PR_LABELS.length) {
-				core.info('Adding label(s) to PR 🏷️')
 				const labels = await github.addLabel()
 
-				core.info(`Label(s) "${ labels.map((label) => label.name).join(', ') }" added`)
+				core.info(`Label(s) "${ labels.map((label) => label.name).join(', ') }" added to PR 🏷️`)
 			}
 		}
 
-		const deploymentUniqueURL = deploymentUrls[deploymentUrls.length - 1]
+		const deploymentUniqueURL = deploymentUrls.at(-1)
 
 		core.setOutput('PREVIEW_URL', previewUrl)
 		core.setOutput('DEPLOYMENT_URLS', deploymentUrls)
@@ -191,10 +178,10 @@ const run = async () => {
 		const summaryMD = `## Deploy to Vercel ▲
 | Name | Link |
 | :--- | :--- |
-| 🔍 Inspect	| <${ deployment.inspectorUrl }> |
 | 👀 Preview	| <${ previewUrl }> |
 | 🌐 Unique 	| <${ deploymentUniqueURL }> |
-| 🌐 Others 	| ${ deploymentUrls.join('<br>') } |
+| 🌐 Others 	| ${ deploymentUrls.splice(2, -1).join('<br>') } |
+| 🔍 Inspect	| <${ deployment.inspectorUrl }> |
 		`
 
 		await core.summary.addRaw(summaryMD).write()
@@ -203,7 +190,7 @@ const run = async () => {
 		core.exportVariable('VERCEL_PREVIEW_URL', previewUrl)
 		core.exportVariable('VERCEL_DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
 
-		core.info('Done')
+		core.info('Done ✅')
 	} catch (err) {
 		await github.updateDeployment('failure')
 		core.error(`Catch Error: ${ err }`)

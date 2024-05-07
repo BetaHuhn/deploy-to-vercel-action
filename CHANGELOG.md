@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.3.2] - 2024-05-07
+
+- 📦 eslint@9.2.0
+
 ## [2.3.1] - 2024-04-26
 
 - better logging of ALIAS_DOMAINS output

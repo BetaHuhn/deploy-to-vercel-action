@@ -1,6 +1,6 @@
 {
   "name": "deploy-to-vercel-action",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -41,10 +41,10 @@
     "@actions/github": "6.0.0"
   },
   "devDependencies": {
-    "@types/node": "20.12.7",
+    "@types/node": "20.12.10",
     "@vercel/ncc": "0.38.1",
-    "eslint": "9.1.1",
-    "globals": "^15.0.0"
+    "eslint": "9.2.0",
+    "globals": "^15.1.0"
   },
   "engines": {
     "node": ">=20"

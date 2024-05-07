@@ -60,12 +60,9 @@ Deploy your project to Vercel using GitHub Actions. Supports PR previews and Git
 
 Before you can start using the Action, you have to setup a few Action inputs. Refer to the [configuration](#%EF%B8%8F-configuration) section below for more info.
 
-Then create a `.yml` file in your `.github/workflows` folder (you can find more info about the structure in the [GitHub Docs](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)) and add the following:
-
-**`.github/workflows/deploy.yml`**
+Create a `.yml` file in your `.github/workflows` folder (you can find more info about the structure in the [GitHub Docs](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)) and add the following:
 
 ```yml
-name: Deploy CI
 on:
   push:
     branches: [master]
@@ -94,13 +91,13 @@ To always use the latest version of the Action add the `latest` tag to the actio
 uses: mountainash/deploy-to-vercel-action@latest
 ```
 
-If you want to make sure that your Workflow doesn't suddenly break when a new major version is released, use the `v1` tag instead (recommended usage):
+If you want to make sure that your Workflow doesn't suddenly break when a new major version is released, use the `v2` tag instead (recommended usage):
 
 ```yml
 uses: mountainash/deploy-to-vercel-action@develop
 ```
 
-With the `v1` tag you will always get the latest non-breaking version which will include potential bug fixes in the future. If you use a specific version, make sure to regularly check if a new version is available, or enable Dependabot.
+With the `v2` tag you will always get the latest non-breaking version which will include potential bug fixes in the future. If you use a specific version, make sure to regularly check if a new version is available, or enable Dependabot.
 
 ## ⚙️ Action Inputs
 
@@ -132,13 +129,13 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/mountainash
 
 ## 🛠️ Configuration
 
-In order for the Action to interact with GitHub and Vercel on your behalf, you have to specify your GitHub and Vercel Access Tokens as well as your Vercel Organization and Project Id.
+In order for the Action to interact with GitHub and Vercel on your behalf, you have to specify your GitHub and Vercel Access Tokens as well as your Vercel Organization and Project ID.
 
 ### Tokens
 
 You can generate your GitHub Personal Access token [here](https://github.com/settings/tokens) and your Vercel Token [here](https://vercel.com/account/tokens) and then specify them as `GITHUB_TOKEN` and `VERCEL_TOKEN` in the Actions inputs.
 
-> **Note:** It is recommended to set the tokens as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+> **NOTE:** It is recommended to set the tokens as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
 
 ### Vercel Project
 
@@ -150,7 +147,7 @@ Once set up, a new `.vercel` directory will be added to your directory. The `.ve
 
 You can then specify them as `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` in the Actions inputs.
 
-> **Note:** It is recommended to set them as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+> **NOTE:** It is recommended to set them as [Repository Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
 
 ### Custom Domains
 
@@ -163,6 +160,7 @@ ALIAS_DOMAINS: |
 ```
 
 #### Pro Teams
+
 If your team is set up to `Pro`, remember to set the `VERCEL_SCOPE` to the slug of your team.
 
 ```yml
@@ -173,7 +171,7 @@ with:
 Otherwise, the action will fail trying to deploy custom domains with default account credentials. It will result in request for authorisation and action fail.
 Even if you extend the scope of `VERCEL_TOKEN` to `All non-SAML Team`, without properly set up `VERCEL_SCOPE` the cli will use default account and fail.
 
-> **Note:** You can use `*.vercel.app` or `*.now.sh` without configuration, but any other custom domain needs to be configured in the Vercel Dashboard first
+> **NOTE:** You can use `*.vercel.app` or `*.now.sh` without configuration, but any other custom domain needs to be configured in the Vercel Dashboard first
 
 You can also use any of the following variables anywhere in the domain:
 
@@ -197,11 +195,11 @@ This is especially useful if you want to change the PR preview domain with the `
 PR_PREVIEW_DOMAIN: "{REPO}-{PR}.vercel.app"
 ```
 
-> **Note:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN`
+> **NOTE:** You can only specify one custom domain for `PR_PREVIEW_DOMAIN`
 
 ### Runtime EnvVars
 
-> **Note:** 🆕 This feature is still in development and may not work as expected!
+> **NTE:** 🆕 This feature is still in development and may not work as expected!
 
 You can set environment variables in the Vercel deployment environment using the `RUNTIME_ENV` array input. This is useful for environment variables that are needed by Severless & Edge functions, or other runtime variables.
 
@@ -230,10 +228,7 @@ You also have to manually checkout the PR branch, as `pull_request_target` runs 
 
 Here's a complete workflow as an example:
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   push:
     branches: [master]
@@ -267,7 +262,7 @@ jobs:
           DEPLOY_PR_FROM_FORK: true # This has some serious security risks you need be aware of
 ```
 
-> **Note:** Since the first of March 2021 workflow runs which are triggered by a Dependabot PR will act as if they are made from a fork and have the same limitations described above (more info in [GitHub's Changelog](https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/)), except that DEPLOY_PR_FROM_FORK doesn't have to be set to true.
+> **NOTE:** Since the first of March 2021 workflow runs which are triggered by a Dependabot PR will act as if they are made from a fork and have the same limitations described above (more info in [GitHub's Changelog](https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/)), except that DEPLOY_PR_FROM_FORK doesn't have to be set to true.
 
 ## 📖 Examples
 
@@ -277,10 +272,7 @@ Here are a few examples to help you get started!
 
 The workflow below will run on every push to master and every time a new PR is created or an existing PR changed. [deploy-to-vercel-action](https://github.com/mountainash/deploy-to-vercel-action) will deploy the master branch to your Vercel production environment and comment on every PR with a preview link to the deployed PR.
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   push:
     branches: [master]
@@ -305,10 +297,7 @@ jobs:
 
 The workflow below will run on every push to the staging branch. The Action will then deploy it to the preview environment on Vercel.
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy staging CI
 on:
   push:
     branches: [ staging ]
@@ -332,10 +321,7 @@ jobs:
 
 The workflow below will only run after a new release is created on GitHub.
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   release:
     types: [created]
@@ -358,10 +344,7 @@ jobs:
 
 If you want, [deploy-to-vercel-action](https://github.com/mountainash/deploy-to-vercel-action) can assign multiple domains to each deployment and also change the PR preview domain:
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   push:
     branches: [master]
@@ -390,10 +373,7 @@ jobs:
 
 The workflow below will wait until your other CI jobs are completed until it will deploy your project to Vercel.
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   push:
     branches: [master]
@@ -423,10 +403,7 @@ jobs:
 
 The workflow below will not automatically create a PR comment. This is useful for example when your PR can trigger multiple deployments (think monorepo for example) and you want to take control over PR comment creation by yourself. You can use output produced by this action to build comment by yourself.
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   push:
     branches: [master]
@@ -475,10 +452,7 @@ The workflow below will run at the given interval and deploy your project to Ver
 
 > Note: You can use any other action to change your project or run your own script before deploying those changes to Vercel
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   schedule:
     - cron:  '0 8 * * 1' # will run every Monday at 8 am
@@ -506,10 +480,7 @@ To overcome this limitation you can use the `pull_request_target` event and chec
 
 > Note: By default this action doesn't deploy any forks so you can use `pull_request_target` without any security concerns
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   push:
     branches: [master]
@@ -546,10 +517,7 @@ jobs:
 
 You can define the build environment variables when using the action:
 
-**`.github/workflows/deploy.yml`**
-
 ```yml
-name: Deploy CI
 on:
   push:
     branches: [master]
@@ -591,7 +559,9 @@ Pass in inputs as environment variables with the prefix `INPUT_` (e.g. `INPUT_GI
 
 ## ❔ About
 
-This project was developed by me ([@betahuhn](https://github.com/BetaHuhn)) and upgraded and extended by [@mountainash](https://github.com/mountainash) in my free time. If you want to support me: [![Donate via PayPal](https://img.shields.io/badge/paypal-donate-009cde.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=394RTSBEEEFEE) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F81S2RK)
+This project was developed by me ([@betahuhn](https://github.com/BetaHuhn)) and upgraded and extended by [@mountainash](https://github.com/mountainash) in my free time.
+
+If you want to support @betahuhn: [![Donate via PayPal](https://img.shields.io/badge/paypal-donate-009cde.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=394RTSBEEEFEE) [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F81S2RK)
 
 If you want to support @mountainash [![Sponsor via GitHub](https://img.shields.io/badge/sponsor-via%20github-94a1f2.svg)](https://github.com/sponsors/mountainash)
 

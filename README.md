@@ -5,9 +5,9 @@
 Until this fork is merged into the main repo, you can use the following to get the latest changes:
 
 ```yml
-uses: mountainash/fork-deploy-to-vercel-action@develop
+uses: mountainash/deploy-to-vercel-action@develop
 OR
-uses: mountainash/fork-deploy-to-vercel-action@65a8b653a<< replace with latest commit >>_aef4c111806
+uses: mountainash/deploy-to-vercel-action@65a8b653a<< replace with latest commit >>_aef4c111806
 ```
 
 ## @mountainash fork changes
@@ -35,7 +35,7 @@ uses: mountainash/fork-deploy-to-vercel-action@65a8b653a<< replace with latest c
 
 <div align="center">
 
-[![Node CI](https://github.com/mountainash/fork-deploy-to-vercel-action/workflows/Node%20CI/badge.svg)](https://github.com/mountainash/fork-deploy-to-vercel-action/actions?query=workflow%3A%22Node+CI%22) [![Release CI](https://github.com/mountainash/fork-deploy-to-vercel-action/workflows/Release%20CI/badge.svg)](https://github.com/mountainash/fork-deploy-to-vercel-action/actions?query=workflow%3A%22Release+CI%22) [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/mountainash/fork-deploy-to-vercel-action/blob/master/LICENSE)
+[![Node CI](https://github.com/mountainash/deploy-to-vercel-action/workflows/Node%20CI/badge.svg)](https://github.com/mountainash/deploy-to-vercel-action/actions?query=workflow%3A%22Node+CI%22) [![Release CI](https://github.com/mountainash/deploy-to-vercel-action/workflows/Release%20CI/badge.svg)](https://github.com/mountainash/deploy-to-vercel-action/actions?query=workflow%3A%22Release+CI%22) [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/mountainash/deploy-to-vercel-action/blob/master/LICENSE)
 
 Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.
 
@@ -45,7 +45,7 @@ Deploy your project to Vercel using GitHub Actions. Supports PR previews and Git
 
 ## 👋 Introduction
 
-[deploy-to-vercel-action](https://github.com/mountainash/fork-deploy-to-vercel-action) uses GitHub Actions to deploy your project/site to [Vercel](https://vercel.com). It offers more customization than Vercel's GitHub integration in terms of when to deploy your site. Using GitHub Actions [Events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows) you can choose to deploy every commit, only on new releases or even on a cron schedule. The Action can also deploy every PR and comment on it with a custom preview URL. It uses the Vercel CLI and can automatically create a Deployment on GitHub as well.
+[deploy-to-vercel-action](https://github.com/mountainash/deploy-to-vercel-action) uses GitHub Actions to deploy your project/site to [Vercel](https://vercel.com). It offers more customization than Vercel's GitHub integration in terms of when to deploy your site. Using GitHub Actions [Events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows) you can choose to deploy every commit, only on new releases or even on a cron schedule. The Action can also deploy every PR and comment on it with a custom preview URL. It uses the Vercel CLI and can automatically create a Deployment on GitHub as well.
 
 ## 🚀 Features
 
@@ -78,7 +78,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -91,20 +91,20 @@ jobs:
 To always use the latest version of the Action add the `latest` tag to the action name like this:
 
 ```yml
-uses: mountainash/fork-deploy-to-vercel-action@latest
+uses: mountainash/deploy-to-vercel-action@latest
 ```
 
 If you want to make sure that your Workflow doesn't suddenly break when a new major version is released, use the `v1` tag instead (recommended usage):
 
 ```yml
-uses: mountainash/fork-deploy-to-vercel-action@develop
+uses: mountainash/deploy-to-vercel-action@develop
 ```
 
 With the `v1` tag you will always get the latest non-breaking version which will include potential bug fixes in the future. If you use a specific version, make sure to regularly check if a new version is available, or enable Dependabot.
 
 ## ⚙️ Action Inputs
 
-Here are all the inputs [deploy-to-vercel-action](https://github.com/mountainash/fork-deploy-to-vercel-action) takes:
+Here are all the inputs [deploy-to-vercel-action](https://github.com/mountainash/deploy-to-vercel-action) takes:
 
 | Key | Value | Required | Default |
 | ------------- | ------------- | ------------- | ------------- |
@@ -258,7 +258,7 @@ jobs:
           repository: ${{ steps.script.outputs.repo }}
 
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -275,7 +275,7 @@ Here are a few examples to help you get started!
 
 ### Basic Example
 
-The workflow below will run on every push to master and every time a new PR is created or an existing PR changed. [deploy-to-vercel-action](https://github.com/mountainash/fork-deploy-to-vercel-action) will deploy the master branch to your Vercel production environment and comment on every PR with a preview link to the deployed PR.
+The workflow below will run on every push to master and every time a new PR is created or an existing PR changed. [deploy-to-vercel-action](https://github.com/mountainash/deploy-to-vercel-action) will deploy the master branch to your Vercel production environment and comment on every PR with a preview link to the deployed PR.
 
 **`.github/workflows/deploy.yml`**
 
@@ -293,7 +293,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -319,7 +319,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -346,7 +346,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -356,7 +356,7 @@ jobs:
 
 ### Assign alias domains
 
-If you want, [deploy-to-vercel-action](https://github.com/mountainash/fork-deploy-to-vercel-action) can assign multiple domains to each deployment and also change the PR preview domain:
+If you want, [deploy-to-vercel-action](https://github.com/mountainash/deploy-to-vercel-action) can assign multiple domains to each deployment and also change the PR preview domain:
 
 **`.github/workflows/deploy.yml`**
 
@@ -374,7 +374,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -411,7 +411,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -440,7 +440,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
         id: vercel-deploy
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -490,7 +490,7 @@ jobs:
         uses: actions/checkout@v4
       # maybe do something else first
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -534,7 +534,7 @@ jobs:
           repository: ${{ steps.script.outputs.repo }}
 
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -562,7 +562,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Deploy to Vercel Action
-        uses: mountainash/fork-deploy-to-vercel-action@develop
+        uses: mountainash/deploy-to-vercel-action@develop
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -583,11 +583,11 @@ The actual source code of this Action is in the `src` folder.
 
 - run `yarn lint` or `npm run lint` to run eslint.
 - run `yarn start` or `npm run start` to run the Action locally.
-- run `yarn build` or `npm run build` to produce a production version of [deploy-to-vercel-action](https://github.com/mountainash/fork-deploy-to-vercel-action) in the `dist` folder.
+- run `yarn build` or `npm run build` to produce a production version of [deploy-to-vercel-action](https://github.com/mountainash/deploy-to-vercel-action) in the `dist` folder.
 
 Pass in inputs as environment variables with the prefix `INPUT_` (e.g. `INPUT_GITHUB_TOKEN`) & `RUNNING_LOCAL=true`.
 
-<!-- Minimal Example: `RUNNING_LOCAL=true INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN INPUT_VERCEL_TOKEN=$INPUT_VERCEL_TOKEN INPUT_VERCEL_ORG_ID=$INPUT_VERCEL_ORG_ID INPUT_VERCEL_PROJECT_ID=$INPUT_VERCEL_PROJECT_ID GITHUB_REPOSITORY="mountainash/fork-deploy-to-vercel-action" INPUT_PREBUILT="false" INPUT_PRODUCTION="false" INPUT_GITHUB_DEPLOYMENT="false" INPUT_CREATE_COMMENT="false" INPUT_DELETE_EXISTING_COMMENT="false" INPUT_ATTACH_COMMIT_METADATA="false" INPUT_DEPLOY_PR_FROM_FORK="false" INPUT_TRIM_COMMIT_MESSAGE="false" INPUT_FORCE="false" npm run start` -->
+<!-- Minimal Example: `RUNNING_LOCAL=true INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN INPUT_VERCEL_TOKEN=$INPUT_VERCEL_TOKEN INPUT_VERCEL_ORG_ID=$INPUT_VERCEL_ORG_ID INPUT_VERCEL_PROJECT_ID=$INPUT_VERCEL_PROJECT_ID GITHUB_REPOSITORY="mountainash/deploy-to-vercel-action" INPUT_PREBUILT="false" INPUT_PRODUCTION="false" INPUT_GITHUB_DEPLOYMENT="false" INPUT_CREATE_COMMENT="false" INPUT_DELETE_EXISTING_COMMENT="false" INPUT_ATTACH_COMMIT_METADATA="false" INPUT_DEPLOY_PR_FROM_FORK="false" INPUT_TRIM_COMMIT_MESSAGE="false" INPUT_FORCE="false" npm run start` -->
 
 ## ❔ About
 
@@ -595,7 +595,7 @@ This project was developed by me ([@betahuhn](https://github.com/BetaHuhn)) and 
 
 If you want to support @mountainash [![Sponsor via GitHub](https://img.shields.io/badge/sponsor-via%20github-94a1f2.svg)](https://github.com/sponsors/mountainash)
 
-**[deploy-to-vercel-action](https://github.com/mountainash/fork-deploy-to-vercel-action) is in no way affiliated with Vercel.**
+**[deploy-to-vercel-action](https://github.com/mountainash/deploy-to-vercel-action) is in no way affiliated with Vercel.**
 
 ## 📄 License
 

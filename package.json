@@ -1,5 +1,5 @@
 {
-  "name": "fork-deploy-to-vercel-action",
+  "name": "deploy-to-vercel-action",
   "version": "2.3.1",
   "description": "Deploy your project to Vercel using GitHub Actions. Supports PR previews and GitHub deployments.",
   "type": "commonjs",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mountainash/fork-deploy-to-vercel-action.git"
+    "url": "git+https://github.com/mountainash/deploy-to-vercel-action.git"
   },
   "keywords": [
     "vercel",
@@ -32,7 +32,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mountainash/fork-deploy-to-vercel-action/issues"
+    "url": "https://github.com/mountainash/deploy-to-vercel-action/issues"
   },
   "homepage": "https://github.com/marketplace/actions/deploy-to-vercel-action",
   "dependencies": {

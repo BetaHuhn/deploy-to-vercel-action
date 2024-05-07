@@ -1,6 +1,6 @@
 contact_links:
   - name: 📚 Docs
-    url: https://github.com/mountainash/fork-deploy-to-vercel-action#-usage
+    url: https://github.com/mountainash/deploy-to-vercel-action#-usage
     about: Checkout the documentation
   - name: 🚀 Feature Request
     url: https://github.com/BetaHuhn/deploy-to-vercel-action/discussions/new?category=ideas

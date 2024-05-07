@@ -1,9 +1,10 @@
 # Change Log
 
-## [2.3.3] - 2024-05-07
+## [2.4.0] - 2024-05-07
 
 - BUG: checking for empty, "false" and "null" ALIAS's as strings
 - 🧹 refactor of deploymentURLs (URLs are now a named object, not a number positioned array)
+- Comments & Summary don't show empty rows
 
 ## [2.3.2] - 2024-05-07
 

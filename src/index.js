@@ -143,7 +143,7 @@ const run = async () => {
 			}
 		}
 
-		deploymentURLs.all = deploymentURLs.unique
+		deploymentURLs.all.push(deploymentURLs.unique)
 		deploymentURLs.all.push(deploymentURLs.preview)
 		deploymentURLs.all = deploymentURLs.all.concat(deploymentURLs.aliases)
 
@@ -168,15 +168,15 @@ const run = async () => {
 
 			if (CREATE_COMMENT) {
 				core.info('Creating new comment on PR 💬')
-				const body = `This pull request (commit \`${ SHA.substring(0, 7) }\`) has been deployed to Vercel ▲ - [View GitHub Actions Workflow Logs](${ LOG_URL })
+				let commentMD = `This pull request (commit \`${ SHA.substring(0, 7) }\`) has been deployed to Vercel ▲ - [View GitHub Actions Workflow Logs](${ LOG_URL })
 
 | Name | Link |
-| :--- | :--- |
-| 👀 Preview	| <${ deploymentURLs.preview }> |
-| 🌐 Unique 	| <${ deploymentURLs.unique }> |
-| 🔍 Inspect	| <${ deploymentURLs.inspector }> |`
+| :--- | :--- |`
+				commentMD += deploymentURLs.preview ?		`| 👀 Preview	| <${ deploymentURLs.preview }> |` : ''
+				commentMD += deploymentURLs.unique ?		`| 🌐 Unique 	| <${ deploymentURLs.unique }> |` : ''
+				commentMD += deploymentURLs.inspector ?	`| 🔍 Inspect	| <${ deploymentURLs.inspector }> |` : ''
 
-				const comment = await github.createComment(body)
+				const comment = await github.createComment(commentMD)
 				core.info(`Comment created: ${ comment.html_url }`)
 			}
 
@@ -187,25 +187,26 @@ const run = async () => {
 			}
 		}
 
-		core.setOutput('PREVIEW_URL', deploymentURLs.preview)
-		core.setOutput('DEPLOYMENT_URLS', deploymentURLs.all)
-		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentURLs.unique)
-		core.setOutput('DEPLOYMENT_ID', deployment.id)
-		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deploymentURLs.inspector)
-		core.setOutput('DEPLOYMENT_CREATED', true)
-		core.setOutput('COMMENT_CREATED', IS_PR && CREATE_COMMENT)
+		let summaryMD = `## Deploy to Vercel ▲
 
-		const summaryMD = `## Deploy to Vercel ▲
 | Name | Link |
-| :--- | :--- |
-| 👀 Preview	| <${ deploymentURLs.preview }> |
-| 🌐 Unique 	| <${ deploymentURLs.unique }> |
-| 🌐 Others 	| ${ deploymentURLs.aliases.join('<br>') } |
-| 🔍 Inspect	| <${ deploymentURLs.inspector }> |`
+| :--- | :--- |`
+		summaryMD += deploymentURLs.preview ?					`| 👀 Preview	| <${ deploymentURLs.preview }> |` : ''
+		summaryMD += deploymentURLs.unique ?					`| 🌐 Unique 	| <${ deploymentURLs.unique }> |` : ''
+		summaryMD += deploymentURLs.aliases.length ?	`| 🌐 Others 	| ${ deploymentURLs.aliases.join('<br>') } |` : ''
+		summaryMD += deploymentURLs.inspector ?				`| 🔍 Inspect	| <${ deploymentURLs.inspector }> |` : ''
 
 		await core.summary.addRaw(summaryMD).write()
 
-		// Set environment variable for use in subsequent job steps
+		// Set environment variables for use in subsequent job steps
+		core.setOutput('DEPLOYMENT_CREATED', true)
+		core.setOutput('DEPLOYMENT_ID', deployment.id)
+		core.setOutput('PREVIEW_URL', deploymentURLs.preview)
+		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentURLs.unique)
+		core.setOutput('DEPLOYMENT_URLS', deploymentURLs.all)
+		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deploymentURLs.inspector)
+		core.setOutput('COMMENT_CREATED', IS_PR && CREATE_COMMENT)
+
 		core.exportVariable('VERCEL_PREVIEW_URL', deploymentURLs.preview)
 		core.exportVariable('VERCEL_DEPLOYMENT_UNIQUE_URL', deploymentURLs.unique)
 

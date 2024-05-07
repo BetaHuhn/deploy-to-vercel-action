@@ -32649,7 +32649,11 @@ const run = async () => {
 
 			ALIAS_DOMAINS.forEach(async (aliasDomain) => {
 				// check for "falsey" can often be null and empty values
+
+				core.debug(`🔎 aliasDomain: ${ aliasDomain }`)
 				if (!aliasDomain || aliasDomain.toLowerCase() === 'false' || aliasDomain.toLowerCase() === 'null') return
+
+				core.debug(`▶️ aliasDomain: ${ aliasDomain }`)
 
 				const alias = aliasFormatting(aliasDomain)
 

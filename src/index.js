@@ -1,15 +1,11 @@
 const core = require('@actions/core')
 const Github = require('./github')
 const Vercel = require('./vercel')
-const { addSchema } = require('./helpers')
-const crypto = require('crypto')
+const { addSchema, aliasFormatting } = require('./helpers')
 
 const {
 	GITHUB_DEPLOYMENT,
 	USER,
-	REPOSITORY,
-	BRANCH,
-	PR_NUMBER,
 	SHA,
 	IS_PR,
 	PR_LABELS,
@@ -24,9 +20,6 @@ const {
 	IS_FORK,
 	ACTOR
 } = require('./config')
-
-// Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break as a domainname
-const urlSafeParameter = (input) => input.replace(/[^a-z0-9~]/gi, '-')
 
 const run = async () => {
 	const github = Github.init()
@@ -103,33 +96,10 @@ const run = async () => {
 				throw new Error('🛑 invalid type for PR_PREVIEW_DOMAIN')
 			}
 
-			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', urlSafeParameter(USER))
-				.replace('{REPO}', urlSafeParameter(REPOSITORY))
-				.replace('{BRANCH}', urlSafeParameter(BRANCH))
-				.replace('{PR}', PR_NUMBER)
-				.replace('{SHA}', SHA.substring(0, 7))
-				.toLowerCase()
-
-			const previewDomainSuffix = '.vercel.app'
-			let nextAlias = alias
-
-			if (alias.endsWith(previewDomainSuffix)) {
-				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
-
-				if (prefix.length >= 60) {
-					core.warning(`⚠️ The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. See https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
-					prefix = prefix.substring(0, 55)
-					const uniqueSuffix = crypto.createHash('sha256')
-						.update(`git-${ BRANCH }-${ REPOSITORY }`)
-						.digest('hex')
-						.slice(0, 6)
-
-					nextAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`
-					core.info(`Updated domain alias: ${ nextAlias }`)
-				}
-			}
+			const nextAlias = aliasFormatting(PR_PREVIEW_DOMAIN)
 
 			await vercel.assignAlias(nextAlias)
+			core.info(`Updated domain alias: ${ nextAlias }`)
 
 			deploymentUrls.push(addSchema(nextAlias))
 		}
@@ -145,12 +115,7 @@ const run = async () => {
 				// check for "falsey" can often be null and empty values
 				if (!ALIAS_DOMAINS[i]) continue
 
-				const alias = ALIAS_DOMAINS[i]
-					.replace('{USER}', urlSafeParameter(USER))
-					.replace('{REPO}', urlSafeParameter(REPOSITORY))
-					.replace('{BRANCH}', urlSafeParameter(BRANCH))
-					.replace('{SHA}', SHA.substring(0, 7))
-					.toLowerCase()
+				const alias = aliasFormatting(ALIAS_DOMAINS[i])
 
 				await vercel.assignAlias(alias)
 

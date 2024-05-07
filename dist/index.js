@@ -32217,8 +32217,17 @@ module.exports = {
 
 const { StringDecoder } = __nccwpck_require__(1576)
 
+const crypto = __nccwpck_require__(6113)
 const core = __nccwpck_require__(2186)
 const { exec } = __nccwpck_require__(1514)
+
+const {
+	USER,
+	REPOSITORY,
+	BRANCH,
+	PR_NUMBER,
+	SHA
+} = __nccwpck_require__(7779)
 
 const execCmd = async (command, args, cwd) => {
 	const options = {}
@@ -32275,10 +32284,41 @@ const removeSchema = (url) => {
 	return url.replace(regex, '')
 }
 
+// Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break as a domain name
+const urlSafeParameter = (input) => input.replace(/[^a-z0-9~]/gi, '-')
+
+const aliasFormatting = (alias) => {
+	let validAlias = alias.replace('{USER}', urlSafeParameter(USER))
+		.replace('{REPO}', urlSafeParameter(REPOSITORY))
+		.replace('{BRANCH}', urlSafeParameter(BRANCH))
+		.replace('{PR}', PR_NUMBER)
+		.replace('{SHA}', SHA.substring(0, 7))
+		.toLowerCase()
+
+	const previewDomainSuffix = '.vercel.app'
+
+	if (validAlias.endsWith(previewDomainSuffix)) {
+		let prefix = validAlias.substring(0, validAlias.indexOf(previewDomainSuffix))
+
+		if (prefix.length >= 60) {
+			core.warning(`⚠️ The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. See https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
+			prefix = prefix.substring(0, 55)
+			const uniqueSuffix = crypto.createHash('sha256')
+				.update(`git-${ BRANCH }-${ REPOSITORY }`)
+				.digest('hex')
+				.slice(0, 6)
+
+			validAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`
+		}
+	}
+	return validAlias
+}
+
 module.exports = {
 	execCmd,
 	addSchema,
-	removeSchema
+	removeSchema,
+	aliasFormatting
 }
 
 /***/ }),
@@ -32496,15 +32536,11 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186)
 const Github = __nccwpck_require__(2196)
 const Vercel = __nccwpck_require__(2463)
-const { addSchema } = __nccwpck_require__(5946)
-const crypto = __nccwpck_require__(6113)
+const { addSchema, aliasFormatting } = __nccwpck_require__(5946)
 
 const {
 	GITHUB_DEPLOYMENT,
 	USER,
-	REPOSITORY,
-	BRANCH,
-	PR_NUMBER,
 	SHA,
 	IS_PR,
 	PR_LABELS,
@@ -32519,9 +32555,6 @@ const {
 	IS_FORK,
 	ACTOR
 } = __nccwpck_require__(7779)
-
-// Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break as a domainname
-const urlSafeParameter = (input) => input.replace(/[^a-z0-9~]/gi, '-')
 
 const run = async () => {
 	const github = Github.init()
@@ -32598,33 +32631,10 @@ const run = async () => {
 				throw new Error('🛑 invalid type for PR_PREVIEW_DOMAIN')
 			}
 
-			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', urlSafeParameter(USER))
-				.replace('{REPO}', urlSafeParameter(REPOSITORY))
-				.replace('{BRANCH}', urlSafeParameter(BRANCH))
-				.replace('{PR}', PR_NUMBER)
-				.replace('{SHA}', SHA.substring(0, 7))
-				.toLowerCase()
-
-			const previewDomainSuffix = '.vercel.app'
-			let nextAlias = alias
-
-			if (alias.endsWith(previewDomainSuffix)) {
-				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
-
-				if (prefix.length >= 60) {
-					core.warning(`⚠️ The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. See https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
-					prefix = prefix.substring(0, 55)
-					const uniqueSuffix = crypto.createHash('sha256')
-						.update(`git-${ BRANCH }-${ REPOSITORY }`)
-						.digest('hex')
-						.slice(0, 6)
-
-					nextAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`
-					core.info(`Updated domain alias: ${ nextAlias }`)
-				}
-			}
+			const nextAlias = aliasFormatting(PR_PREVIEW_DOMAIN)
 
 			await vercel.assignAlias(nextAlias)
+			core.info(`Updated domain alias: ${ nextAlias }`)
 
 			deploymentUrls.push(addSchema(nextAlias))
 		}
@@ -32640,12 +32650,7 @@ const run = async () => {
 				// check for "falsey" can often be null and empty values
 				if (!ALIAS_DOMAINS[i]) continue
 
-				const alias = ALIAS_DOMAINS[i]
-					.replace('{USER}', urlSafeParameter(USER))
-					.replace('{REPO}', urlSafeParameter(REPOSITORY))
-					.replace('{BRANCH}', urlSafeParameter(BRANCH))
-					.replace('{SHA}', SHA.substring(0, 7))
-					.toLowerCase()
+				const alias = aliasFormatting(ALIAS_DOMAINS[i])
 
 				await vercel.assignAlias(alias)
 

@@ -2,6 +2,7 @@
 
 ## [2.3.2] - 2024-05-07
 
+- truncate long ALIAS_DOMAINS values
 - 📦 eslint@9.2.0
 
 ## [2.3.1] - 2024-04-26

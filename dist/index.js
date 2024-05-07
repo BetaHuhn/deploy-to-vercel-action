@@ -32626,7 +32626,9 @@ const run = async () => {
 		const deploymentURLs = {
 			unique: addSchema(uniqueURL),
 			preview: '',
-			aliases: []
+			aliases: [],
+			inspector: '',
+			all: []
 		}
 
 		if (IS_PR && PR_PREVIEW_DOMAIN) {

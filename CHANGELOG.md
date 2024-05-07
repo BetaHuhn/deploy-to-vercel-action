@@ -2,13 +2,16 @@
 
 ## [2.3.2] - 2024-05-07
 
-- truncate long ALIAS_DOMAINS values
+- Unique domain added to PR comment
+- Markdown table PR comment formatting
+- less domain duplication in the Workflow Summary
+- Truncate long ALIAS_DOMAINS values
 - 📦 eslint@9.2.0
 
 ## [2.3.1] - 2024-04-26
 
-- better logging of ALIAS_DOMAINS output
-- skipping falsey ALIAS_DOMAINS values
+- Better logging of ALIAS_DOMAINS output
+- Skipping falsey ALIAS_DOMAINS values
 - 📦 eslint@9.1.1
 
 ## [2.3.0] - 2024-04-12

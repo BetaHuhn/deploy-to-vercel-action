@@ -32651,7 +32651,10 @@ const run = async () => {
 				core.debug(`🔎 aliasDomain: ${ aliasDomain } (${ typeof aliasDomain })`)
 
 				// check for "falsey" can often be null and empty values
-				if (aliasDomain === '' || aliasDomain.toLowerCase() === 'false' || aliasDomain.toLowerCase() === 'null') return
+				if (aliasDomain === '' || aliasDomain.toLowerCase() === 'false' || aliasDomain.toLowerCase() === 'null') {
+					core.info(`Skipping ALIAS domain "${ aliasDomain }" 🌐`)
+					return
+				}
 
 				const alias = aliasFormatting(aliasDomain)
 				core.debug(`▶️ alias: ${ alias }`)

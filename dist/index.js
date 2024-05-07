@@ -32707,9 +32707,9 @@ const run = async () => {
 
 | Name | Link |
 | :--- | :--- |`
-				commentMD += deploymentURLs.preview ?		`| 👀 Preview	| <${ deploymentURLs.preview }> |` : ''
-				commentMD += deploymentURLs.unique ?		`| 🌐 Unique 	| <${ deploymentURLs.unique }> |` : ''
-				commentMD += deploymentURLs.inspector ?	`| 🔍 Inspect	| <${ deploymentURLs.inspector }> |` : ''
+				commentMD += deploymentURLs.preview ?		`\n| 👀 Preview	| <${ deploymentURLs.preview }> |` : ''
+				commentMD += deploymentURLs.unique ?		`\n| 🌐 Unique 	| <${ deploymentURLs.unique }> |` : ''
+				commentMD += deploymentURLs.inspector ?	`\n| 🔍 Inspect	| <${ deploymentURLs.inspector }> |` : ''
 
 				const comment = await github.createComment(commentMD)
 				core.info(`Comment created: ${ comment.html_url }`)
@@ -32726,10 +32726,10 @@ const run = async () => {
 
 | Name | Link |
 | :--- | :--- |`
-		summaryMD += deploymentURLs.preview ?					`| 👀 Preview	| <${ deploymentURLs.preview }> |` : ''
-		summaryMD += deploymentURLs.unique ?					`| 🌐 Unique 	| <${ deploymentURLs.unique }> |` : ''
-		summaryMD += deploymentURLs.aliases.length ?	`| 🌐 Others 	| ${ deploymentURLs.aliases.join('<br>') } |` : ''
-		summaryMD += deploymentURLs.inspector ?				`| 🔍 Inspect	| <${ deploymentURLs.inspector }> |` : ''
+		summaryMD += deploymentURLs.preview ?					`\n| 👀 Preview	| <${ deploymentURLs.preview }> |` : ''
+		summaryMD += deploymentURLs.unique ?					`\n| 🌐 Unique 	| <${ deploymentURLs.unique }> |` : ''
+		summaryMD += deploymentURLs.aliases.length ?	`\n| 🌐 Others 	| ${ deploymentURLs.aliases.join('<br>') } |` : ''
+		summaryMD += deploymentURLs.inspector ?				`\n| 🔍 Inspect	| <${ deploymentURLs.inspector }> |` : ''
 
 		await core.summary.addRaw(summaryMD).write()
 

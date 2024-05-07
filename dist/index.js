@@ -32648,8 +32648,14 @@ const run = async () => {
 			}
 
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
-				const aliasDomain = ALIAS_DOMAINS[i].toLowerCase()
+				let aliasDomain = ALIAS_DOMAINS[i]
+
 				core.debug(`🔎 aliasDomain: ${ aliasDomain } (${ typeof aliasDomain })`)
+
+				// clean string
+				aliasDomain = aliasDomain.toLowerCase()
+				aliasDomain = aliasDomain.trim()
+				aliasDomain = aliasDomain.replace(/['"]+/g, '')
 
 				// check for "falsey" can often be null and empty values
 				if (aliasDomain === '' || aliasDomain === 'false' || aliasDomain.toLowerCase() === 'null') {

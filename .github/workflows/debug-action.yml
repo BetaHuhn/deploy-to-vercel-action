@@ -61,6 +61,8 @@ jobs:
             ""
             "false"
             "null"
+            false
+            null
             a-really-really-really-really-really-really-really-really-really-long-alias.vercel.app
             {REPO}-{BRANCH}.vercel.app
             {USER}-{REPO}-{SHA}.vercel.app

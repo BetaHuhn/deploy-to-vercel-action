@@ -84,11 +84,16 @@ const run = async () => {
 		const vercel = Vercel.init()
 
 		const commit = ATTACH_COMMIT_METADATA ? await github.getCommit() : undefined
-		const deploymentUrl = await vercel.deploy(commit)
+		const uniqueURL = await vercel.deploy(commit)
 
 		core.info('Successfully deployed to Vercel ▲')
 
-		const deploymentUrls = []
+		const deploymentURLs = {
+			unique: addSchema(uniqueURL),
+			preview: '',
+			aliases: []
+		}
+
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info('Assigning custom preview domain to PR 🌐')
 
@@ -96,12 +101,12 @@ const run = async () => {
 				throw new Error('🛑 invalid type for PR_PREVIEW_DOMAIN')
 			}
 
-			const nextAlias = aliasFormatting(PR_PREVIEW_DOMAIN)
+			const previewURL = aliasFormatting(PR_PREVIEW_DOMAIN)
 
-			await vercel.assignAlias(nextAlias)
-			core.info(`Updated domain alias: ${ nextAlias }`)
+			await vercel.assignAlias(previewURL)
+			core.info(`Updated domain alias: ${ previewURL }`)
 
-			deploymentUrls.push(addSchema(nextAlias))
+			deploymentURLs.preview = addSchema(previewURL)
 		}
 
 		if (ALIAS_DOMAINS.length) {
@@ -132,19 +137,22 @@ const run = async () => {
 
 				await vercel.assignAlias(alias)
 
-				deploymentUrls.push(addSchema(alias))
+				deploymentURLs.aliases.push(addSchema(alias))
 			}
 		}
 
-		deploymentUrls.push(addSchema(deploymentUrl))
-		const previewUrl = deploymentUrls[0]
+		deploymentURLs.all = deploymentURLs.unique
+		deploymentURLs.all.push(deploymentURLs.preview)
+		deploymentURLs.all = deploymentURLs.all.concat(deploymentURLs.aliases)
 
 		const deployment = await vercel.getDeployment()
-		core.info(`Deployment "${ deployment.id }" available at: ${ deploymentUrls.join(' ') }`)
+		deploymentURLs.inspector = deployment.inspectorUrl
+
+		core.info(`Deployment "${ deployment.id }" available at: ${ deploymentURLs.all.join(' ') }`)
 
 		if (GITHUB_DEPLOYMENT) {
 			core.info('Changing GitHub deployment status to "success" ✔︎')
-			await github.updateDeployment('success', previewUrl)
+			await github.updateDeployment('success', deploymentURLs.preview)
 		}
 
 		if (IS_PR) {
@@ -162,10 +170,9 @@ const run = async () => {
 
 | Name | Link |
 | :--- | :--- |
-| 👀 Preview	| <${ previewUrl }> |
-| 🌐 Unique 	| <${ deploymentUniqueURL }> |
-| 🔍 Inspect	| <${ deployment.inspectorUrl }> |
-				`
+| 👀 Preview	| <${ deploymentURLs.preview }> |
+| 🌐 Unique 	| <${ deploymentURLs.unique }> |
+| 🔍 Inspect	| <${ deploymentURLs.inspector }> |`
 
 				const comment = await github.createComment(body)
 				core.info(`Comment created: ${ comment.html_url }`)
@@ -178,30 +185,27 @@ const run = async () => {
 			}
 		}
 
-		const deploymentUniqueURL = deploymentUrls.at(-1)
-
-		core.setOutput('PREVIEW_URL', previewUrl)
-		core.setOutput('DEPLOYMENT_URLS', deploymentUrls)
-		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
+		core.setOutput('PREVIEW_URL', deploymentURLs.preview)
+		core.setOutput('DEPLOYMENT_URLS', deploymentURLs.all)
+		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentURLs.unique)
 		core.setOutput('DEPLOYMENT_ID', deployment.id)
-		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deployment.inspectorUrl)
+		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deploymentURLs.inspector)
 		core.setOutput('DEPLOYMENT_CREATED', true)
 		core.setOutput('COMMENT_CREATED', IS_PR && CREATE_COMMENT)
 
 		const summaryMD = `## Deploy to Vercel ▲
 | Name | Link |
 | :--- | :--- |
-| 👀 Preview	| <${ previewUrl }> |
-| 🌐 Unique 	| <${ deploymentUniqueURL }> |
-| 🌐 Others 	| ${ deploymentUrls.splice(2, -1).join('<br>') } |
-| 🔍 Inspect	| <${ deployment.inspectorUrl }> |
-		`
+| 👀 Preview	| <${ deploymentURLs.preview }> |
+| 🌐 Unique 	| <${ deploymentURLs.unique }> |
+| 🌐 Others 	| ${ deploymentURLs.aliases.join('<br>') } |
+| 🔍 Inspect	| <${ deploymentURLs.inspector }> |`
 
 		await core.summary.addRaw(summaryMD).write()
 
 		// Set environment variable for use in subsequent job steps
-		core.exportVariable('VERCEL_PREVIEW_URL', previewUrl)
-		core.exportVariable('VERCEL_DEPLOYMENT_UNIQUE_URL', deploymentUniqueURL)
+		core.exportVariable('VERCEL_PREVIEW_URL', deploymentURLs.preview)
+		core.exportVariable('VERCEL_DEPLOYMENT_UNIQUE_URL', deploymentURLs.unique)
 
 		core.info('Done ✅')
 	} catch (err) {

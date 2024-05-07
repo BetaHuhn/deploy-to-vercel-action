@@ -112,13 +112,14 @@ const run = async () => {
 				throw new Error('🛑 ALIAS_DOMAINS should be in array format')
 			}
 
-			ALIAS_DOMAINS.forEach(async (aliasDomain) => {
+			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
+				const aliasDomain = ALIAS_DOMAINS[i].toLowerCase()
 				core.debug(`🔎 aliasDomain: ${ aliasDomain } (${ typeof aliasDomain })`)
 
 				// check for "falsey" can often be null and empty values
-				if (aliasDomain === '' || aliasDomain.toLowerCase() === 'false' || aliasDomain.toLowerCase() === 'null') {
+				if (aliasDomain === '' || aliasDomain === 'false' || aliasDomain.toLowerCase() === 'null') {
 					core.info(`Skipping ALIAS domain "${ aliasDomain }" 🌐`)
-					return
+					continue
 				}
 
 				const alias = aliasFormatting(aliasDomain)
@@ -127,7 +128,7 @@ const run = async () => {
 				await vercel.assignAlias(alias)
 
 				deploymentUrls.push(addSchema(alias))
-			})
+			}
 		}
 
 		deploymentUrls.push(addSchema(deploymentUrl))

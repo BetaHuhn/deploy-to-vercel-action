@@ -58,9 +58,9 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           ALIAS_DOMAINS: |
-            "" # Empty string
-            "false" # false string
-            "null" # false string
+            ""
+            "false"
+            "null"
             a-really-really-really-really-really-really-really-really-really-long-alias.vercel.app
             {REPO}-{BRANCH}.vercel.app
             {USER}-{REPO}-{SHA}.vercel.app

@@ -23,6 +23,10 @@ inputs:
     description: |
       Create a production deployment (default: true, false for PR deployments).
     required: false
+  PREBUILT:
+    description: |
+      Deploy a prebuilt Vercel Project (default: false).
+    required: false
   GITHUB_DEPLOYMENT:
     description: |
       Create a deployment on GitHub (default: true).
@@ -73,23 +77,29 @@ inputs:
     required: false
   WORKING_DIRECTORY:
     description: |
-      Working directory for the Vercel CLI
+      Working directory for the Vercel CLI.
+    required: false
+  FORCE:
+    description: |
+      Used to skip the build cache.
     required: false
 
 outputs:
   PREVIEW_URL:
-    description: 'Main deployment preview URL'
+    description: 'Main deployment preview URL.'
   DEPLOYMENT_URLS:
-    description: 'All assigned deployment URLs'
+    description: 'All assigned deployment URLs.'
   DEPLOYMENT_CREATED:
     description: 'True if a Vercel deployment was created.'
   COMMENT_CREATED:
     description: 'True if a comment was created on the PR or commit.'
   DEPLOYMENT_INSPECTOR_URL:
     description: 'Main deployment inspection url.'
+  DEPLOYMENT_UNIQUE_URL:
+    description: 'The unique deployment url on Vercel'
 
 runs:
-  using: 'node12'
+  using: 'node20'
   main: 'dist/index.js'
 
 branding:

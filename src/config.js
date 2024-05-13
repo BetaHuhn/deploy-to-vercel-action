@@ -60,7 +60,8 @@ const context = {
 	}),
 	ALIAS_DOMAINS: parser.getInput({
 		key: 'ALIAS_DOMAINS',
-		type: 'array'
+		type: 'array',
+		disableable: true
 	}),
 	PR_PREVIEW_DOMAIN: parser.getInput({
 		key: 'PR_PREVIEW_DOMAIN'
@@ -86,6 +87,11 @@ const context = {
 	BUILD_ENV: parser.getInput({
 		key: 'BUILD_ENV',
 		type: 'array'
+	}),
+	PREBUILT: parser.getInput({
+		key: 'PREBUILT',
+		type: 'boolean',
+		default: false
 	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true',
 	FORCE: parser.getInput({

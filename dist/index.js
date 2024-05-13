@@ -140,7 +140,6 @@ const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
 const os = __importStar(__nccwpck_require__(2037));
 const path = __importStar(__nccwpck_require__(1017));
-const uuid_1 = __nccwpck_require__(5840);
 const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
@@ -170,20 +169,9 @@ function exportVariable(name, val) {
     process.env[name] = convertedVal;
     const filePath = process.env['GITHUB_ENV'] || '';
     if (filePath) {
-        const delimiter = `ghadelimiter_${uuid_1.v4()}`;
-        // These should realistically never happen, but just in case someone finds a way to exploit uuid generation let's not allow keys or values that contain the delimiter.
-        if (name.includes(delimiter)) {
-            throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
-        }
-        if (convertedVal.includes(delimiter)) {
-            throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
-        }
-        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
-        file_command_1.issueCommand('ENV', commandValue);
+        return file_command_1.issueFileCommand('ENV', file_command_1.prepareKeyValueMessage(name, val));
     }
-    else {
-        command_1.issueCommand('set-env', { name }, convertedVal);
-    }
+    command_1.issueCommand('set-env', { name }, convertedVal);
 }
 exports.exportVariable = exportVariable;
 /**
@@ -201,7 +189,7 @@ exports.setSecret = setSecret;
 function addPath(inputPath) {
     const filePath = process.env['GITHUB_PATH'] || '';
     if (filePath) {
-        file_command_1.issueCommand('PATH', inputPath);
+        file_command_1.issueFileCommand('PATH', inputPath);
     }
     else {
         command_1.issueCommand('add-path', {}, inputPath);
@@ -241,7 +229,10 @@ function getMultilineInput(name, options) {
     const inputs = getInput(name, options)
         .split('\n')
         .filter(x => x !== '');
-    return inputs;
+    if (options && options.trimWhitespace === false) {
+        return inputs;
+    }
+    return inputs.map(input => input.trim());
 }
 exports.getMultilineInput = getMultilineInput;
 /**
@@ -274,8 +265,12 @@ exports.getBooleanInput = getBooleanInput;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setOutput(name, value) {
+    const filePath = process.env['GITHUB_OUTPUT'] || '';
+    if (filePath) {
+        return file_command_1.issueFileCommand('OUTPUT', file_command_1.prepareKeyValueMessage(name, value));
+    }
     process.stdout.write(os.EOL);
-    command_1.issueCommand('set-output', { name }, value);
+    command_1.issueCommand('set-output', { name }, utils_1.toCommandValue(value));
 }
 exports.setOutput = setOutput;
 /**
@@ -404,7 +399,11 @@ exports.group = group;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function saveState(name, value) {
-    command_1.issueCommand('save-state', { name }, value);
+    const filePath = process.env['GITHUB_STATE'] || '';
+    if (filePath) {
+        return file_command_1.issueFileCommand('STATE', file_command_1.prepareKeyValueMessage(name, value));
+    }
+    command_1.issueCommand('save-state', { name }, utils_1.toCommandValue(value));
 }
 exports.saveState = saveState;
 /**
@@ -470,13 +469,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.issueCommand = void 0;
+exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const fs = __importStar(__nccwpck_require__(7147));
 const os = __importStar(__nccwpck_require__(2037));
+const uuid_1 = __nccwpck_require__(5840);
 const utils_1 = __nccwpck_require__(5278);
-function issueCommand(command, message) {
+function issueFileCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
         throw new Error(`Unable to find environment variable for file command ${command}`);
@@ -488,7 +488,22 @@ function issueCommand(command, message) {
         encoding: 'utf8'
     });
 }
-exports.issueCommand = issueCommand;
+exports.issueFileCommand = issueFileCommand;
+function prepareKeyValueMessage(key, value) {
+    const delimiter = `ghadelimiter_${uuid_1.v4()}`;
+    const convertedValue = utils_1.toCommandValue(value);
+    // These should realistically never happen, but just in case someone finds a
+    // way to exploit uuid generation let's not allow keys or values that contain
+    // the delimiter.
+    if (key.includes(delimiter)) {
+        throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
+    }
+    if (convertedValue.includes(delimiter)) {
+        throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
+    }
+    return `${key}<<${delimiter}${os.EOL}${convertedValue}${os.EOL}${delimiter}`;
+}
+exports.prepareKeyValueMessage = prepareKeyValueMessage;
 //# sourceMappingURL=file-command.js.map
 
 /***/ }),
@@ -15931,7 +15946,8 @@ const context = {
 	}),
 	ALIAS_DOMAINS: parser.getInput({
 		key: 'ALIAS_DOMAINS',
-		type: 'array'
+		type: 'array',
+		disableable: true
 	}),
 	PR_PREVIEW_DOMAIN: parser.getInput({
 		key: 'PR_PREVIEW_DOMAIN'
@@ -15957,6 +15973,11 @@ const context = {
 	BUILD_ENV: parser.getInput({
 		key: 'BUILD_ENV',
 		type: 'array'
+	}),
+	PREBUILT: parser.getInput({
+		key: 'PREBUILT',
+		type: 'boolean',
+		default: false
 	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true',
 	FORCE: parser.getInput({
@@ -16163,8 +16184,8 @@ const execCmd = (command, args, cwd) => {
 	core.debug(`EXEC: "${ command } ${ args }" in ${ cwd || '.' }`)
 	return new Promise((resolve, reject) => {
 		const process = spawn(command, args, { cwd })
-		let stdout
-		let stderr
+		let stdout = ''
+		let stderr = ''
 
 		process.stdout.on('data', (data) => {
 			core.debug(data.toString())
@@ -16227,6 +16248,7 @@ const {
 	BRANCH,
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
+	PREBUILT,
 	WORKING_DIRECTORY,
 	FORCE
 } = __nccwpck_require__(4570)
@@ -16247,6 +16269,10 @@ const init = () => {
 
 		if (PRODUCTION) {
 			commandArguments.push('--prod')
+		}
+
+		if (PREBUILT) {
+			commandArguments.push('--prebuilt')
 		}
 
 		if (FORCE) {
@@ -16525,6 +16551,7 @@ const core = __nccwpck_require__(2186)
 const Github = __nccwpck_require__(8396)
 const Vercel = __nccwpck_require__(847)
 const { addSchema } = __nccwpck_require__(8505)
+const crypto = __nccwpck_require__(6113)
 
 const {
 	GITHUB_DEPLOYMENT,
@@ -16545,6 +16572,9 @@ const {
 	IS_FORK,
 	ACTOR
 } = __nccwpck_require__(4570)
+
+// Following https://perishablepress.com/stop-using-unsafe-characters-in-urls/ only allow characters that won't break the URL.
+const urlSafeParameter = (input) => input.replace(/[^a-z0-9_~]/gi, '-')
 
 const run = async () => {
 	const github = Github.init()
@@ -16591,27 +16621,53 @@ const run = async () => {
 		if (IS_PR && PR_PREVIEW_DOMAIN) {
 			core.info(`Assigning custom preview domain to PR`)
 
-			const alias = PR_PREVIEW_DOMAIN
-				.replace('{USER}', USER)
-				.replace('{REPO}', REPOSITORY)
-				.replace('{BRANCH}', BRANCH)
+			if (typeof PR_PREVIEW_DOMAIN !== 'string') {
+				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
+			}
+
+			const alias = PR_PREVIEW_DOMAIN.replace('{USER}', urlSafeParameter(USER))
+				.replace('{REPO}', urlSafeParameter(REPOSITORY))
+				.replace('{BRANCH}', urlSafeParameter(BRANCH))
 				.replace('{PR}', PR_NUMBER)
 				.replace('{SHA}', SHA.substring(0, 7))
 				.toLowerCase()
 
-			await vercel.assignAlias(alias)
+			const previewDomainSuffix = '.vercel.app'
+			let nextAlias = alias
 
-			deploymentUrls.push(addSchema(alias))
+
+			if (alias.endsWith(previewDomainSuffix)) {
+				let prefix = alias.substring(0, alias.indexOf(previewDomainSuffix))
+
+				if (prefix.length >= 60) {
+					core.warning(`The alias ${ prefix } exceeds 60 chars in length, truncating using vercel's rules. See https://vercel.com/docs/concepts/deployments/automatic-urls#automatic-branch-urls`)
+					prefix = prefix.substring(0, 55)
+					const uniqueSuffix = crypto.createHash('sha256')
+						.update(`git-${ BRANCH }-${ REPOSITORY }`)
+						.digest('hex')
+						.slice(0, 6)
+
+					nextAlias = `${ prefix }-${ uniqueSuffix }${ previewDomainSuffix }`
+					core.info(`Updated domain alias: ${ nextAlias }`)
+				}
+			}
+
+			await vercel.assignAlias(nextAlias)
+			deploymentUrls.push(addSchema(nextAlias))
 		}
 
 		if (!IS_PR && ALIAS_DOMAINS) {
 			core.info(`Assigning custom domains to Vercel deployment`)
 
+			if (!Array.isArray(ALIAS_DOMAINS)) {
+				throw new Error(`invalid type for PR_PREVIEW_DOMAIN`)
+			}
+
 			for (let i = 0; i < ALIAS_DOMAINS.length; i++) {
 				const alias = ALIAS_DOMAINS[i]
-					.replace('{USER}', USER)
-					.replace('{REPO}', REPOSITORY)
-					.replace('{BRANCH}', BRANCH)
+					.replace('{USER}', urlSafeParameter(USER))
+					.replace('{REPO}', urlSafeParameter(REPOSITORY))
+					.replace('{BRANCH}', urlSafeParameter(BRANCH))
 					.replace('{SHA}', SHA.substring(0, 7))
 					.toLowerCase()
 
@@ -16677,6 +16733,7 @@ const run = async () => {
 
 		core.setOutput('PREVIEW_URL', previewUrl)
 		core.setOutput('DEPLOYMENT_URLS', deploymentUrls)
+		core.setOutput('DEPLOYMENT_UNIQUE_URL', deploymentUrls[deploymentUrls.length - 1])
 		core.setOutput('DEPLOYMENT_ID', deployment.id)
 		core.setOutput('DEPLOYMENT_INSPECTOR_URL', deployment.inspectorUrl)
 		core.setOutput('DEPLOYMENT_CREATED', true)

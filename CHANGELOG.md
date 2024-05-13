@@ -1,3 +1,75 @@
+## [v1.10.0] - 2024-05-05
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.10.0) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.12...v1.10.0) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.10.0) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.10.0.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.10.0.tar.gz))
+
+### New features
+
+- [`39ad2e1`](https://github.com/betahuhn/deploy-to-vercel-action/commit/39ad2e1)  Add prebuilt option (#302)
+(Issues: [`#302`](https://github.com/betahuhn/deploy-to-vercel-action/issues/302))
+
+### Bug fixes
+
+- [`643bc80`](https://github.com/betahuhn/deploy-to-vercel-action/commit/643bc80)  Make repo, user and branch url safe (#289)
+(Issues: [`#289`](https://github.com/betahuhn/deploy-to-vercel-action/issues/289))- [`9c29c6f`](https://github.com/betahuhn/deploy-to-vercel-action/commit/9c29c6f)  Fix prevent trimming attempts on undefined value (#389)
+(Issues: [`#389`](https://github.com/betahuhn/deploy-to-vercel-action/issues/389))
+
+### Security issues
+
+- [`e49bbe3`](https://github.com/betahuhn/deploy-to-vercel-action/commit/e49bbe3)  Update action to use Node 20 (#379)
+(Issues: [`#379`](https://github.com/betahuhn/deploy-to-vercel-action/issues/379) [`#390`](https://github.com/betahuhn/deploy-to-vercel-action/issues/390))
+
+## [v1.9.12] - 2023-01-30
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.12) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.11...v1.9.12) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.12) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.12.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.12.tar.gz))
+
+### Dependency updates
+
+- [`ff66ece`](https://github.com/betahuhn/deploy-to-vercel-action/commit/ff66ece)  Bump @vercel/ncc from 0.36.0 to 0.36.1
+
+## [v1.9.11] - 2022-12-12
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.11) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.10...v1.9.11) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.11) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.11.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.11.tar.gz))
+
+### Dependency updates
+
+- [`bbd346f`](https://github.com/betahuhn/deploy-to-vercel-action/commit/bbd346f)  Bump @vercel/ncc from 0.34.0 to 0.36.0
+
+## [v1.9.10] - 2022-11-08
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.10) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.9...v1.9.10) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.10) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.10.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.10.tar.gz))
+
+## [v1.9.9] - 2022-10-10
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.9) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.8...v1.9.9) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.9) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.9.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.9.tar.gz))
+
+### Dependency updates
+
+- [`8ce4390`](https://github.com/betahuhn/deploy-to-vercel-action/commit/8ce4390)  Bump action-input-parser from 1.2.37 to 1.2.38
+
+## [v1.9.8] - 2022-10-03
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.8) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.7...v1.9.8) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.8) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.8.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.8.tar.gz))
+
+### Dependency updates
+
+- [`cf1f736`](https://github.com/betahuhn/deploy-to-vercel-action/commit/cf1f736)  Bump @actions/core from 1.9.1 to 1.10.0
+
+## [v1.9.7] - 2022-09-19
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.7) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.6...v1.9.7) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.7) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.7.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.7.tar.gz))
+
+### Dependency updates
+
+- [`77e92d5`](https://github.com/betahuhn/deploy-to-vercel-action/commit/77e92d5)  Bump action-input-parser from 1.2.36 to 1.2.37
+
+## [v1.9.6] - 2022-09-05
+
+[Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.6) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.5...v1.9.6) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.6) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.6.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.6.tar.gz))
+
+### Dependency updates
+
+- [`8180fa1`](https://github.com/betahuhn/deploy-to-vercel-action/commit/8180fa1)  Bump action-input-parser from 1.2.35 to 1.2.36
+
 ## [v1.9.5] - 2022-08-15
 
 [Release notes](https://github.com/betahuhn/deploy-to-vercel-action/releases/tag/v1.9.5) · [Compare](https://github.com/betahuhn/deploy-to-vercel-action/compare/v1.9.4...v1.9.5) · [Tag](https://github.com/betahuhn/deploy-to-vercel-action/tree/v1.9.5) · Archive ([zip](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.5.zip) · [tar.gz](https://github.com/betahuhn/deploy-to-vercel-action/archive/v1.9.5.tar.gz))

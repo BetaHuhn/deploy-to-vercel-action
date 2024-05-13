@@ -14,6 +14,7 @@ const {
 	BRANCH,
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
+	PREBUILT,
 	WORKING_DIRECTORY,
 	FORCE
 } = require('./config')
@@ -34,6 +35,10 @@ const init = () => {
 
 		if (PRODUCTION) {
 			commandArguments.push('--prod')
+		}
+
+		if (PREBUILT) {
+			commandArguments.push('--prebuilt')
 		}
 
 		if (FORCE) {

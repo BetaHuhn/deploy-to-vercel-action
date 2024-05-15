@@ -83,7 +83,8 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `GITHUB_DEPLOYMENT` | Create a deployment on GitHub | **No** | true |
 | `GITHUB_DEPLOYMENT_ENV` | Custom environment for the GitHub deployment. | **No** | `Production` or `Preview` |
 | `PRODUCTION` | Create a production deployment on Vercel and GitHub | **No** | true (false for PR deployments) |
-| `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
+| `UPDATE_EXISTING_COMMENT` | Update existing PR comment when redeploying PR | **No** | false |
+| `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true (ignored if `UPDATE_EXISTING_COMMENT`) |
 | `CREATE_COMMENT` | Create PR comment when deploying | **No** | true |
 | `ATTACH_COMMIT_METADATA` | Attach metadata about the commit to the Vercel deployment | **No** | true |
 | `TRIM_COMMIT_MESSAGE` | When passing meta data to Vercel deployment, trim the commit message to subject only | **No** | false |

@@ -35,9 +35,13 @@ inputs:
     description: |
       Create PR comment when deploying (default: true).
     required: false
+  UPDATE_EXISTING_COMMENT:
+    description: |
+      Update existing PR comment when redeploying PR (default: false).
+    required: false
   DELETE_EXISTING_COMMENT:
     description: |
-      Delete existing PR comment when redeploying PR (default: true).
+      Delete existing PR comment when redeploying PR (default: true, ignored if UPDATE_EXISTING_COMMENT is true).
     required: false
   ATTACH_COMMIT_METADATA:
     description: |

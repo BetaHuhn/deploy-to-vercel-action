@@ -88,6 +88,10 @@ const context = {
 		key: 'BUILD_ENV',
 		type: 'array'
 	}),
+	ENV: parser.getInput({
+		key: 'ENV',
+		type: 'array'
+	}),
 	PREBUILT: parser.getInput({
 		key: 'PREBUILT',
 		type: 'boolean',

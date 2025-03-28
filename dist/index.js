@@ -15974,6 +15974,10 @@ const context = {
 		key: 'BUILD_ENV',
 		type: 'array'
 	}),
+	ENV: parser.getInput({
+		key: 'ENV',
+		type: 'array'
+	}),
 	PREBUILT: parser.getInput({
 		key: 'PREBUILT',
 		type: 'boolean',
@@ -16248,6 +16252,7 @@ const {
 	REF,
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
+	ENV,
 	PREBUILT,
 	WORKING_DIRECTORY,
 	FORCE
@@ -16301,6 +16306,12 @@ const init = () => {
 		if (BUILD_ENV) {
 			BUILD_ENV.forEach((item) => {
 				commandArguments = commandArguments.concat([ '--build-env', item ])
+			})
+		}
+
+		if (ENV) {
+			ENV.forEach((item) => {
+				commandArguments = commandArguments.concat([ '--env', item ])
 			})
 		}
 

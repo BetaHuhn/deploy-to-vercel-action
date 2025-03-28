@@ -15,6 +15,7 @@ const {
 	TRIM_COMMIT_MESSAGE,
 	BUILD_ENV,
 	PREBUILT,
+	TARGET,
 	WORKING_DIRECTORY,
 	FORCE
 } = require('./config')
@@ -39,6 +40,10 @@ const init = () => {
 
 		if (PREBUILT) {
 			commandArguments.push('--prebuilt')
+		}
+
+		if (TARGET) {
+			commandArguments.push(`--target=${ TARGET }`)
 		}
 
 		if (FORCE) {

@@ -93,6 +93,9 @@ const context = {
 		type: 'boolean',
 		default: false
 	}),
+	TARGET: parser.getInput({
+		key: 'TARGET'
+	}),
 	RUNNING_LOCAL: process.env.RUNNING_LOCAL === 'true',
 	FORCE: parser.getInput({
 		key: 'FORCE',

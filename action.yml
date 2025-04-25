@@ -23,6 +23,10 @@ inputs:
     description: |
       Create a production deployment (default: true, false for PR deployments).
     required: false
+  VERCEL_TARGET:
+    description: |
+      Specify a custom Vercel environment target, such as 'Production' or 'Preview'. Takes priority over PRODUCTION.
+    required: false
   PREBUILT:
     description: |
       Deploy a prebuilt Vercel Project (default: false).

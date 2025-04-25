@@ -82,7 +82,7 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_PROJECT_ID` | Id of your Vercel project (more info [below](#vercel-project)) | **Yes** | N/A |
 | `GITHUB_DEPLOYMENT` | Create a deployment on GitHub | **No** | true |
 | `GITHUB_DEPLOYMENT_ENV` | Custom environment for the GitHub deployment. | **No** | `Production` or `Preview` |
-| `PRODUCTION` | Create a production deployment on Vercel and GitHub | **No** | true (false for PR deployments) |
+| `PRODUCTION` | Create a production deployment on Vercel and GitHub. | **No** | true (false for PR deployments) |
 | `DELETE_EXISTING_COMMENT` | Delete existing PR comment when redeploying PR | **No** | true |
 | `CREATE_COMMENT` | Create PR comment when deploying | **No** | true |
 | `ATTACH_COMMIT_METADATA` | Attach metadata about the commit to the Vercel deployment | **No** | true |
@@ -94,8 +94,9 @@ Here are all the inputs [deploy-to-vercel-action](https://github.com/BetaHuhn/de
 | `VERCEL_SCOPE` | Execute commands from a different Vercel team or user | **No** | N/A |
 | `BUILD_ENV` | Provide environment variables to the build step | **No** | N/A |
 | `WORKING_DIRECTORY` | Working directory for the Vercel CLI | **No** | N/A |
-| `FORCE` | Used to skip the build cache. | **No** | false
-| `PREBUILT` | Deploy a prebuilt Vercel Project. | **No** | false
+| `FORCE` | Used to skip the build cache. | **No** | false |
+| `PREBUILT` | Deploy a prebuilt Vercel Project. | **No** | false |
+| `VERCEL_TARGET` | Specify a custom vercel environment target. Takes priority over `PRODUCTION`. | **No** | `Production` or `Preview` |
 
 ## 🛠️ Configuration
 

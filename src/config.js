@@ -27,6 +27,9 @@ const context = {
 		type: 'boolean',
 		default: !IS_PR
 	}),
+	VERCEL_TARGET: parser.getInput({
+		key: 'VERCEL_TARGET',
+	}),
 	GITHUB_DEPLOYMENT: parser.getInput({
 		key: 'GITHUB_DEPLOYMENT',
 		type: 'boolean',

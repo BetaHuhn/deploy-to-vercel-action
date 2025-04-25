@@ -15913,6 +15913,9 @@ const context = {
 		type: 'boolean',
 		default: !IS_PR
 	}),
+	VERCEL_TARGET: parser.getInput({
+		key: 'VERCEL_TARGET',
+	}),
 	GITHUB_DEPLOYMENT: parser.getInput({
 		key: 'GITHUB_DEPLOYMENT',
 		type: 'boolean',
@@ -16242,6 +16245,7 @@ const {
 	VERCEL_SCOPE,
 	VERCEL_ORG_ID,
 	VERCEL_PROJECT_ID,
+	VERCEL_TARGET,
 	SHA,
 	USER,
 	REPOSITORY,
@@ -16267,8 +16271,12 @@ const init = () => {
 			commandArguments.push(`--scope=${ VERCEL_SCOPE }`)
 		}
 
-		if (PRODUCTION) {
+		if (PRODUCTION && !VERCEL_TARGET) {
 			commandArguments.push('--prod')
+		}
+
+		if (VERCEL_TARGET) {
+			commandArguments.push(`--target=${ VERCEL_TARGET }`)
 		}
 
 		if (PREBUILT) {

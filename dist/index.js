@@ -15984,6 +15984,10 @@ const context = {
 		key: 'FORCE',
 		type: 'boolean',
 		default: false
+	}),
+	ARCHIVE: parser.getInput({
+		key: 'ARCHIVE',
+		type: 'string',
 	})
 }
 
@@ -16003,6 +16007,7 @@ const setDynamicVars = () => {
 		context.ACTOR = process.env.ACTOR || context.USER
 		context.IS_FORK = process.env.IS_FORK === 'true' || false
 		context.TRIM_COMMIT_MESSAGE = process.env.TRIM_COMMIT_MESSAGE === 'true' || false
+		context.ARCHIVE = process.env.ARCHIVE || undefined
 
 		return
 	}
@@ -16250,7 +16255,8 @@ const {
 	BUILD_ENV,
 	PREBUILT,
 	WORKING_DIRECTORY,
-	FORCE
+	FORCE,
+	ARCHIVE
 } = __nccwpck_require__(4570)
 
 const init = () => {
@@ -16277,6 +16283,10 @@ const init = () => {
 
 		if (FORCE) {
 			commandArguments.push('--force')
+		}
+
+		if (ARCHIVE) {
+			commandArguments.push(`--archive=${ ARCHIVE }`)
 		}
 
 		if (commit) {

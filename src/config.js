@@ -98,6 +98,10 @@ const context = {
 		key: 'FORCE',
 		type: 'boolean',
 		default: false
+	}),
+	ARCHIVE: parser.getInput({
+		key: 'ARCHIVE',
+		type: 'string'
 	})
 }
 
@@ -117,6 +121,7 @@ const setDynamicVars = () => {
 		context.ACTOR = process.env.ACTOR || context.USER
 		context.IS_FORK = process.env.IS_FORK === 'true' || false
 		context.TRIM_COMMIT_MESSAGE = process.env.TRIM_COMMIT_MESSAGE === 'true' || false
+		context.ARCHIVE = process.env.ARCHIVE || undefined
 
 		return
 	}

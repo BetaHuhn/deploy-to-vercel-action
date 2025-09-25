@@ -27,6 +27,10 @@ inputs:
     description: |
       Deploy a prebuilt Vercel Project (default: false).
     required: false
+  ARCHIVE:
+    description: |
+      Compress deployment code (e.g. "tgz").
+    required: false
   GITHUB_DEPLOYMENT:
     description: |
       Create a deployment on GitHub (default: true).
